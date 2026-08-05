@@ -8,7 +8,7 @@ import { Icon } from 'shared';
 import { colors } from 'constant/colors';
 
 // styles
-import styles from './HomePage.module.scss';
+import styles from './home-page.module.scss';
 
 const HomePage: FC = () => {
   const { t } = useTranslation();

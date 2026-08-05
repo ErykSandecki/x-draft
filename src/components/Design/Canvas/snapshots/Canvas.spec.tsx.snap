@@ -3,7 +3,7 @@
 exports[`Canvas snapshots > should render Canvas 1`] = `
 <DocumentFragment>
   <canvas
-    class="_Canvas_db4984"
+    class="_Canvas_8cb929"
   />
 </DocumentFragment>
 `;

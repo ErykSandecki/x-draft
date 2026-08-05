@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 // styles
-import styles from './NotFoundPage.module.scss';
+import styles from './not-found-page.module.scss';
 
 const NotFoundPage: FC = () => {
   const { t } = useTranslation();

@@ -7,7 +7,7 @@ import { Icons } from 'assets/svg';
 import { colors } from 'constant/colors';
 
 // styles
-import styles from './Icon.module.scss';
+import styles from './icon.module.scss';
 
 export type TIconProps = Omit<SVGProps<SVGSVGElement>, 'color'> & {
   color?: keyof typeof colors;

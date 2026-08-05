@@ -13,7 +13,7 @@ import { setActiveTool } from 'store/design/designSlice';
 import { useAppDispatch, useAppSelector } from 'store';
 
 // styles
-import styles from './MouseModes.module.scss';
+import styles from './mouse-modes.module.scss';
 
 // types
 import { ToolName } from 'types/design/enums';

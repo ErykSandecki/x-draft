@@ -3,16 +3,16 @@
 exports[`DesignPage snapshots > should render DesignPage 1`] = `
 <DocumentFragment>
   <main
-    class="_DesignPage_22f71e"
+    class="_DesignPage_8d1b83"
   >
     <canvas
-      class="_Canvas_db4984"
+      class="_Canvas_8cb929"
     />
     <div
-      class="_Toolbar_3cbe0a"
+      class="_Toolbar_0b5712"
     >
       <div
-        class="_MouseModes_2eb92f"
+        class="_MouseModes_be7a0d"
         dir="ltr"
         role="radiogroup"
         style="outline: none;"
@@ -21,7 +21,7 @@ exports[`DesignPage snapshots > should render DesignPage 1`] = `
         <button
           aria-checked="true"
           aria-label="default"
-          class="_button_2eb92f"
+          class="_button_be7a0d"
           data-radix-collection-item=""
           data-state="on"
           role="radio"
@@ -29,7 +29,7 @@ exports[`DesignPage snapshots > should render DesignPage 1`] = `
           type="button"
         >
           <svg
-            class="_Icon_4d05ff"
+            class="_Icon_49a9ec"
             fill="none"
             height="16"
             style="color: var(--color-neutral-1);"
@@ -47,7 +47,7 @@ exports[`DesignPage snapshots > should render DesignPage 1`] = `
         <button
           aria-checked="false"
           aria-label="frame"
-          class="_button_2eb92f"
+          class="_button_be7a0d"
           data-radix-collection-item=""
           data-state="off"
           role="radio"
@@ -55,7 +55,7 @@ exports[`DesignPage snapshots > should render DesignPage 1`] = `
           type="button"
         >
           <svg
-            class="_Icon_4d05ff"
+            class="_Icon_49a9ec"
             fill="none"
             height="16"
             style="color: var(--color-neutral-1);"

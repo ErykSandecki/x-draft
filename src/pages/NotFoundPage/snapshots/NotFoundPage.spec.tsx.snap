@@ -3,7 +3,7 @@
 exports[`NotFoundPage snapshots > should render NotFoundPage 1`] = `
 <DocumentFragment>
   <main
-    class="_NotFoundPage_d0a173"
+    class="_NotFoundPage_f61d42"
   >
     <h1>
       404

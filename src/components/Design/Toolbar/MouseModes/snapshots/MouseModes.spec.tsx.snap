@@ -3,7 +3,7 @@
 exports[`MouseModes snapshots > should render MouseModes 1`] = `
 <DocumentFragment>
   <div
-    class="_MouseModes_2eb92f"
+    class="_MouseModes_be7a0d"
     dir="ltr"
     role="radiogroup"
     style="outline: none;"
@@ -12,7 +12,7 @@ exports[`MouseModes snapshots > should render MouseModes 1`] = `
     <button
       aria-checked="true"
       aria-label="default"
-      class="_button_2eb92f"
+      class="_button_be7a0d"
       data-radix-collection-item=""
       data-state="on"
       role="radio"
@@ -20,7 +20,7 @@ exports[`MouseModes snapshots > should render MouseModes 1`] = `
       type="button"
     >
       <svg
-        class="_Icon_4d05ff"
+        class="_Icon_49a9ec"
         fill="none"
         height="16"
         style="color: var(--color-neutral-1);"
@@ -38,7 +38,7 @@ exports[`MouseModes snapshots > should render MouseModes 1`] = `
     <button
       aria-checked="false"
       aria-label="frame"
-      class="_button_2eb92f"
+      class="_button_be7a0d"
       data-radix-collection-item=""
       data-state="off"
       role="radio"
@@ -46,7 +46,7 @@ exports[`MouseModes snapshots > should render MouseModes 1`] = `
       type="button"
     >
       <svg
-        class="_Icon_4d05ff"
+        class="_Icon_49a9ec"
         fill="none"
         height="16"
         style="color: var(--color-neutral-1);"

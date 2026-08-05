@@ -3,13 +3,13 @@
 exports[`App snapshots > should render App 1`] = `
 <DocumentFragment>
   <div
-    class="_App_e99302"
+    class="_App_55ce9c"
   >
     <main
-      class="_HomePage_3b33c1"
+      class="_HomePage_04d875"
     >
       <svg
-        class="_Icon_4d05ff"
+        class="_Icon_49a9ec"
         fill="none"
         height="32"
         style="color: var(--color-blue-1);"

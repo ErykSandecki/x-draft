@@ -3,7 +3,7 @@
 exports[`Icon snapshots > should render Icon 1`] = `
 <DocumentFragment>
   <svg
-    class="_Icon_4d05ff"
+    class="_Icon_49a9ec"
     fill="none"
     height="16"
     style="color: var(--color-neutral-1);"

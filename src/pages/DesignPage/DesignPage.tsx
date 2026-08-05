@@ -5,7 +5,7 @@ import Canvas from 'components/Design/Canvas/Canvas';
 import Toolbar from 'components/Design/Toolbar/Toolbar';
 
 // styles
-import styles from './DesignPage.module.scss';
+import styles from './design-page.module.scss';
 
 const DesignPage: FC = () => (
   <main className={styles.DesignPage}>

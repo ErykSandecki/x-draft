@@ -4,7 +4,7 @@ import { FC } from 'react';
 import MouseModes from './MouseModes/MouseModes';
 
 // styles
-import styles from './Toolbar.module.scss';
+import styles from './toolbar.module.scss';
 
 const Toolbar: FC = () => (
   <div className={styles.Toolbar} onMouseDown={(event) => event.stopPropagation()}>
