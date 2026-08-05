@@ -1,11 +1,20 @@
 /// <reference types="vitest/config" />
-import path from 'node:path';
 
-import { defineConfig } from 'vite';
+import path from 'node:path';
 import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    svgr({
+      svgrOptions: {
+        titleProp: true,
+        ref: true,
+      },
+    }),
+  ],
   resolve: {
     tsconfigPaths: true,
   },
@@ -13,7 +22,6 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    // snapshots live in a sibling `snapshots/` folder, mirroring x-design
     resolveSnapshotPath: (testPath, snapExtension) =>
       path.join(path.dirname(testPath), 'snapshots', `${path.basename(testPath)}${snapExtension}`),
   },

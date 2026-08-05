@@ -1,5 +1,8 @@
 import { FC } from 'react';
 
+// components
+import { Icon } from 'shared';
+
 // hooks
 import { useTheme } from 'hooks';
 
@@ -14,6 +17,7 @@ const App: FC = () => {
 
   return (
     <main className={styles.App}>
+      <Icon color="blue1" name="Logo" size={32} />
       <h1>x-draft</h1>
       <p style={{ color: colors.neutral2 }}>Vite + React + TypeScript</p>
       <button type="button" className={styles.ThemeToggle} onClick={toggleTheme}>
