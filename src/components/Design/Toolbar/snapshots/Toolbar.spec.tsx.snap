@@ -15,7 +15,7 @@ exports[`Toolbar snapshots > should render Toolbar 1`] = `
       <button
         aria-checked="true"
         aria-label="default"
-        class="_button_be7a0d"
+        class="_MouseModes__button_be7a0d"
         data-radix-collection-item=""
         data-state="on"
         role="radio"
@@ -41,7 +41,7 @@ exports[`Toolbar snapshots > should render Toolbar 1`] = `
       <button
         aria-checked="false"
         aria-label="frame"
-        class="_button_be7a0d"
+        class="_MouseModes__button_be7a0d"
         data-radix-collection-item=""
         data-state="off"
         role="radio"

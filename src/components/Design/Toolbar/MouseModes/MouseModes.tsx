@@ -30,7 +30,7 @@ const MouseModes: FC = () => {
       value={activeTool}
     >
       {Object.values(ToolName).map((name) => (
-        <ToggleGroupPrimitive.Item aria-label={name} className={styles.button} key={name} value={name}>
+        <ToggleGroupPrimitive.Item aria-label={name} className={styles.MouseModes__button} key={name} value={name}>
           <Icon name={TOOL_ICON[name]} />
         </ToggleGroupPrimitive.Item>
       ))}

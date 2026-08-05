@@ -15,8 +15,8 @@ const Canvas: FC = () => {
 
   return (
     <div className={styles.Canvas}>
-      <div className={styles.texture} />
-      <canvas className={styles.canvasElement} ref={canvasRef} />
+      <div className={styles.Canvas__texture} />
+      <canvas className={styles['Canvas__canvas-element']} ref={canvasRef} />
     </div>
   );
 };
