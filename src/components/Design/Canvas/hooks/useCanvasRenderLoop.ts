@@ -1,31 +1,29 @@
 import { RefObject, useEffect } from 'react';
 
 // others
-import { BACKGROUND_ALPHA, BACKGROUND_COLOR } from '../constants';
+import { WEBGL_CONTEXT_ATTRIBUTES, WEBGL_CONTEXT_ID } from '../constants';
 
-const drawBackground = (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void => {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.globalAlpha = BACKGROUND_ALPHA;
-  context.fillStyle = BACKGROUND_COLOR;
-  context.fillRect(0, 0, canvas.width, canvas.height);
-};
+// utils
+import { drawBackground } from '../utils/drawBackground';
 
 export const useCanvasRenderLoop = (canvasRef: RefObject<HTMLCanvasElement | null>): void => {
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
+    const gl = canvas?.getContext(WEBGL_CONTEXT_ID, WEBGL_CONTEXT_ATTRIBUTES);
 
-    if (canvas && context) {
+    if (canvas && gl) {
       let frameId: number;
 
       const tick = (): void => {
-        drawBackground(context, canvas);
+        drawBackground(gl);
         frameId = requestAnimationFrame(tick);
       };
 
       frameId = requestAnimationFrame(tick);
 
-      return (): void => cancelAnimationFrame(frameId);
+      return (): void => {
+        cancelAnimationFrame(frameId);
+      };
     }
   }, [canvasRef]);
 };

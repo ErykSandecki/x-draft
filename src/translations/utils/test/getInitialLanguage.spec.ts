@@ -19,7 +19,7 @@ describe('getInitialLanguage', () => {
   });
 
   it('should ignore a stored language that is not available', () => {
-    // mock
+    // spy
     vi.spyOn(navigator, 'language', 'get').mockReturnValue('en-US');
 
     // before
@@ -30,7 +30,7 @@ describe('getInitialLanguage', () => {
   });
 
   it('should fall back to the system language when nothing is stored', () => {
-    // mock
+    // spy
     vi.spyOn(navigator, 'language', 'get').mockReturnValue('pl-PL');
 
     // result
@@ -38,7 +38,7 @@ describe('getInitialLanguage', () => {
   });
 
   it('should fall back to the default language when neither storage nor the system language is available', () => {
-    // mock
+    // spy
     vi.spyOn(navigator, 'language', 'get').mockReturnValue('fr-FR');
 
     // result

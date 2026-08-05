@@ -5,7 +5,24 @@ Cel: odtworzyć aplikację Figma 1:1, krok po kroku. Silnik rysowania: **Canvas*
 (`TextEditOverlay`) — cała reszta (kształty, selekcja, handle'y, guide'y)
 rysowana jest na canvasie, tak jak w oryginale.
 
+**Rendering: WebGL od samego fundamentu**, nie Canvas 2D — zdecydowane świadomie
+wcześnie, bo docelowo będzie dużo obiektów na scenie i lepiej nie migrować
+później. C++/WASM (tak jak w prawdziwej Figmie) to osobny, odległy temat — nie
+robimy go teraz, dopiero jeśli kiedyś faktycznie będzie potrzebny (patrz sekcja
+„Rendering" niżej po co WebGL i dlaczego nie WASM na starcie).
+
 Zaznaczamy checkboxy w miarę postępu. Każdy etap = osobna, malutka porcja pracy.
+
+## Rendering: WebGL, nie Canvas 2D
+
+- Canvas 2D był tylko punktem startowym (Etap 0) — świadomie przeszliśmy na
+  WebGL zanim zaczęliśmy rysować realne obiekty, żeby uniknąć drugiej migracji
+  renderera później, gdy scena urośnie
+- WASM zostaje **poza scope na razie** — dopiero jeśli/gdy realny profiling
+  pokaże, że wąskim gardłem jest matematyka po stronie JS (hit-testing,
+  tesselacja), a nie samo rysowanie na GPU. WebGL sam w sobie ułatwia tę
+  ewentualną migrację później (te same wywołania GL da się wołać z C++ przez
+  Emscripten), ale to nie jest cel na dziś
 
 ## Etap 0 — Fundament projektu
 
@@ -14,15 +31,18 @@ Zaznaczamy checkboxy w miarę postępu. Każdy etap = osobna, malutka porcja pra
       wszystkie komponenty widoku trzymamy w `components/Design/...`)
 - [x] resize handling (dopasowanie canvasu do okna + `devicePixelRatio`) —
       `Canvas/hooks/useCanvasResize.ts`: `ResizeObserver` na elemencie canvasu +
-      `canvas.width/height` liczone z `devicePixelRatio`, `ctx.scale(dpr, dpr)`
-      żeby dalsze rysowanie działało w jednostkach logicznych (CSS px)
+      `canvas.width/height` liczone z `devicePixelRatio`, `gl.viewport(...)` po
+      każdym resize żeby framebuffer WebGL nadążał za nowym rozmiarem
 - [x] render loop (`requestAnimationFrame`) rysujący na razie puste tło —
-      `Canvas/hooks/useCanvasRenderLoop.ts`: `ctx.fillRect` co klatkę
-      (`BACKGROUND_COLOR`/`BACKGROUND_ALPHA` z `Canvas/constants.ts`). Pod
-      canvasem (który ma teraz przezroczyste tło) leży osobny `div.texture` z
-      teksturką z x-design (`texture--dark.svg`/`texture--light.svg`, dobierana
-      wg motywu) — dzięki temu jak `BACKGROUND_ALPHA` spadnie poniżej 1,
-      teksturka będzie prześwitywać spod wypełnienia, tak jak w oryginale
+      `Canvas/hooks/useCanvasRenderLoop.ts`: kontekst `webgl2`
+      (`WEBGL_CONTEXT_ID`/`WEBGL_CONTEXT_ATTRIBUTES` z `Canvas/constants.ts`,
+      `premultipliedAlpha: false` żeby alpha liczyła się w sposób intuicyjny),
+      co klatkę `gl.clearColor` + `gl.clear` (`BACKGROUND_COLOR` konwertowany
+      przez `Canvas/utils/hexToRgbFloat.ts`, `BACKGROUND_ALPHA`). Pod canvasem
+      (przezroczyste tło) leży osobny `div.texture` z teksturką z x-design
+      (`texture--dark.svg`/`texture--light.svg`, dobierana wg motywu) — dzięki
+      temu jak `BACKGROUND_ALPHA` spadnie poniżej 1, teksturka będzie
+      prześwitywać spod wypełnienia, tak jak w oryginale
 
 ## Etap 1 — Dolny toolbar (bieżący krok)
 

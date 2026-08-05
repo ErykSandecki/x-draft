@@ -62,8 +62,10 @@ describe('useCanvasResize behaviors', () => {
     vi.stubGlobal('devicePixelRatio', 1);
 
     const canvas = document.createElement('canvas');
-    const rectSpy = vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({ height: 50, width: 100 } as DOMRect);
     const canvasRef: RefObject<HTMLCanvasElement | null> = { current: canvas };
+
+    // spy
+    const rectSpy = vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({ height: 50, width: 100 } as DOMRect);
 
     // before
     renderHook(() => useCanvasResize(canvasRef));
@@ -78,12 +80,11 @@ describe('useCanvasResize behaviors', () => {
   });
 
   it('should disconnect the resize observer on unmount', () => {
-    // mock
+    // spy
     const disconnectSpy = vi.spyOn(ResizeObserverMock.prototype, 'disconnect');
 
-    const canvasRef = createCanvasRef(10, 10);
-
     // before
+    const canvasRef = createCanvasRef(10, 10);
     const { unmount } = renderHook(() => useCanvasResize(canvasRef));
 
     // action

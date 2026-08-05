@@ -1,15 +1,9 @@
 import { RefObject, useEffect } from 'react';
 
+// utils
+import { resizeCanvas } from '../utils/resizeCanvas';
+
 export const useCanvasResize = (canvasRef: RefObject<HTMLCanvasElement | null>): void => {
-  const resizeCanvas = (canvas: HTMLCanvasElement): void => {
-    const { width, height } = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-
-    canvas.width = Math.round(width * dpr);
-    canvas.height = Math.round(height * dpr);
-    canvas.getContext('2d')?.scale(dpr, dpr);
-  };
-
   useEffect(() => {
     const canvas = canvasRef.current;
 

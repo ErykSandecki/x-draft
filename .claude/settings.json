@@ -11,7 +11,8 @@
       "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-function-style)",
       "Edit(/.claude/skills/x-draft-function-style/**)",
       "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-scss-bem)",
-      "Edit(/.claude/skills/x-draft-scss-bem/**)"
+      "Edit(/.claude/skills/x-draft-scss-bem/**)",
+      "Edit(/.claude/skills/x-draft-test-conventions/**)"
     ],
     "additionalDirectories": [
       "/Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills"
