@@ -5,11 +5,18 @@ exports[`DesignPage snapshots > should render DesignPage 1`] = `
   <main
     class="_DesignPage_8d1b83"
   >
-    <canvas
+    <div
       class="_Canvas_8cb929"
-      height="0"
-      width="0"
-    />
+    >
+      <div
+        class="_texture_8cb929"
+      />
+      <canvas
+        class="_canvasElement_8cb929"
+        height="0"
+        width="0"
+      />
+    </div>
     <div
       class="_Toolbar_0b5712"
     >

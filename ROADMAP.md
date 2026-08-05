@@ -16,9 +16,13 @@ Zaznaczamy checkboxy w miarę postępu. Każdy etap = osobna, malutka porcja pra
       `Canvas/hooks/useCanvasResize.ts`: `ResizeObserver` na elemencie canvasu +
       `canvas.width/height` liczone z `devicePixelRatio`, `ctx.scale(dpr, dpr)`
       żeby dalsze rysowanie działało w jednostkach logicznych (CSS px)
-- [ ] render loop (`requestAnimationFrame`) rysujący na razie puste tło — tło
-      jest teraz zwykłym `background-color` w CSS, nie rysowaniem przez
-      `CanvasRenderingContext2D`
+- [x] render loop (`requestAnimationFrame`) rysujący na razie puste tło —
+      `Canvas/hooks/useCanvasRenderLoop.ts`: `ctx.fillRect` co klatkę
+      (`BACKGROUND_COLOR`/`BACKGROUND_ALPHA` z `Canvas/constants.ts`). Pod
+      canvasem (który ma teraz przezroczyste tło) leży osobny `div.texture` z
+      teksturką z x-design (`texture--dark.svg`/`texture--light.svg`, dobierana
+      wg motywu) — dzięki temu jak `BACKGROUND_ALPHA` spadnie poniżej 1,
+      teksturka będzie prześwitywać spod wypełnienia, tak jak w oryginale
 
 ## Etap 1 — Dolny toolbar (bieżący krok)
 

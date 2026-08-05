@@ -2,10 +2,17 @@
 
 exports[`Canvas snapshots > should render Canvas 1`] = `
 <DocumentFragment>
-  <canvas
+  <div
     class="_Canvas_8cb929"
-    height="0"
-    width="0"
-  />
+  >
+    <div
+      class="_texture_8cb929"
+    />
+    <canvas
+      class="_canvasElement_8cb929"
+      height="0"
+      width="0"
+    />
+  </div>
 </DocumentFragment>
 `;

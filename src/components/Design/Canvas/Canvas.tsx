@@ -1,6 +1,7 @@
 import { FC, useRef } from 'react';
 
 // hooks
+import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop';
 import { useCanvasResize } from './hooks/useCanvasResize';
 
 // styles
@@ -10,8 +11,14 @@ const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useCanvasResize(canvasRef);
+  useCanvasRenderLoop(canvasRef);
 
-  return <canvas className={styles.Canvas} ref={canvasRef} />;
+  return (
+    <div className={styles.Canvas}>
+      <div className={styles.texture} />
+      <canvas className={styles.canvasElement} ref={canvasRef} />
+    </div>
+  );
 };
 
 export default Canvas;
