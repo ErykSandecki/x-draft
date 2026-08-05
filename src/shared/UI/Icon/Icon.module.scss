@@ -3,10 +3,10 @@
   flex-shrink: 0;
 
   :global([data-svg-property='fill']) {
-    fill: currentColor;
+    fill: currentcolor;
   }
 
   :global([data-svg-property='stroke']) {
-    stroke: currentColor;
+    stroke: currentcolor;
   }
 }
