@@ -3,6 +3,12 @@
   display: flex;
   height: 100%;
 
+  &__tool-group {
+    align-items: center;
+    display: flex;
+    height: 100%;
+  }
+
   &__button {
     align-items: center;
     background-color: transparent;
@@ -15,7 +21,7 @@
     width: 32px;
 
     &:hover:not([data-state='on']) {
-      background-color: var(--color-neutral-3);
+      background-color: color-mix(in srgb, var(--color-neutral-3) 50%, transparent);
     }
 
     &[data-state='on'] {

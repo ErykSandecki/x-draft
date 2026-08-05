@@ -17,9 +17,13 @@ mixed. 13+ folders (`core/ReduxHookForm`, `hooks/useTheme`, `store/pageBuilder`,
   direction is fine, just never the reverse (`constants.ts` must not import from `./types`).
 - **`enums.ts`** — `enum` declarations, kept in their own file, separate from both `types.ts` and
   `constants.ts` (verified: `store/pageBuilder/`, `shared/UI/`, `types/` all keep `enums.ts`
-  alongside a distinct `constants.ts`). Members are camelCase and match their string value exactly,
-  e.g. `northEast = 'northEast'` (`store/pageBuilder/enums.ts`'s `AnchorResize`/`AnchorRotate`) —
-  never PascalCase members. `types.ts` and `constants.ts` may both import from `./enums`.
+  alongside a distinct `constants.ts`). **Both the member name and its string value are camelCase**,
+  and the two match exactly — e.g. `northEast = 'northEast'` (`store/pageBuilder/enums.ts`'s
+  `AnchorResize`/`AnchorRotate`), `comment = 'comment'` (x-draft's own `ToolName`). Never PascalCase,
+  kebab-case, or snake_case on either side — this applies to every enum in the project, including
+  ones that only ever have single-word members today (`ToolName`, `RouteName`): a later multi-word
+  addition (e.g. `extraSmall = 'extraSmall'`) must stay camelCase on both sides too, not just the
+  already-existing entries. `types.ts` and `constants.ts` may both import from `./enums`.
 - **`constants.ts`** — runtime constant values (strings, numbers, maps) built from those enums, e.g.
   `DEFAULT_TOOL = ToolName.select`. No types/interfaces, no enum declarations themselves.
 - **`utils/`** — one file per utility function, named after the function it exports

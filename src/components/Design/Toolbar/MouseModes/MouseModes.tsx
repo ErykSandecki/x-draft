@@ -2,10 +2,11 @@ import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { FC } from 'react';
 
 // components
+import ToolDropdown from './ToolDropdown/ToolDropdown';
 import { Icon } from 'shared';
 
 // others
-import { TOOL_ICON } from '../constants';
+import { TOOL_ICON, TOOLBAR_ORDER, TOOLS_WITH_DROPDOWN } from '../constants';
 
 // store
 import { selectActiveTool } from 'store/design/selectors';
@@ -29,10 +30,13 @@ const MouseModes: FC = () => {
       type="single"
       value={activeTool}
     >
-      {Object.values(ToolName).map((name) => (
-        <ToggleGroupPrimitive.Item aria-label={name} className={styles.MouseModes__button} key={name} value={name}>
-          <Icon name={TOOL_ICON[name]} />
-        </ToggleGroupPrimitive.Item>
+      {TOOLBAR_ORDER.map((name) => (
+        <div className={styles['MouseModes__tool-group']} key={name}>
+          <ToggleGroupPrimitive.Item aria-label={name} className={styles.MouseModes__button} value={name}>
+            <Icon name={TOOL_ICON[name]} />
+          </ToggleGroupPrimitive.Item>
+          {TOOLS_WITH_DROPDOWN.includes(name) && <ToolDropdown tool={name} />}
+        </div>
       ))}
     </ToggleGroupPrimitive.Root>
   );

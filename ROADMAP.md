@@ -49,15 +49,22 @@ Zaznaczamy checkboxy w miarę postępu. Każdy etap = osobna, malutka porcja pra
 Referencja: zrzut z toolbarem Figmy (select / frame / rectangle / pen / text /
 comment / shapes, potem osobno: draw / scale / actions / dev mode).
 
-- [ ] `shared/UI/Toolbar` (albo `components/Toolbar`) — statyczny layout wg
-      zrzutu: grupa lewa (select, frame, rectangle+dropdown, pen+dropdown,
-      text+dropdown, comment, shapes) + separator + grupa prawa (draw, scale,
-      actions, code/dev mode)
-- [ ] stan aktywnego narzędzia (`activeTool`) — jeden wybrany na raz, podświetlenie
-      jak na zrzucie (niebieskie tło aktywnej ikony)
-- [ ] ikony wg konwencji projektu ([[x-draft-icons]] — SVG przez
-      `vite-plugin-svgr`)
-- [ ] na razie tylko UI, bez realnej logiki narzędzi poza zaznaczeniem stanu
+- [x] `components/Design/Toolbar` — statyczny layout, floating na dole canvasu
+      (nie `shared/UI/Toolbar` — trzymamy wszystkie komponenty widoku pod
+      `components/Design/...`)
+- [x] stan aktywnego narzędzia (`activeTool`) — Redux (`store/design`), nie
+      lokalny stan; podświetlenie aktywnej ikony przez Radix `ToggleGroup`
+      (`data-state="on"` → `background-color: var(--color-blue-1)`)
+- [x] ikony wg konwencji projektu ([[x-draft-icons]])
+- [x] pierwsze 3 przyciski od lewej: Select/Move (`default`), Frame, Comment —
+      realna logika (dispatch `setActiveTool`), nie tylko UI
+- [x] dropdown-chevron (16×32, hover taki sam jak reszta przycisków) przy
+      Select i Frame — `MouseModes/ToolDropdown` (Radix `DropdownMenu`), na
+      razie pokazuje jedną, aktualnie aktywną opcję (checkmark + ikona + label
+      + skrót klawiszowy); realne warianty (Hand tool, Scale, Slice...) dojdą
+      later jako osobny krok
+- [ ] rectangle / pen / text (z dropdownami wariantów) — kolejny krok
+- [ ] shapes (assets), prawa grupa (draw / scale / actions / dev mode)
 
 ## Etap 2 — Model danych sceny
 

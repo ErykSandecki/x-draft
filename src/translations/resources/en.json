@@ -1,6 +1,9 @@
 {
   "app.themeToggle.switchToDark": "Switch to dark theme",
   "app.themeToggle.switchToLight": "Switch to light theme",
+  "design.toolbar.tool.comment": "Comment",
+  "design.toolbar.tool.default": "Move",
+  "design.toolbar.tool.frame": "Frame",
   "home.description": "A minimal starter template.",
   "home.subtitle": "Vite + React + TypeScript",
   "notFound.description": "Page not found.",
