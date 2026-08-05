@@ -4,6 +4,8 @@ exports[`Canvas snapshots > should render Canvas 1`] = `
 <DocumentFragment>
   <canvas
     class="_Canvas_8cb929"
+    height="0"
+    width="0"
   />
 </DocumentFragment>
 `;

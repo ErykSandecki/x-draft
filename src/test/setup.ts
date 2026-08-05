@@ -20,3 +20,18 @@ Object.defineProperty(window, 'matchMedia', {
   }),
   writable: true,
 });
+
+// jsdom doesn't implement ResizeObserver
+class ResizeObserverMock {
+  disconnect(): void {}
+  observe(): void {}
+  unobserve(): void {}
+}
+
+window.ResizeObserver = window.ResizeObserver ?? ResizeObserverMock;
+
+// jsdom doesn't implement HTMLCanvasElement's 2D context (needs the "canvas" npm package)
+Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+  value: (): null => null,
+  writable: true,
+});

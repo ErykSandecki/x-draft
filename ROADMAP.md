@@ -9,9 +9,16 @@ Zaznaczamy checkboxy w miarę postępu. Każdy etap = osobna, malutka porcja pra
 
 ## Etap 0 — Fundament projektu
 
-- [ ] `core/Canvas` — komponent React montujący jeden `<canvas>` na cały viewport
-- [ ] resize handling (dopasowanie canvasu do okna + `devicePixelRatio`)
-- [ ] render loop (`requestAnimationFrame`) rysujący na razie puste tło
+- [x] `components/Design/Canvas` — komponent React montujący jeden `<canvas>` na
+      cały viewport (docelowo miało być `core/Canvas`, ale zgodnie z ustaleniami
+      wszystkie komponenty widoku trzymamy w `components/Design/...`)
+- [x] resize handling (dopasowanie canvasu do okna + `devicePixelRatio`) —
+      `Canvas/hooks/useCanvasResize.ts`: `ResizeObserver` na elemencie canvasu +
+      `canvas.width/height` liczone z `devicePixelRatio`, `ctx.scale(dpr, dpr)`
+      żeby dalsze rysowanie działało w jednostkach logicznych (CSS px)
+- [ ] render loop (`requestAnimationFrame`) rysujący na razie puste tło — tło
+      jest teraz zwykłym `background-color` w CSS, nie rysowaniem przez
+      `CanvasRenderingContext2D`
 
 ## Etap 1 — Dolny toolbar (bieżący krok)
 

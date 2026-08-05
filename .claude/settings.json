@@ -7,7 +7,12 @@
       "Bash(git config *)",
       "Bash(git rm *)",
       "Bash(git add *)",
-      "Bash(git ls-tree *)"
+      "Bash(git ls-tree *)",
+      "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-function-style)",
+      "Edit(/.claude/skills/x-draft-function-style/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills"
     ]
   }
 }
