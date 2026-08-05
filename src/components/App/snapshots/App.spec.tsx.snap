@@ -5,12 +5,6 @@ exports[`App snapshots > should render App 1`] = `
   <div
     class="_App_e99302"
   >
-    <button
-      class="_ThemeToggle_e99302"
-      type="button"
-    >
-      Switch to light theme
-    </button>
     <main
       class="_HomePage_3b33c1"
     >
