@@ -4,22 +4,30 @@ import { render, screen } from '@testing-library/react';
 // components
 import App from './App';
 
-describe('App', () => {
-  it('renders the heading', () => {
-    render(<App />);
+describe('App snapshots', () => {
+  it('should render App', () => {
+    // before
+    const { asFragment } = render(<App />);
 
-    expect(screen.getByRole('heading', { name: 'x-draft' })).toBeInTheDocument();
+    // result
+    expect(asFragment()).toMatchSnapshot();
   });
+});
 
-  it('toggles the theme attribute when the button is clicked', async () => {
+describe('App behaviors', () => {
+  it('should toggle the theme attribute when the button is clicked', async () => {
+    // mock
     const user = userEvent.setup();
-    render(<App />);
 
+    // before
+    render(<App />);
     const initialTheme = document.documentElement.dataset.theme;
     const button = screen.getByRole('button', { name: /switch to/i });
 
+    // action
     await user.click(button);
 
+    // result
     expect(document.documentElement.dataset.theme).not.toBe(initialTheme);
   });
 });

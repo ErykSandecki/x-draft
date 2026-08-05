@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`App snapshots > should render App 1`] = `
+<DocumentFragment>
+  <main
+    class="_App_e99302"
+  >
+    <h1>
+      x-draft
+    </h1>
+    <p
+      style="color: var(--color-neutral-2);"
+    >
+      Vite + React + TypeScript
+    </p>
+    <button
+      class="_ThemeToggle_e99302"
+      type="button"
+    >
+      Switch to light theme
+    </button>
+  </main>
+</DocumentFragment>
+`;
