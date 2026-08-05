@@ -22,6 +22,8 @@ describe('App behaviors', () => {
     // before
     render(<App />);
     const initialTheme = document.documentElement.dataset.theme;
+
+    // find
     const button = screen.getByRole('button', { name: /switch to/i });
 
     // action
