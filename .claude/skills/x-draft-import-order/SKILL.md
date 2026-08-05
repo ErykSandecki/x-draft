@@ -46,8 +46,11 @@ UI, same as a local component import).
 This applies to **relative** paths too, not just the bare alias — a nested feature folder's own
 `./types.ts` or `./utils/*` still gets `// types` / `// utils`, exactly like the top-level alias
 would (see `renderRoute.tsx` importing `../types` under `// types`, or `Routing.tsx` importing
-`./utils/renderRoute` under `// utils`). Only fall back to `// others` when the relative file's name
-doesn't match one of these category labels at all (`./classNames`, `./constants`, `./enums`).
+`./utils/renderRoute` under `// utils`). `./enums` also gets `// types` — confirmed in x-design's
+`types/components/types.ts`, which imports `AlignmentHorizontal` from `./enums` under `// types`
+(see [[x-draft-module-structure]] for why `enums.ts` is its own file, separate from `types.ts` and
+`constants.ts`). Only fall back to `// others` when the relative file's name doesn't match one of
+these category labels at all (`./classNames`, `./constants`).
 
 Groups sort alphabetically by their own label, e.g.:
 `assets < components < core < hooks < others < store < styles < types < utils`.
@@ -56,8 +59,7 @@ Groups sort alphabetically by their own label, e.g.:
 
 Catch-all — **not** a dumping ground of last resort, it's a real, frequently-used category:
 
-- Local co-located files with no bigger category: `./classNames`, `./constants`, `./enums`,
-  `../constants`.
+- Local co-located files with no bigger category: `./classNames`, `./constants`, `../constants`.
 - The **global `constant/*` alias** — always goes here, never under a `// constant` header, e.g.
   `import { THEME } from 'constant/localStorageKeys';` (`ContextProvider.tsx`) and
   `import { cssVariables } from 'constant/cssVariables';` (`getCssVariable.ts`).

@@ -15,7 +15,13 @@ mixed. 13+ folders (`core/ReduxHookForm`, `hooks/useTheme`, `store/pageBuilder`,
 - **`types.ts`** — type/interface declarations only. No `export const`, no functions. May import
   from `./constants` (e.g. `type TLanguage = (typeof AVAILABLE_LANGUAGES)[number]`) — that
   direction is fine, just never the reverse (`constants.ts` must not import from `./types`).
-- **`constants.ts`** — runtime constant values (strings, numbers, enums, maps). No types/interfaces.
+- **`enums.ts`** — `enum` declarations, kept in their own file, separate from both `types.ts` and
+  `constants.ts` (verified: `store/pageBuilder/`, `shared/UI/`, `types/` all keep `enums.ts`
+  alongside a distinct `constants.ts`). Members are camelCase and match their string value exactly,
+  e.g. `northEast = 'northEast'` (`store/pageBuilder/enums.ts`'s `AnchorResize`/`AnchorRotate`) —
+  never PascalCase members. `types.ts` and `constants.ts` may both import from `./enums`.
+- **`constants.ts`** — runtime constant values (strings, numbers, maps) built from those enums, e.g.
+  `DEFAULT_TOOL = ToolName.select`. No types/interfaces, no enum declarations themselves.
 - **`utils/`** — one file per utility function, named after the function it exports
   (`utils/getRouteByName.ts` exports `getRouteByName`), not a single grab-bag `utils.ts`.
 - **`hooks/`**, **`components/`** — same idea: subfolders once there's more than a trivial single
@@ -55,7 +61,9 @@ translations/
 
 ## Related
 
-[[x-draft-import-order]] — how imports from these files are grouped and ordered (`./types` gets its
-own `// types` header even via a relative path; `./constants`/`./utils/*` fall under `// others`
-unless the alias is one of the recognized top-level categories).
+[[x-draft-import-order]] — how imports from these files are grouped and ordered (`./types` **and**
+`./enums` both get the `// types` header even via a relative path — confirmed in x-design's
+`types/components/types.ts` importing `AlignmentHorizontal` from `./enums` under `// types`;
+`./constants`/`./utils/*` fall under `// others` unless the alias is one of the recognized top-level
+categories).
 [[x-draft-test-conventions]] — how tests for these utils/hooks are structured.
