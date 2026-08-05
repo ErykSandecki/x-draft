@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write ."
   },
@@ -20,6 +22,7 @@
     "react-router": "^8.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.3",
@@ -27,10 +30,14 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.9.0",
     "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
     "sass": "^1.102.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.66.0",
     "vite": "^8.2.0",
     "vite-plugin-svgr": "^5.2.0",
     "vitest": "^4.1.10"

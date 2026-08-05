@@ -8,15 +8,15 @@ await initI18n(DEFAULT_LANGUAGE);
 
 // jsdom doesn't implement matchMedia
 Object.defineProperty(window, 'matchMedia', {
-  writable: true,
   value: (query: string) => ({
+    addEventListener: (): void => {},
+    addListener: (): void => {},
+    dispatchEvent: (): boolean => false,
     matches: false,
     media: query,
     onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false,
+    removeEventListener: (): void => {},
+    removeListener: (): void => {},
   }),
+  writable: true,
 });

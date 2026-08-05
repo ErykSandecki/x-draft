@@ -10,8 +10,8 @@ export default defineConfig({
     react(),
     svgr({
       svgrOptions: {
-        titleProp: true,
         ref: true,
+        titleProp: true,
       },
     }),
   ],
@@ -21,8 +21,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: ['./src/test/setup.ts'],
     resolveSnapshotPath: (testPath, snapExtension) =>
       path.join(path.dirname(testPath), 'snapshots', `${path.basename(testPath)}${snapExtension}`),
+    setupFiles: ['./src/test/setup.ts'],
   },
 });

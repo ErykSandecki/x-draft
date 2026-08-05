@@ -8,9 +8,15 @@ import { TGuard } from '../../types';
 
 describe('ProtectedRoute behaviors', () => {
   it('should render children when all guards pass', () => {
+    // mock
+    const guard: TGuard = {
+      guardCheck: () => true,
+      renderFallback: () => <p>Fallback</p>,
+    };
+
     // before
     render(
-      <ProtectedRoute guards={[{ guardCheck: () => true, renderFallback: () => <p>Fallback</p> }]}>
+      <ProtectedRoute guards={[guard]}>
         <p>Protected content</p>
       </ProtectedRoute>,
     );

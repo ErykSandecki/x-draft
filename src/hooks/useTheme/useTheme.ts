@@ -1,10 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 // others
 import { STORAGE_KEY } from './constants';
 
 // types
 import { Theme } from 'types/theme';
+
+export type TUseTheme = {
+  setTheme: Dispatch<SetStateAction<Theme>>;
+  theme: Theme;
+  toggleTheme: () => void;
+};
 
 const getInitialTheme = (): Theme => {
   const stored = localStorage.getItem(STORAGE_KEY);
@@ -16,7 +22,7 @@ const getInitialTheme = (): Theme => {
   return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 };
 
-export const useTheme = () => {
+export const useTheme = (): TUseTheme => {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   useEffect(() => {
@@ -28,5 +34,5 @@ export const useTheme = () => {
     setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
   }, []);
 
-  return { theme, setTheme, toggleTheme };
+  return { setTheme, theme, toggleTheme };
 };
