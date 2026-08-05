@@ -14,7 +14,7 @@ export type TAppRouteData = {
   Component: TComponent;
   guards?: Array<TGuard>;
   name: RouteName;
-  title: string;
+  titleKey: string;
 };
 
 export type TAppRoutesData = Array<TAppRouteData>;

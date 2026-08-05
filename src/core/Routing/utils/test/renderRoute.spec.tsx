@@ -13,7 +13,7 @@ describe('renderRoute', () => {
     const routeData: TAppRouteData = {
       Component: () => null,
       name: RouteName.home,
-      title: 'Home',
+      titleKey: 'routing.title.home',
     };
 
     // before

@@ -4,11 +4,18 @@ import { StrictMode } from 'react';
 // components
 import App from 'components/App/App';
 
+// others
+import { initI18n } from 'translations';
+
 // styles
 import 'styles/index.scss';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+const container = document.getElementById('root')!;
+
+initI18n().then(() => {
+  createRoot(container).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+});

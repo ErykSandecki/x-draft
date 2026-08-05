@@ -9,6 +9,6 @@ export const APP_ROUTES_DATA: TAppRoutesData = [
   {
     Component: HomePage,
     name: RouteName.home,
-    title: 'Home',
+    titleKey: 'routing.title.home',
   },
 ];

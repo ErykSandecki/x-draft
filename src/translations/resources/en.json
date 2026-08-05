@@ -1,0 +1,10 @@
+{
+  "app.themeToggle.switchToDark": "Switch to dark theme",
+  "app.themeToggle.switchToLight": "Switch to light theme",
+  "home.description": "A minimal starter template.",
+  "home.subtitle": "Vite + React + TypeScript",
+  "notFound.description": "Page not found.",
+  "notFound.title": "404",
+  "routing.title.home": "Home",
+  "routing.title.notFound": "404"
+}

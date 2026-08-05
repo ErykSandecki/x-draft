@@ -59,6 +59,11 @@ exports[`HomePage snapshots > should render HomePage 1`] = `
     >
       Vite + React + TypeScript
     </p>
+    <p
+      style="color: var(--color-neutral-2);"
+    >
+      A minimal starter template.
+    </p>
   </main>
 </DocumentFragment>
 `;

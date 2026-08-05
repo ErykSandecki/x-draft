@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // core
 import { Routing } from 'core';
@@ -11,11 +12,12 @@ import styles from './App.module.scss';
 
 const App: FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <div className={styles.App}>
       <button type="button" className={styles.ThemeToggle} onClick={toggleTheme}>
-        Switch to {theme === 'dark' ? 'light' : 'dark'} theme
+        {theme === 'dark' ? t('app.themeToggle.switchToLight') : t('app.themeToggle.switchToDark')}
       </button>
       <Routing />
     </div>

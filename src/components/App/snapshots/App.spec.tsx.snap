@@ -68,6 +68,11 @@ exports[`App snapshots > should render App 1`] = `
       >
         Vite + React + TypeScript
       </p>
+      <p
+        style="color: var(--color-neutral-2);"
+      >
+        A minimal starter template.
+      </p>
     </main>
   </div>
 </DocumentFragment>

@@ -43,6 +43,12 @@ Match the top-level `src/` alias folders as they get used: `assets`, `components
 actually imported. Anything from `shared/` or `pages/` is filed under `// components` (they render
 UI, same as a local component import).
 
+This applies to **relative** paths too, not just the bare alias — a nested feature folder's own
+`./types.ts` or `./utils/*` still gets `// types` / `// utils`, exactly like the top-level alias
+would (see `renderRoute.tsx` importing `../types` under `// types`, or `Routing.tsx` importing
+`./utils/renderRoute` under `// utils`). Only fall back to `// others` when the relative file's name
+doesn't match one of these category labels at all (`./classNames`, `./constants`, `./enums`).
+
 Groups sort alphabetically by their own label, e.g.:
 `assets < components < core < hooks < others < store < styles < types < utils`.
 

@@ -16,6 +16,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "resolveJsonModule": true,
     "paths": {
       "assets/*": ["./src/assets/*"],
       "components/*": ["./src/components/*"],
@@ -35,6 +36,8 @@
       "styles/*": ["./src/styles/*"],
       "test": ["./src/test"],
       "test/*": ["./src/test/*"],
+      "translations": ["./src/translations"],
+      "translations/*": ["./src/translations/*"],
       "types": ["./src/types"],
       "types/*": ["./src/types/*"],
       "utils": ["./src/utils"],

@@ -1,0 +1,10 @@
+{
+  "app.themeToggle.switchToDark": "Przełącz na ciemny motyw",
+  "app.themeToggle.switchToLight": "Przełącz na jasny motyw",
+  "home.description": "Minimalny szablon startowy.",
+  "home.subtitle": "Vite + React + TypeScript",
+  "notFound.description": "Nie znaleziono strony.",
+  "notFound.title": "404",
+  "routing.title.home": "Strona główna",
+  "routing.title.notFound": "404"
+}
