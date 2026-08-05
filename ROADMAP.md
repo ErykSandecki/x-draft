@@ -32,7 +32,11 @@ Zaznaczamy checkboxy w miarę postępu. Każdy etap = osobna, malutka porcja pra
 - [x] resize handling (dopasowanie canvasu do okna + `devicePixelRatio`) —
       `Canvas/hooks/useCanvasResize.ts`: `ResizeObserver` na elemencie canvasu +
       `canvas.width/height` liczone z `devicePixelRatio`, `gl.viewport(...)` po
-      każdym resize żeby framebuffer WebGL nadążał za nowym rozmiarem
+      każdym resize żeby framebuffer WebGL nadążał za nowym rozmiarem.
+      Przeliczanie jest debounce'owane (`lodash/debounce`, `RESIZE_DEBOUNCE_MS`
+      z `Canvas/constants.ts`) — bez tego `canvas.width/height` resetowało cały
+      bitmap/kontekst WebGL na każdy pojedynczy event z `ResizeObserver`
+      (a tych lecą dziesiątki podczas przeciągania okna), stąd migotanie
 - [x] render loop (`requestAnimationFrame`) rysujący na razie puste tło —
       `Canvas/hooks/useCanvasRenderLoop.ts`: kontekst `webgl2`
       (`WEBGL_CONTEXT_ID`/`WEBGL_CONTEXT_ATTRIBUTES` z `Canvas/constants.ts`,

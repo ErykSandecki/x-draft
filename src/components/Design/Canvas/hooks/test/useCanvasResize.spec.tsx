@@ -4,6 +4,9 @@ import { RefObject } from 'react';
 // hooks
 import { useCanvasResize } from '../useCanvasResize';
 
+// others
+import { RESIZE_DEBOUNCE_MS } from '../../constants';
+
 let latestResizeCallback: ResizeObserverCallback | undefined;
 
 class ResizeObserverMock {
@@ -33,6 +36,7 @@ describe('useCanvasResize behaviors', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should size the canvas using devicePixelRatio', () => {
@@ -59,6 +63,7 @@ describe('useCanvasResize behaviors', () => {
 
   it('should resize again when the observed element resizes', () => {
     // mock
+    vi.useFakeTimers();
     vi.stubGlobal('devicePixelRatio', 1);
 
     const canvas = document.createElement('canvas');
@@ -73,6 +78,40 @@ describe('useCanvasResize behaviors', () => {
     // action
     rectSpy.mockReturnValue({ height: 80, width: 200 } as DOMRect);
     latestResizeCallback?.([], {} as ResizeObserver);
+
+    // wait
+    vi.advanceTimersByTime(RESIZE_DEBOUNCE_MS);
+
+    // result
+    expect(canvas.width).toBe(200);
+    expect(canvas.height).toBe(80);
+  });
+
+  it('should debounce rapid successive resizes into a single recalculation', () => {
+    // mock
+    vi.useFakeTimers();
+    vi.stubGlobal('devicePixelRatio', 1);
+
+    const canvas = document.createElement('canvas');
+    const canvasRef: RefObject<HTMLCanvasElement | null> = { current: canvas };
+
+    // spy
+    const rectSpy = vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({ height: 50, width: 100 } as DOMRect);
+
+    // before
+    renderHook(() => useCanvasResize(canvasRef));
+
+    // action
+    rectSpy.mockReturnValue({ height: 60, width: 120 } as DOMRect);
+    latestResizeCallback?.([], {} as ResizeObserver);
+    rectSpy.mockReturnValue({ height: 80, width: 200 } as DOMRect);
+    latestResizeCallback?.([], {} as ResizeObserver);
+
+    // result
+    expect(canvas.width).toBe(100);
+
+    // wait
+    vi.advanceTimersByTime(RESIZE_DEBOUNCE_MS);
 
     // result
     expect(canvas.width).toBe(200);
