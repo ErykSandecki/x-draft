@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp /tmp/routecheck.mjs /Users/eryksandecki/Desktop/Work/Figma/x-draft/routecheck.mjs)",
+      "Bash(node routecheck.mjs)"
+    ]
+  }
+}

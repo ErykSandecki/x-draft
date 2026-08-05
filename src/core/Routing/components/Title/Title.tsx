@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { matchPath, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 // others
@@ -12,7 +12,7 @@ export const Title: FC = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const route = APP_ROUTES_DATA.find(({ name }) => ROUTES[name] === pathname);
+    const route = APP_ROUTES_DATA.find(({ name }) => matchPath(ROUTES[name], pathname));
     const title = t(route ? route.titleKey : 'routing.title.notFound');
 
     document.title = `${title} - ${APP_NAME}`;

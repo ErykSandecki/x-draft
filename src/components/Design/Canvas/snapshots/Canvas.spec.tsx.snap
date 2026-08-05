@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Canvas snapshots > should render Canvas 1`] = `
+<DocumentFragment>
+  <canvas
+    class="_Canvas_db4984"
+  />
+</DocumentFragment>
+`;

@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DesignPage snapshots > should render DesignPage 1`] = `
+<DocumentFragment>
+  <main
+    class="_DesignPage_22f71e"
+  >
+    <canvas
+      class="_Canvas_db4984"
+    />
+    <div
+      class="_Toolbar_3cbe0a"
+    />
+  </main>
+</DocumentFragment>
+`;

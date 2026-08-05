@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Toolbar snapshots > should render Toolbar 1`] = `
+<DocumentFragment>
+  <div
+    class="_Toolbar_3cbe0a"
+  />
+</DocumentFragment>
+`;

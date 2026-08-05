@@ -5,6 +5,7 @@
   "home.subtitle": "Vite + React + TypeScript",
   "notFound.description": "Page not found.",
   "notFound.title": "404",
+  "routing.title.design": "Design",
   "routing.title.home": "Home",
   "routing.title.notFound": "404"
 }

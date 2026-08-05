@@ -1,0 +1,17 @@
+import { FC } from 'react';
+
+// components
+import Canvas from 'components/Design/Canvas/Canvas';
+import Toolbar from 'components/Design/Toolbar/Toolbar';
+
+// styles
+import styles from './DesignPage.module.scss';
+
+const DesignPage: FC = () => (
+  <main className={styles.DesignPage}>
+    <Canvas />
+    <Toolbar />
+  </main>
+);
+
+export default DesignPage;
