@@ -18,8 +18,10 @@ describe('Icon behaviors', () => {
     // before
     const { container } = render(<Icon name="Close" size={24} />);
 
-    // result
+    // find
     const svg = container.querySelector('svg');
+
+    // result
     expect(svg).toHaveAttribute('width', '24');
     expect(svg).toHaveAttribute('height', '24');
   });
