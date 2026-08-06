@@ -17,20 +17,38 @@ type TGlCanvasRef = {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   clear: ReturnType<typeof vi.fn>;
   clearColor: ReturnType<typeof vi.fn>;
+  colorMask: ReturnType<typeof vi.fn>;
 };
 
 const createGlCanvasRef = (): TGlCanvasRef => {
   const canvas = document.createElement('canvas');
   const clearColor = vi.fn();
   const clear = vi.fn();
+  const colorMask = vi.fn();
 
   vi.spyOn(canvas, 'getContext').mockReturnValue({
+    BLEND: 3042,
     COLOR_BUFFER_BIT: 16384,
+    ONE_MINUS_SRC_ALPHA: 771,
+    SRC_ALPHA: 770,
+    attachShader: vi.fn(),
+    blendFunc: vi.fn(),
     clear,
     clearColor,
+    colorMask,
+    compileShader: vi.fn(),
+    createBuffer: vi.fn(() => ({})),
+    createProgram: vi.fn(() => ({})),
+    createShader: vi.fn(() => ({})),
+    deleteBuffer: vi.fn(),
+    enable: vi.fn(),
+    getProgramParameter: vi.fn(() => true),
+    getShaderParameter: vi.fn(() => true),
+    linkProgram: vi.fn(),
+    shaderSource: vi.fn(),
   } as unknown as WebGL2RenderingContext);
 
-  return { canvasRef: { current: canvas }, clear, clearColor };
+  return { canvasRef: { current: canvas }, clear, clearColor, colorMask };
 };
 
 describe('useCanvasRenderLoop behaviors', () => {
@@ -69,6 +87,23 @@ describe('useCanvasRenderLoop behaviors', () => {
     // result
     expect(clearColor).toHaveBeenCalledTimes(1);
     expect(clear).toHaveBeenCalledTimes(1);
+  });
+
+  it('should re-enable alpha writes for the background clear, then lock them for foreground drawing', () => {
+    // mock
+    const { canvasRef, colorMask } = createGlCanvasRef();
+
+    // before
+    renderHook(() => useCanvasRenderLoop(canvasRef));
+
+    // action
+    rafCallback?.(0);
+
+    // result
+    expect(colorMask.mock.calls).toEqual([
+      [true, true, true, true],
+      [true, true, true, false],
+    ]);
   });
 
   it('should schedule the next frame after drawing', () => {

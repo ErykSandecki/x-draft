@@ -41,4 +41,26 @@ describe('resizeCanvas', () => {
     // result
     expect(viewport).toHaveBeenCalledWith(0, 0, 100, 50);
   });
+
+  it('should do nothing when the computed size did not change', () => {
+    // mock
+    vi.stubGlobal('devicePixelRatio', 1);
+
+    const canvas = document.createElement('canvas');
+    const viewport = vi.fn();
+
+    // spy
+    vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({ height: 50, width: 100 } as DOMRect);
+    vi.spyOn(canvas, 'getContext').mockReturnValue({ viewport } as unknown as WebGL2RenderingContext);
+
+    // before
+    resizeCanvas(canvas);
+    viewport.mockClear();
+
+    // action
+    resizeCanvas(canvas);
+
+    // result
+    expect(viewport).not.toHaveBeenCalled();
+  });
 });

@@ -13,6 +13,7 @@ export type TBaseNode = {
 };
 
 export type TFrameNode = TBaseNode & {
+  fill: string;
   type: NodeType.frame;
 };
 

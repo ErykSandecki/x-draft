@@ -12,7 +12,8 @@
       "Edit(/.claude/skills/x-draft-function-style/**)",
       "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-scss-bem)",
       "Edit(/.claude/skills/x-draft-scss-bem/**)",
-      "Edit(/.claude/skills/x-draft-test-conventions/**)"
+      "Edit(/.claude/skills/x-draft-test-conventions/**)",
+      "Bash(grep -rn '\\\\$--xd-blue-1--light:\\\\|\\\\$--xd-blue-1--dark:\\\\|\\\\$--xd-neutral-1--light:\\\\|\\\\$--xd-neutral-1--dark:' src/styles)"
     ],
     "additionalDirectories": [
       "/Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills"

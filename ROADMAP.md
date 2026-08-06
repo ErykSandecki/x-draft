@@ -88,12 +88,28 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
 
 ## Etap 3 — Narzędzie Frame
 
-- [ ] aktywacja narzędzia „Frame" z toolbaru
-- [ ] interakcja: click-drag na canvasie tworzy `FrameNode` (rysowanie
-      prostokąta w trakcie przeciągania)
-- [ ] po puszczeniu przycisku myszy: frame trafia do store'u, narzędzie wraca
-      do „Select"
-- [ ] renderowanie frame'a na canvasie (obrys + nazwa nad frame'em, jak w Figmie)
+- [x] aktywacja narzędzia „Frame" z toolbaru — już działało od Etapu 1
+      (`activeTool` w Redux), `useFrameTool` po prostu nasłuchuje na nie
+- [x] interakcja: click-drag na canvasie tworzy frame — `Canvas/hooks/useFrameTool.ts`,
+      natywne listenery `pointerdown/move/up` na elemencie canvasu (nie JSX
+      props, spójnie z resztą hooków canvasu), `setPointerCapture` żeby drag
+      działał nawet gdy kursor wyjdzie poza canvas. Draft (w trakcie
+      przeciągania) trzymany w `useRef` w `Canvas.tsx`, **nie** w Reduxie —
+      render loop czyta go bezpośrednio co klatkę, żeby przeciąganie nie
+      dispatchowało do store'u przy każdym pixelu
+- [x] po puszczeniu przycisku myszy: `addNode` (tylko jeśli przeciągnięty
+      obszar ≥ `MIN_FRAME_SIZE`, żeby zwykły klik nie tworzył 0×0 frame'a) +
+      `setActiveTool(default)` — narzędzie zawsze wraca do Select po puszczeniu,
+      niezależnie czy coś powstało
+- [x] renderowanie frame'a na canvasie — `Canvas/utils/{createShader,createProgram,drawRect}.ts`:
+      pierwszy realny WebGL rendering (dotąd był tylko `gl.clear`), prosty
+      shader (`VERTEX_SHADER_SOURCE`/`FRAGMENT_SHADER_SOURCE` w `constants.ts`)
+      rysujący wypełnienie (2 trójkąty) + obrys (`LINE_LOOP`). Każdy nowy frame
+      dostaje losowy kolor wypełnienia (`getRandomColor.ts`) — na razie zamiast
+      realnego systemu fill/stylingu. **Nazwa nad frame'em pominięta na razie**
+      — tekst w WebGL to osobny, spory temat (atlas glifów/SDF), wraca jako
+      osobny krok przy Etapie 6/7, kiedy i tak trzeba będzie rozwiązać
+      renderowanie tekstu (Text tool + edycja)
 
 ## Etap 4 — Pan & zoom
 

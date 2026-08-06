@@ -6,6 +6,7 @@ import { NodeType, ToolName } from 'types/design/enums';
 import { TSceneNode } from 'types/design/types';
 
 const frameNodePayload: Omit<TSceneNode, 'id'> = {
+  fill: '#ff0000',
   height: 100,
   name: 'Frame 1',
   parentId: null,

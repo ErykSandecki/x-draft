@@ -3,15 +3,21 @@ import { FC, useRef } from 'react';
 // hooks
 import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop';
 import { useCanvasResize } from './hooks/useCanvasResize';
+import { useFrameTool } from './hooks/useFrameTool';
 
 // styles
 import styles from './canvas.module.scss';
 
+// types
+import { TDraftRect } from './types';
+
 const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const draftRef = useRef<TDraftRect | null>(null);
 
   useCanvasResize(canvasRef);
-  useCanvasRenderLoop(canvasRef);
+  useFrameTool(canvasRef, draftRef);
+  useCanvasRenderLoop(canvasRef, draftRef);
 
   return (
     <div className={styles.Canvas}>
