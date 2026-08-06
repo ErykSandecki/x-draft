@@ -72,11 +72,19 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
 
 ## Etap 2 — Model danych sceny
 
-- [ ] `SceneNode` jako discriminated union (`type: 'frame' | 'rectangle' | ...`)
-      zamiast hierarchii klas czy komponentów React
-- [ ] store sceny (lista/drzewo node'ów + relacje parent/children po `id`)
-- [ ] viewport state: pan (x, y) + zoom (scale) jako jedno źródło prawdy dla
-      transformacji world → screen
+- [x] `TSceneNode` jako discriminated union (`types/design/types.ts`) —
+      `TBaseNode` (id/name/x/y/width/height/rotation/parentId) + `TFrameNode`
+      (`type: NodeType.frame`) jako jedyny na razie wariant; `TSceneNode = TFrameNode`
+      — reszta (rectangle/ellipse/text/vector) dojdzie w Etapie 6, kiedy realnie
+      powstaną te narzędzia, nie wcześniej
+- [x] store sceny — `store/design`: `nodes: Record<string, TSceneNode>` +
+      `rootOrder: string[]` (kolejność/z-index, nie polegamy na kolejności
+      kluczy obiektu). Reducery: `addNode` (id generowany przez `nanoid()` z
+      `@reduxjs/toolkit` w `prepare`, nie w reducerze — reducer zostaje czystą
+      funkcją), `updateNode` (częściowy patch po id, no-op na nieznane id)
+- [x] viewport state: `TViewport { x, y, zoom }` w `store/design`, reducer
+      `setViewport` — jedno źródło prawdy pod transformację world → screen,
+      realne sterowanie pan/zoom (scroll/pinch) to Etap 4
 
 ## Etap 3 — Narzędzie Frame
 
