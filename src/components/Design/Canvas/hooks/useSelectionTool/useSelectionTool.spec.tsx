@@ -276,6 +276,73 @@ describe('useSelectionTool behaviors', () => {
     expect(store.getState().design.selectedIds).toEqual([]);
   });
 
+  it('should select an unselected node sitting in the gap instead of deselecting everything', () => {
+    // mock
+    const idA = addFrameNode(1400, 700, 20);
+    const idC = addFrameNode(1430, 700, 20);
+    const idB = addFrameNode(1460, 700, 20);
+
+    store.dispatch(setSelection([idA, idB]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action - click directly on the unselected node C, which sits inside A+B's shared bounds
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 1440, 710));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 1440, 710));
+
+    // result
+    expect(store.getState().design.selectedIds).toEqual([idC]);
+  });
+
+  it('should not replace the selection while the button is still pressed on an unselected node in the gap', () => {
+    // mock
+    const idA = addFrameNode(1500, 700, 20);
+    addFrameNode(1530, 700, 20);
+    const idB = addFrameNode(1560, 700, 20);
+
+    store.dispatch(setSelection([idA, idB]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action - press down on the unselected node in the gap, but do not release
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 1540, 710));
+
+    // result - selection must stay untouched until pointerup decides
+    expect(store.getState().design.selectedIds).toEqual([idA, idB]);
+  });
+
+  it('should move the whole group together when dragging from an unselected node in the gap', () => {
+    // mock
+    const idA = addFrameNode(1600, 700, 20);
+    const idC = addFrameNode(1630, 700, 20);
+    const idB = addFrameNode(1660, 700, 20);
+
+    store.dispatch(setSelection([idA, idB]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 1640, 710));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 1650, 720));
+
+    // result - A and B (the actual selection) move together; C (the hit node) is untouched and unselected
+    const { nodes, selectedIds } = store.getState().design;
+
+    expect(selectedIds).toEqual([idA, idB]);
+    expect(nodes[idA]).toMatchObject({ x: 1610, y: 710 });
+    expect(nodes[idB]).toMatchObject({ x: 1670, y: 710 });
+    expect(nodes[idC]).toMatchObject({ x: 1630, y: 700 });
+  });
+
   it('should deselect everything when clicking outside the shared selection bounds', () => {
     // mock
     const idA = addFrameNode(1300, 700, 20);

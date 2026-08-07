@@ -28,12 +28,13 @@ export const handlePointerDown = (
     const point = screenToWorld(getPointerPosition(canvas, event), selectViewport(state));
     const hit = getNodeAtPoint(point, selectOrderedNodes(state));
     const currentSelection = selectSelectedIds(state);
+    const selectedNodes = selectSelectedNodes(state);
 
     if (hit && event.shiftKey) {
       dispatch(setSelection(toggleSelection(currentSelection, hit.id)));
     } else if (hit) {
-      armHitDrag(canvas, event, dispatch, armDrag, hit, currentSelection, point);
-    } else if (!event.shiftKey && isPointInGroupBounds(point, selectSelectedNodes(state))) {
+      armHitDrag(canvas, event, dispatch, armDrag, hit, currentSelection, selectedNodes, point);
+    } else if (!event.shiftKey && isPointInGroupBounds(point, selectedNodes)) {
       armGroupBoundsDrag(canvas, event, armDrag, currentSelection, point);
     } else if (!event.shiftKey) {
       dispatch(setSelection([]));
