@@ -63,6 +63,53 @@ translations/
     pl.json
 ```
 
+## A hook with its own utils gets its own folder — utils never sit one level too high
+
+`utils/` at a feature root (`Canvas/utils/`, `Routing/utils/`) is for helpers genuinely shared
+across that feature's hooks/components. A helper used by exactly one hook does not belong there —
+it belongs inside that hook's own folder, promoting the hook from a flat `hooks/useX.ts` file to
+`hooks/useX/useX.ts` with a sibling `utils/`. Confirmed against x-design's
+`hooks/useResizeHandler/` (`useResizeHandler.tsx` + `utils/handleMouseDown.ts`) and
+`hooks/useKeyboardHandler/` (`useKeyboardHandler.tsx` + `types.ts` + `utils/handleLockBrowserEvents.ts`
++ `utils/triggerActions.ts`).
+
+```
+hooks/
+  useCanvasRenderLoop/
+    useCanvasRenderLoop.ts
+    useCanvasRenderLoop.spec.tsx
+    utils/
+      drawFrame.ts
+      startRenderLoop.ts
+      createProgram.ts
+      ...
+      test/
+        drawFrame.spec.ts
+        startRenderLoop.spec.ts
+        ...
+  useCanvasResize/
+    useCanvasResize.ts
+    useCanvasResize.spec.tsx
+    utils/
+      resizeCanvas.ts
+      test/resizeCanvas.spec.ts
+```
+
+Two things change once a hook gets this treatment:
+
+- The hook's own spec **co-locates directly** beside it (`useX.spec.tsx`, no nested `test/`) — same
+  as a component. The nested-`test/` rule from [[x-draft-test-conventions]] still applies, but only
+  one level down, to the hook's own `utils/` (`utils/test/<functionName>.spec.ts`).
+- If a util is only ever reached through another util in the same cluster (e.g. `createProgram` →
+  `createShader`, `drawFrame` → `drawBackground`/`drawCornerHandles`/`drawRect`), that whole chain
+  moves together — check actual usage (`grep -rl` for the export name) rather than assuming one
+  util's flatness; a single hook can own a dozen `utils/` files if nothing outside that hook's tree
+  imports them.
+
+Before adding a new util under a shared feature-root `utils/`, check whether it's actually used from
+more than one hook/component in that feature — if not, it belongs in the owning hook's own folder,
+not the shared one.
+
 ## Related
 
 [[x-draft-import-order]] — how imports from these files are grouped and ordered (`./types` **and**

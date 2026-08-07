@@ -1,12 +1,12 @@
 // others
-import { DRAFT_FRAME_STROKE } from '../constants';
+import { DRAFT_FRAME_STROKE } from '../../../constants';
 
 // store
 import { selectOrderedNodes } from 'store/design/selectors';
 import { store } from 'store';
 
 // types
-import { TDraftRect } from '../types';
+import { TDraftRect } from '../../../types';
 
 // utils
 import { drawBackground } from './drawBackground';

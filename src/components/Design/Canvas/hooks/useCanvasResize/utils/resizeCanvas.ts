@@ -1,5 +1,5 @@
 // others
-import { WEBGL_CONTEXT_ATTRIBUTES, WEBGL_CONTEXT_ID } from '../constants';
+import { WEBGL_CONTEXT_ATTRIBUTES, WEBGL_CONTEXT_ID } from '../../../constants';
 
 export const resizeCanvas = (canvas: HTMLCanvasElement): void => {
   const { width, height } = canvas.getBoundingClientRect();

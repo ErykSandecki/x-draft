@@ -1,9 +1,9 @@
 import { FC, useRef } from 'react';
 
 // hooks
-import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop';
-import { useCanvasResize } from './hooks/useCanvasResize';
-import { useFrameTool } from './hooks/useFrameTool';
+import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRenderLoop';
+import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
+import { useFrameTool } from './hooks/useFrameTool/useFrameTool';
 
 // styles
 import styles from './canvas.module.scss';

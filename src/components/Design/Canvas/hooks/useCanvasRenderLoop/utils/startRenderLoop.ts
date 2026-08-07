@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 // types
-import { TDraftRect } from '../types';
+import { TDraftRect } from '../../../types';
 
 // utils
 import { drawFrame } from './drawFrame';

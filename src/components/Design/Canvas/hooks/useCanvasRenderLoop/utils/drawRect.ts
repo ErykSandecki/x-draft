@@ -1,5 +1,5 @@
 // types
-import { TDraftRect } from '../types';
+import { TDraftRect } from '../../../types';
 
 // utils
 import { hexToRgbaFloat } from './hexToRgbaFloat';
@@ -37,11 +37,7 @@ export const drawRect = (
   gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
   if (rect.fill) {
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([x1, y1, x2, y2, x3, y3, x1, y1, x3, y3, x4, y4]),
-      gl.STATIC_DRAW,
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([x1, y1, x2, y2, x3, y3, x1, y1, x3, y3, x4, y4]), gl.STATIC_DRAW);
     gl.uniform4fv(colorLocation, hexToRgbaFloat(rect.fill, rect.fillAlpha));
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }

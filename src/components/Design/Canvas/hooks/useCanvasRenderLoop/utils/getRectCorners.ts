@@ -1,5 +1,5 @@
 // types
-import { TDraftRect } from '../types';
+import { TDraftRect } from '../../../types';
 
 export type TPoint = {
   x: number;

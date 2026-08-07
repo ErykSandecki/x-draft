@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { RefObject } from 'react';
 
 // hooks
-import { useCanvasRenderLoop } from '../useCanvasRenderLoop';
+import { useCanvasRenderLoop } from './useCanvasRenderLoop';
 
 let rafCallback: FrameRequestCallback | undefined;
 

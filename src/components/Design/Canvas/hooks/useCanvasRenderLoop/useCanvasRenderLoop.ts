@@ -1,14 +1,19 @@
 import { RefObject, useEffect } from 'react';
 
 // others
-import { FRAGMENT_SHADER_SOURCE, VERTEX_SHADER_SOURCE, WEBGL_CONTEXT_ATTRIBUTES, WEBGL_CONTEXT_ID } from '../constants';
+import {
+  FRAGMENT_SHADER_SOURCE,
+  VERTEX_SHADER_SOURCE,
+  WEBGL_CONTEXT_ATTRIBUTES,
+  WEBGL_CONTEXT_ID,
+} from '../../constants';
 
 // types
-import { TDraftRect } from '../types';
+import { TDraftRect } from '../../types';
 
 // utils
-import { createProgram } from '../utils/createProgram';
-import { startRenderLoop } from '../utils/startRenderLoop';
+import { createProgram } from './utils/createProgram';
+import { startRenderLoop } from './utils/startRenderLoop';
 
 export const useCanvasRenderLoop = (
   canvasRef: RefObject<HTMLCanvasElement | null>,

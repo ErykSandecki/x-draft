@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { RefObject } from 'react';
 
 // hooks
-import { useCanvasResize } from '../useCanvasResize';
+import { useCanvasResize } from './useCanvasResize';
 
 // others
 import { RESIZE_DEBOUNCE_MS } from '../../constants';

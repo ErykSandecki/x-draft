@@ -1,5 +1,5 @@
 // others
-import { BACKGROUND_ALPHA, BACKGROUND_COLOR } from '../constants';
+import { BACKGROUND_ALPHA, BACKGROUND_COLOR } from '../../../constants';
 
 // utils
 import { hexToRgbFloat } from './hexToRgbFloat';

@@ -4,7 +4,7 @@ import { renderHook } from '@testing-library/react';
 import { RefObject } from 'react';
 
 // hooks
-import { useFrameTool } from '../useFrameTool';
+import { useFrameTool } from './useFrameTool';
 
 // store
 import designReducer, { setActiveTool } from 'store/design/designSlice';

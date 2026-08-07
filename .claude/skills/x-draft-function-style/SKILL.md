@@ -76,8 +76,10 @@ Passing the value explicitly as a parameter (rather than reaching for it through
 the helper readable on its own and keeps the effect body itself short — the effect just wires
 lifecycle (when to call it, when to observe/clean up), the named function holds the actual logic.
 
-See `components/Design/Canvas/hooks/useCanvasResize.ts` for both rules applied together: the
-positive `if (canvas)` guard, and `resizeCanvas` extracted to module scope above the hook.
+See `components/Design/Canvas/hooks/useCanvasResize/useCanvasResize.ts` for both rules applied
+together: the positive `if (canvas)` guard, and `resizeCanvas` extracted to its own
+`utils/resizeCanvas.ts` (see [[x-draft-module-structure]] for when a hook gets its own folder like
+this).
 
 ### Recursive loops (`requestAnimationFrame`, `setInterval`, ...)
 
@@ -143,10 +145,10 @@ useEffect(() => {
 }, [canvasRef]);
 ```
 
-See `components/Design/Canvas/utils/drawFrame.ts` and
-`components/Design/Canvas/utils/startRenderLoop.ts`, used from
-`components/Design/Canvas/hooks/useCanvasRenderLoop.ts` — the effect body no longer defines any
-function itself.
+See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawFrame.ts` and
+`.../utils/startRenderLoop.ts`, used from
+`components/Design/Canvas/hooks/useCanvasRenderLoop/useCanvasRenderLoop.ts` — the effect body no
+longer defines any function itself.
 
 The rule reapplies one level down: `startRenderLoop` itself must not nest `tick` in its own body
 either — "don't keep a function inside a function" isn't just about `useEffect`, it's about any
@@ -178,6 +180,67 @@ The `() => tick(...)` wrapper passed to `requestAnimationFrame` is fine to stay 
 forwarding with no logic of its own (same as `debounce(() => resizeCanvas(canvas), ...)` in the
 resize example), unlike a `tick` body that both draws and reschedules, which is exactly what must
 not be nested.
+
+### Multiple DOM event handlers (`pointerdown`/`pointermove`/`pointerup`, ...)
+
+Not every extracted function belongs in `utils/`. When the logic needs several pieces of
+hook-local state that don't reduce to one or two explicit parameters — a dispatch function, a ref
+the hook owns, another ref passed in as an argument — keep the named function in the hook's own
+body instead of forcing it out to a pure utility. The dividing line is reusability: if the function
+is genuinely parameterizable and pure (no hook-local closures at all), it goes in `utils/`; if it
+fundamentally needs multiple pieces of this hook's own state, it stays as a sibling function inside
+the hook, just not nested inside `useEffect`.
+
+Avoid — handlers nested inside the effect, closing over a `let` for drag state:
+
+```ts
+useEffect(() => {
+  if (canvas && activeTool === ToolName.frame) {
+    let start: TPoint | null = null;
+
+    const handlePointerDown = (event: PointerEvent): void => {
+      start = getPointerPosition(canvas, event);
+      // ...
+    };
+    // ...pointermove/pointerup nested the same way, closing over `start`, `canvas`, `dispatch`
+
+    canvas.addEventListener('pointerdown', handlePointerDown);
+    // ...
+  }
+}, [activeTool, canvasRef, dispatch, draftRef]);
+```
+
+Prefer — handlers live in the hook body, take the values they need as explicit parameters where
+that's cheap (`canvas`), and use a `useRef` instead of an effect-local `let` for state that must
+survive across events:
+
+```ts
+const startRef = useRef<TPoint | null>(null);
+
+const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
+  startRef.current = getPointerPosition(canvas, event);
+  // ...
+};
+// ...handlePointerMove/handlePointerUp defined the same way, still in the hook body
+
+useEffect(() => {
+  if (canvas && activeTool === ToolName.frame) {
+    const onPointerDown = (event: PointerEvent): void => handlePointerDown(canvas, event);
+    // ...
+
+    canvas.addEventListener('pointerdown', onPointerDown);
+
+    return (): void => canvas.removeEventListener('pointerdown', onPointerDown);
+  }
+}, [activeTool, canvasRef, dispatch, draftRef]);
+```
+
+`getPointerPosition(canvas, event)` and `toDraftRect(start, current)` themselves *are* pure and
+parameterizable (no hook state at all), so those moved to
+`components/Design/Canvas/hooks/useFrameTool/utils/getPointerPosition.ts` and `.../utils/toDraftRect.ts`
+— see `components/Design/Canvas/hooks/useFrameTool/useFrameTool.ts` for the full split: pure
+helpers in `utils/`, stateful handlers in the hook body, and `useEffect` doing nothing but
+add/remove listeners.
 
 ## Related
 
