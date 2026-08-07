@@ -80,6 +80,18 @@ describe('useCanvasPanZoom behaviors', () => {
     expect(store.getState().design.viewport.zoom).toBeGreaterThan(1);
   });
 
+  it('should do nothing when the canvas has no element yet', () => {
+    // mock
+    const canvasRef: RefObject<HTMLCanvasElement | null> = { current: null };
+
+    // result
+    expect(() =>
+      renderHook(() => useCanvasPanZoom(canvasRef), {
+        wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+      }),
+    ).not.toThrow();
+  });
+
   it('should prevent the browser default scroll/pinch behavior', () => {
     // mock
     const canvasRef = createCanvasRef();

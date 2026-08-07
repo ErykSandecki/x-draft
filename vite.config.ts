@@ -19,6 +19,16 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
+    coverage: {
+      exclude: ['src/main.tsx', 'src/assets/**'],
+      provider: 'v8',
+      thresholds: {
+        branches: 100,
+        functions: 100,
+        lines: 100,
+        statements: 100,
+      },
+    },
     environment: 'jsdom',
     exclude: ['**/node_modules/**', 'e2e/**'],
     globals: true,

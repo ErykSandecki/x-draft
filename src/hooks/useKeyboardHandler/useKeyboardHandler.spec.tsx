@@ -127,6 +127,49 @@ describe('useKeyboardHandler behaviors', () => {
     expect(preventDefaultSpy).toHaveBeenCalled();
   });
 
+  it('should stop propagation when stopPropagation is set', () => {
+    // mock
+    const event = new KeyboardEvent('keydown', { code: KeyboardKeys.c });
+    const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
+
+    // before
+    renderHook(() => useKeyboardHandler(true, [], [keyMap], undefined, undefined, true));
+
+    // action
+    window.dispatchEvent(event);
+
+    // result
+    expect(stopPropagationSpy).toHaveBeenCalled();
+  });
+
+  it('should do nothing when no element matches the given id', () => {
+    // mock
+    const action = vi.fn();
+
+    // before
+    renderHook(() => useKeyboardHandler(true, [], [{ ...keyMap, action }], 'missing-scope'));
+
+    // action
+    fireEvent.keyDown(window, { code: KeyboardKeys.c });
+
+    // result
+    expect(action).not.toHaveBeenCalled();
+  });
+
+  it('should ignore a lone modifier key press', () => {
+    // mock
+    const action = vi.fn();
+
+    // before
+    renderHook(() => useKeyboardHandler(true, [], [{ ...keyMap, action, anyKey: true }]));
+
+    // action
+    fireEvent.keyDown(window, { code: KeyboardKeys.alt, key: 'Alt' });
+
+    // result
+    expect(action).not.toHaveBeenCalled();
+  });
+
   it('should stop listening after unmount', () => {
     // mock
     const action = vi.fn();

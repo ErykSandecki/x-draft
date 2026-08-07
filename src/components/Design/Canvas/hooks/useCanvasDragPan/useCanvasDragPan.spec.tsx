@@ -92,6 +92,28 @@ describe('useCanvasDragPan behaviors', () => {
     expect(canvasRef.current?.className).not.toContain('pressing');
   });
 
+  it('should do nothing when the canvas has no element yet', () => {
+    // mock
+    const canvasRef: RefObject<HTMLCanvasElement | null> = { current: null };
+
+    // result
+    expect(() => renderDragPan(canvasRef)).not.toThrow();
+  });
+
+  it('should ignore a pointer-up that was not preceded by a pointer-down', () => {
+    // mock
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderDragPan(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 10));
+
+    // result
+    expect(canvasRef.current?.releasePointerCapture).not.toHaveBeenCalled();
+  });
+
   it('should stop panning once the button is released', () => {
     // mock
     const canvasRef = createCanvasRef();

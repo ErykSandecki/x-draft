@@ -1,3 +1,10 @@
+// store
+import { addNode } from 'store/design/designSlice';
+import { store } from 'store';
+
+// types
+import { NodeType } from 'types/design/enums';
+
 // utils
 import { drawFrame } from '../drawFrame';
 
@@ -70,5 +77,33 @@ describe('drawFrame', () => {
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
     expect(gl.drawArrays).toHaveBeenCalledTimes(9);
+  });
+
+  it('should draw every node currently in the scene', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    store.dispatch(
+      addNode({
+        fill: '#ff0000',
+        height: 20,
+        name: 'Frame 1',
+        parentId: null,
+        rotation: 0,
+        type: NodeType.frame,
+        width: 10,
+        x: 0,
+        y: 0,
+      }),
+    );
+
+    // before
+    drawFrame(gl, program, buffer, canvas);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
   });
 });

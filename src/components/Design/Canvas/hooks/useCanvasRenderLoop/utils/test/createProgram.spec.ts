@@ -8,6 +8,7 @@ const createGlMock = (linked: boolean): WebGL2RenderingContext =>
     createProgram: vi.fn(() => ({})),
     createShader: vi.fn(() => ({})),
     deleteProgram: vi.fn(),
+    deleteShader: vi.fn(),
     getProgramParameter: vi.fn(() => linked),
     getShaderParameter: vi.fn(() => true),
     linkProgram: vi.fn(),
@@ -30,5 +31,17 @@ describe('createProgram', () => {
     // result
     expect(createProgram(gl, 'vertex', 'fragment')).toBeNull();
     expect(gl.deleteProgram).toHaveBeenCalled();
+  });
+
+  it('should return null without attaching shaders when shader compilation fails', () => {
+    // mock
+    const gl = {
+      ...createGlMock(true),
+      getShaderParameter: vi.fn(() => false),
+    } as unknown as WebGL2RenderingContext;
+
+    // result
+    expect(createProgram(gl, 'vertex', 'fragment')).toBeNull();
+    expect(gl.attachShader).not.toHaveBeenCalled();
   });
 });

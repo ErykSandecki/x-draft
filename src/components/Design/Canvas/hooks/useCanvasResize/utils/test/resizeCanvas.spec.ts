@@ -24,6 +24,23 @@ describe('resizeCanvas', () => {
     expect(canvas.height).toBe(100);
   });
 
+  it('should fall back to a devicePixelRatio of 1 when unavailable', () => {
+    // mock
+    vi.stubGlobal('devicePixelRatio', 0);
+
+    const canvas = document.createElement('canvas');
+
+    // spy
+    vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue({ height: 50, width: 100 } as DOMRect);
+
+    // before
+    resizeCanvas(canvas);
+
+    // result
+    expect(canvas.width).toBe(100);
+    expect(canvas.height).toBe(50);
+  });
+
   it('should update the WebGL viewport to match the new size', () => {
     // mock
     vi.stubGlobal('devicePixelRatio', 1);

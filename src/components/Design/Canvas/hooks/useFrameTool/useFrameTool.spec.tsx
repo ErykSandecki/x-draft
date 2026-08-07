@@ -29,8 +29,8 @@ const createCanvasRef = (): RefObject<HTMLCanvasElement | null> => {
   return { current: canvas };
 };
 
-const pointerEvent = (type: string, x: number, y: number): PointerEvent =>
-  new PointerEvent(type, { clientX: x, clientY: y, pointerId: 1 });
+const pointerEvent = (type: string, x: number, y: number, button = 0): PointerEvent =>
+  new PointerEvent(type, { button, clientX: x, clientY: y, pointerId: 1 });
 
 describe('useFrameTool behaviors', () => {
   it('should not react to pointer events when the frame tool is not active', () => {
@@ -100,6 +100,93 @@ describe('useFrameTool behaviors', () => {
     expect(design.nodes[design.rootOrder[0]]).toMatchObject({ height: 30, width: 50, x: 10, y: 10 });
     expect(design.activeTool).toBe(ToolName.default);
     expect(draftRef.current).toBeNull();
+  });
+
+  it('should ignore a non-primary button press', () => {
+    // mock
+    const store = createTestStore();
+
+    store.dispatch(setActiveTool(ToolName.frame));
+
+    const canvasRef = createCanvasRef();
+    const draftRef: RefObject<TDraftRect | null> = { current: null };
+
+    // before
+    renderHook(() => useFrameTool(canvasRef, draftRef), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10, 1));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 60, 40));
+
+    // result
+    expect(draftRef.current).toBeNull();
+  });
+
+  it('should not add a node when only one dimension meets the minimum frame size', () => {
+    // mock
+    const store = createTestStore();
+
+    store.dispatch(setActiveTool(ToolName.frame));
+
+    const canvasRef = createCanvasRef();
+    const draftRef: RefObject<TDraftRect | null> = { current: null };
+
+    // before
+    renderHook(() => useFrameTool(canvasRef, draftRef), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 30, 10));
+
+    // result
+    expect(store.getState().design.rootOrder).toHaveLength(0);
+  });
+
+  it('should not add a node when only the other dimension meets the minimum frame size', () => {
+    // mock
+    const store = createTestStore();
+
+    store.dispatch(setActiveTool(ToolName.frame));
+
+    const canvasRef = createCanvasRef();
+    const draftRef: RefObject<TDraftRect | null> = { current: null };
+
+    // before
+    renderHook(() => useFrameTool(canvasRef, draftRef), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 30));
+
+    // result
+    expect(store.getState().design.rootOrder).toHaveLength(0);
+  });
+
+  it('should ignore a pointer-up that was not preceded by a pointer-down', () => {
+    // mock
+    const store = createTestStore();
+
+    store.dispatch(setActiveTool(ToolName.frame));
+
+    const canvasRef = createCanvasRef();
+    const draftRef: RefObject<TDraftRect | null> = { current: null };
+
+    // before
+    renderHook(() => useFrameTool(canvasRef, draftRef), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 10));
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.frame);
   });
 
   it('should switch back to the default tool without adding a node when the drag is too small', () => {

@@ -65,6 +65,24 @@ describe('startRenderLoop', () => {
     expect(requestAnimationFrameMock).toHaveBeenCalledTimes(2);
   });
 
+  it('should keep drawing across multiple animation frames', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    // before
+    startRenderLoop(gl, program, buffer, canvas);
+
+    // action
+    rafCallback?.(0);
+    rafCallback?.(16);
+
+    // result
+    expect(gl.clear).toHaveBeenCalledTimes(2);
+  });
+
   it('should cancel the scheduled frame when the returned stop function is called', () => {
     // mock
     const gl = createGlMock();
