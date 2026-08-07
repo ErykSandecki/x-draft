@@ -1,22 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cp /tmp/routecheck.mjs /Users/eryksandecki/Desktop/Work/Figma/x-draft/routecheck.mjs)",
-      "Bash(node routecheck.mjs)",
-      "Bash(grep -rnE \"#[0-9A-Fa-f]{3,8}\" /Users/eryksandecki/Desktop/Work/Figma/x-draft/src --include=\"*.scss\")",
-      "Bash(git config *)",
-      "Bash(git rm *)",
-      "Bash(git add *)",
-      "Bash(git ls-tree *)",
-      "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-function-style)",
-      "Edit(/.claude/skills/x-draft-function-style/**)",
-      "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-scss-bem)",
-      "Edit(/.claude/skills/x-draft-scss-bem/**)",
-      "Edit(/.claude/skills/x-draft-test-conventions/**)",
-      "Bash(grep -rn '\\\\$--xd-blue-1--light:\\\\|\\\\$--xd-blue-1--dark:\\\\|\\\\$--xd-neutral-1--light:\\\\|\\\\$--xd-neutral-1--dark:' src/styles)"
+      "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-design/.claude/skills/x-design-scss-import-order)",
+      "Edit(/.claude/skills/x-design-scss-import-order/**)",
+      "WebFetch(domain:github.com)",
+      "WebSearch"
     ],
-    "additionalDirectories": [
-      "/Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills"
-    ]
+    "additionalDirectories": ["/tmp", "/Users/eryksandecki/Desktop/Work/Figma/x-design/.claude/skills"]
   }
 }

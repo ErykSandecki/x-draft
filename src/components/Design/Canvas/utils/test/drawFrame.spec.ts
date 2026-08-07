@@ -1,0 +1,72 @@
+// utils
+import { drawFrame } from '../drawFrame';
+
+const createGlMock = (): WebGL2RenderingContext =>
+  ({
+    COLOR_BUFFER_BIT: 16384,
+    LINE_LOOP: 2,
+    STATIC_DRAW: 35044,
+    TRIANGLES: 4,
+    bindBuffer: vi.fn(),
+    bufferData: vi.fn(),
+    clear: vi.fn(),
+    clearColor: vi.fn(),
+    colorMask: vi.fn(),
+    createBuffer: vi.fn(() => ({})),
+    drawArrays: vi.fn(),
+    enableVertexAttribArray: vi.fn(),
+    getAttribLocation: vi.fn(() => 0),
+    getUniformLocation: vi.fn(() => ({})),
+    uniform4fv: vi.fn(),
+    useProgram: vi.fn(),
+    vertexAttribPointer: vi.fn(),
+  }) as unknown as WebGL2RenderingContext;
+
+describe('drawFrame', () => {
+  it('should re-enable alpha writes for the background clear, then lock them for foreground drawing', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    // before
+    drawFrame(gl, program, buffer, canvas);
+
+    // result
+    expect(gl.colorMask.mock.calls).toEqual([
+      [true, true, true, true],
+      [true, true, true, false],
+    ]);
+    expect(gl.clear).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not draw a draft rect when none is given', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    // before
+    drawFrame(gl, program, buffer, canvas);
+
+    // result
+    expect(gl.drawArrays).not.toHaveBeenCalled();
+  });
+
+  it('should draw the draft rect and its 4 corner handles when given', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    // before
+    drawFrame(gl, program, buffer, canvas, { height: 20, width: 10, x: 0, y: 0 });
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
+    expect(gl.drawArrays).toHaveBeenCalledTimes(9);
+  });
+});
