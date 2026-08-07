@@ -4,3 +4,8 @@ export type TDraftRect = {
   x: number;
   y: number;
 };
+
+export type TPoint = {
+  x: number;
+  y: number;
+};

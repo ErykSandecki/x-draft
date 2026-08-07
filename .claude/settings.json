@@ -32,7 +32,11 @@
       "mcp__playwright__browser_type",
       "mcp__playwright__browser_wait_for",
       "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-playwright-mcp-testing)",
-      "Edit(/.claude/skills/x-draft-playwright-mcp-testing/**)"
+      "Edit(/.claude/skills/x-draft-playwright-mcp-testing/**)",
+      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/components/PageBuilder/ViewBox/hooks/**)",
+      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/pages/PageBuilderPage/hooks/**)",
+      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/shared/ZoomBox/hooks/**)",
+      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/utils/events/**)"
     ],
     "additionalDirectories": [
       "/tmp",

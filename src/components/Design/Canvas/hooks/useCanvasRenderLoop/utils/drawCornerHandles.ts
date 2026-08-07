@@ -3,6 +3,7 @@ import { CORNER_HANDLE_FILL, CORNER_HANDLE_SIZE } from '../../../constants';
 
 // types
 import { TDraftRect } from '../../../types';
+import { TViewport } from 'types/design/types';
 
 // utils
 import { drawRect } from './drawRect';
@@ -16,6 +17,7 @@ export const drawCornerHandles = (
   strokeColor: string,
   canvasWidth: number,
   canvasHeight: number,
+  viewport: TViewport,
 ): void => {
   getRectCorners(rect).forEach((corner) => {
     drawRect(
@@ -32,6 +34,7 @@ export const drawCornerHandles = (
       },
       canvasWidth,
       canvasHeight,
+      viewport,
     );
   });
 };

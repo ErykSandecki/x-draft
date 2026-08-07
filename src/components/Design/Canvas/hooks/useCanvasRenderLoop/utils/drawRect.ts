@@ -1,5 +1,6 @@
 // types
 import { TDraftRect } from '../../../types';
+import { TViewport } from 'types/design/types';
 
 // utils
 import { hexToRgbaFloat } from './hexToRgbaFloat';
@@ -10,11 +11,6 @@ export type TDrawableRect = TDraftRect & {
   stroke?: string;
 };
 
-const toClipSpace = (x: number, y: number, canvasWidth: number, canvasHeight: number): [number, number] => [
-  (x / canvasWidth) * 2 - 1,
-  1 - (y / canvasHeight) * 2,
-];
-
 export const drawRect = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
@@ -22,16 +18,27 @@ export const drawRect = (
   rect: TDrawableRect,
   canvasWidth: number,
   canvasHeight: number,
+  viewport: TViewport,
 ): void => {
   const positionLocation = gl.getAttribLocation(program, 'a_position');
   const colorLocation = gl.getUniformLocation(program, 'u_color');
+  const viewportOffsetLocation = gl.getUniformLocation(program, 'u_viewportOffset');
+  const zoomLocation = gl.getUniformLocation(program, 'u_zoom');
+  const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
 
-  const [x1, y1] = toClipSpace(rect.x, rect.y, canvasWidth, canvasHeight);
-  const [x2, y2] = toClipSpace(rect.x + rect.width, rect.y, canvasWidth, canvasHeight);
-  const [x3, y3] = toClipSpace(rect.x + rect.width, rect.y + rect.height, canvasWidth, canvasHeight);
-  const [x4, y4] = toClipSpace(rect.x, rect.y + rect.height, canvasWidth, canvasHeight);
+  const x1 = rect.x;
+  const y1 = rect.y;
+  const x2 = rect.x + rect.width;
+  const y2 = rect.y;
+  const x3 = rect.x + rect.width;
+  const y3 = rect.y + rect.height;
+  const x4 = rect.x;
+  const y4 = rect.y + rect.height;
 
   gl.useProgram(program);
+  gl.uniform2f(viewportOffsetLocation, viewport.x, viewport.y);
+  gl.uniform1f(zoomLocation, viewport.zoom);
+  gl.uniform2f(resolutionLocation, canvasWidth, canvasHeight);
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(positionLocation);
   gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);

@@ -5,17 +5,17 @@ import { MIN_FRAME_SIZE } from '../../constants';
 
 // store
 import { addNode, setActiveTool } from 'store/design/designSlice';
-import { selectActiveTool } from 'store/design/selectors';
+import { selectActiveTool, selectViewport } from 'store/design/selectors';
 import { useAppDispatch, useAppSelector } from 'store';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
-import { TDraftRect } from '../../types';
-import { TPoint } from './types';
+import { TDraftRect, TPoint } from '../../types';
 
 // utils
-import { getPointerPosition } from './utils/getPointerPosition';
+import { getPointerPosition } from '../../utils/getPointerPosition';
 import { getRandomColor } from './utils/getRandomColor';
+import { screenToWorld } from '../../utils/screenToWorld';
 import { toDraftRect } from './utils/toDraftRect';
 
 export const useFrameTool = (
@@ -23,23 +23,24 @@ export const useFrameTool = (
   draftRef: RefObject<TDraftRect | null>,
 ): void => {
   const activeTool = useAppSelector(selectActiveTool);
+  const viewport = useAppSelector(selectViewport);
   const dispatch = useAppDispatch();
   const startRef = useRef<TPoint | null>(null);
 
   const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
-    startRef.current = getPointerPosition(canvas, event);
+    startRef.current = screenToWorld(getPointerPosition(canvas, event), viewport);
     canvas.setPointerCapture(event.pointerId);
   };
 
   const handlePointerMove = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     if (startRef.current) {
-      draftRef.current = toDraftRect(startRef.current, getPointerPosition(canvas, event));
+      draftRef.current = toDraftRect(startRef.current, screenToWorld(getPointerPosition(canvas, event), viewport));
     }
   };
 
   const handlePointerUp = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     if (startRef.current) {
-      const rect = toDraftRect(startRef.current, getPointerPosition(canvas, event));
+      const rect = toDraftRect(startRef.current, screenToWorld(getPointerPosition(canvas, event), viewport));
 
       if (rect.width >= MIN_FRAME_SIZE && rect.height >= MIN_FRAME_SIZE) {
         dispatch(
@@ -79,5 +80,5 @@ export const useFrameTool = (
         canvas.removeEventListener('pointerup', onPointerUp);
       };
     }
-  }, [activeTool, canvasRef, dispatch, draftRef]);
+  }, [activeTool, canvasRef, dispatch, draftRef, viewport]);
 };

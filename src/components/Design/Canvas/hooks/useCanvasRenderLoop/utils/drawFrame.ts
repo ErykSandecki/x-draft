@@ -2,7 +2,7 @@
 import { DRAFT_FRAME_STROKE } from '../../../constants';
 
 // store
-import { selectOrderedNodes } from 'store/design/selectors';
+import { selectOrderedNodes, selectViewport } from 'store/design/selectors';
 import { store } from 'store';
 
 // types
@@ -24,8 +24,10 @@ export const drawFrame = (
   drawBackground(gl);
   gl.colorMask(true, true, true, false);
 
+  const viewport = selectViewport(store.getState());
+
   selectOrderedNodes(store.getState()).forEach((node) => {
-    drawRect(gl, program, buffer, node, canvas.clientWidth, canvas.clientHeight);
+    drawRect(gl, program, buffer, node, canvas.clientWidth, canvas.clientHeight, viewport);
   });
 
   if (draftRect) {
@@ -36,7 +38,17 @@ export const drawFrame = (
       { ...draftRect, stroke: DRAFT_FRAME_STROKE },
       canvas.clientWidth,
       canvas.clientHeight,
+      viewport,
     );
-    drawCornerHandles(gl, program, buffer, draftRect, DRAFT_FRAME_STROKE, canvas.clientWidth, canvas.clientHeight);
+    drawCornerHandles(
+      gl,
+      program,
+      buffer,
+      draftRect,
+      DRAFT_FRAME_STROKE,
+      canvas.clientWidth,
+      canvas.clientHeight,
+      viewport,
+    );
   }
 };

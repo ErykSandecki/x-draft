@@ -1,6 +1,7 @@
 import { FC, useRef } from 'react';
 
 // hooks
+import { useCanvasPanZoom } from './hooks/useCanvasPanZoom/useCanvasPanZoom';
 import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRenderLoop';
 import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
 import { useFrameTool } from './hooks/useFrameTool/useFrameTool';
@@ -16,6 +17,7 @@ const Canvas: FC = () => {
   const draftRef = useRef<TDraftRect | null>(null);
 
   useCanvasResize(canvasRef);
+  useCanvasPanZoom(canvasRef);
   useFrameTool(canvasRef, draftRef);
   useCanvasRenderLoop(canvasRef, draftRef);
 

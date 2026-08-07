@@ -16,10 +16,14 @@ const createGlMock = (): WebGL2RenderingContext =>
     enableVertexAttribArray: vi.fn(),
     getAttribLocation: vi.fn(() => 0),
     getUniformLocation: vi.fn(() => ({})),
+    uniform1f: vi.fn(),
+    uniform2f: vi.fn(),
     uniform4fv: vi.fn(),
     useProgram: vi.fn(),
     vertexAttribPointer: vi.fn(),
   }) as unknown as WebGL2RenderingContext;
+
+const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
 describe('drawCornerHandles', () => {
   it('should draw a fill and a stroke pass for each of the 4 corners', () => {
@@ -29,7 +33,7 @@ describe('drawCornerHandles', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawCornerHandles(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 100, 100);
+    drawCornerHandles(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(8);
@@ -44,14 +48,14 @@ describe('drawCornerHandles', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawCornerHandles(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 100, 100);
+    drawCornerHandles(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 100, 100, IDENTITY_VIEWPORT);
 
     // result
     const bufferDataCalls = (gl.bufferData as ReturnType<typeof vi.fn>).mock.calls;
     const [firstFillCall] = bufferDataCalls;
     const vertices: Float32Array = firstFillCall[1];
-    const clipWidth = Math.abs(vertices[2] - vertices[0]);
+    const worldWidth = Math.abs(vertices[2] - vertices[0]);
 
-    expect(clipWidth).toBeCloseTo((CORNER_HANDLE_SIZE / 100) * 2);
+    expect(worldWidth).toBeCloseTo(CORNER_HANDLE_SIZE);
   });
 });

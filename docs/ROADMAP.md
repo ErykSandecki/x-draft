@@ -64,8 +64,7 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       realna logika (dispatch `setActiveTool`), nie tylko UI
 - [x] dropdown-chevron (16×32, hover taki sam jak reszta przycisków) przy
       Select i Frame — `MouseModes/ToolDropdown` (Radix `DropdownMenu`), na
-      razie pokazuje jedną, aktualnie aktywną opcję (checkmark + ikona + label
-      + skrót klawiszowy); realne warianty (Hand tool, Scale, Slice...) dojdą
+      razie pokazuje jedną, aktualnie aktywną opcję (checkmark + ikona + label + skrót klawiszowy); realne warianty (Hand tool, Scale, Slice...) dojdą
       later jako osobny krok
 - [ ] rectangle / pen / text (z dropdownami wariantów) — kolejny krok
 - [ ] shapes (assets), prawa grupa (draw / scale / actions / dev mode)
@@ -78,13 +77,13 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       — reszta (rectangle/ellipse/text/vector) dojdzie w Etapie 6, kiedy realnie
       powstaną te narzędzia, nie wcześniej
 - [x] store sceny — `store/design`: `nodes: Record<string, TSceneNode>` +
-      `rootOrder: string[]` (kolejność/z-index, nie polegamy na kolejności
-      kluczy obiektu). Reducery: `addNode` (id generowany przez `nanoid()` z
-      `@reduxjs/toolkit` w `prepare`, nie w reducerze — reducer zostaje czystą
-      funkcją), `updateNode` (częściowy patch po id, no-op na nieznane id)
+  `rootOrder: string[]` (kolejność/z-index, nie polegamy na kolejności
+  kluczy obiektu). Reducery: `addNode` (id generowany przez `nanoid()` z
+  `@reduxjs/toolkit` w `prepare`, nie w reducerze — reducer zostaje czystą
+  funkcją), `updateNode` (częściowy patch po id, no-op na nieznane id)
 - [x] viewport state: `TViewport { x, y, zoom }` w `store/design`, reducer
-      `setViewport` — jedno źródło prawdy pod transformację world → screen,
-      realne sterowanie pan/zoom (scroll/pinch) to Etap 4
+  `setViewport` — jedno źródło prawdy pod transformację world → screen,
+  realne sterowanie pan/zoom (scroll/pinch) to Etap 4
 
 ## Etap 3 — Narzędzie Frame
 
@@ -113,8 +112,28 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
 
 ## Etap 4 — Pan & zoom
 
-- [ ] scroll = pan, ctrl/cmd+scroll (lub pinch) = zoom wokół kursora
-- [ ] wszystkie rysowane node'y respektują transformację viewportu
+- [x] scroll = pan, ctrl/cmd+scroll (lub pinch) = zoom wokół kursora —
+      `Canvas/hooks/useCanvasPanZoom/useCanvasPanZoom.ts`: natywny listener `wheel` (bez gate'a na
+      `activeTool` — działa niezależnie od aktywnego narzędzia), `{ passive: false }` +
+      `preventDefault()` żeby nie walczyć z natywnym scrollem/pinch-zoomem strony.
+      `event.ctrlKey` rozróżnia zoom (Ctrl/Cmd+scroll **i** pinch trackpada — przeglądarki
+      raportują pinch jako `wheel` z `ctrlKey: true`) od zwykłego pan. Czysta matematyka w
+      `utils/applyPan.ts`/`utils/applyZoom.ts` — zoom dociskany do `[ZOOM_MIN, ZOOM_MAX]`
+      (`lodash/clamp`) i przeliczany tak, żeby punkt świata pod kursorem został w tym samym
+      miejscu na ekranie po zmianie zoomu
+- [x] wszystkie rysowane node'y respektują transformację viewportu — transformacja liczona
+      **na GPU**, nie w JS: `VERTEX_SHADER_SOURCE` dostał `u_viewportOffset`/`u_zoom`/`u_resolution`
+      i sam liczy clip-space; `drawRect.ts` przestał robić to po stronie CPU (`toClipSpace`
+      usunięte), wysyła surowe współrzędne świata i nowe uniformy. Świadomy wybór GPU zamiast JS —
+      to dokładnie ten sam typ decyzji co wybór WebGL zamiast Canvas 2D w Etapie 0 (per-vertex
+      transform przechodzi przez każdy draw call, więc lepiej raz zrobić to dobrze niż migrować
+      później przy większej scenie). Przy okazji naprawiony `useFrameTool.ts` — pozycja kursora
+      konwertowana przez nowy `Canvas/utils/screenToWorld.ts` zanim trafi do `addNode`, inaczej
+      nowe frame'y powstawałyby w złym miejscu przy niezerowym pan/zoom.
+      **Znany, świadomy kompromis**: uchwyty narożne (`CORNER_HANDLE_SIZE`) skalują się teraz razem
+      z zoomem, bo idą przez tę samą transformację co realne node'y — stały rozmiar na ekranie
+      wymagałby osobnej warstwy screen-space UI, zostawione na później, nie blokuje żadnego z
+      dwóch punktów tego etapu
 
 ## Etap 5 — Selekcja
 

@@ -20,6 +20,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    exclude: ['**/node_modules/**', 'e2e/**'],
     globals: true,
     resolveSnapshotPath: (testPath, snapExtension) =>
       path.join(path.dirname(testPath), 'snapshots', `${path.basename(testPath)}${snapExtension}`),

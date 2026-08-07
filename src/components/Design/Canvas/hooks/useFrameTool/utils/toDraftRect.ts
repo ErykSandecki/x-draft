@@ -1,6 +1,5 @@
 // types
-import { TDraftRect } from '../../../types';
-import { TPoint } from '../types';
+import { TDraftRect, TPoint } from '../../../types';
 
 export const toDraftRect = (start: TPoint, current: TPoint): TDraftRect => ({
   height: Math.abs(current.y - start.y),
