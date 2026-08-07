@@ -256,7 +256,7 @@ describe('useSelectionTool behaviors', () => {
     expect(nodes[idB]).toMatchObject({ x: 1170, y: 710 });
   });
 
-  it('should keep the selection untouched when clicking the gap without moving', () => {
+  it('should deselect everything when clicking the gap without moving', () => {
     // mock
     const idA = addFrameNode(1200, 700, 20);
     const idB = addFrameNode(1260, 700, 20);
@@ -273,7 +273,7 @@ describe('useSelectionTool behaviors', () => {
     canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 1240, 710));
 
     // result
-    expect(store.getState().design.selectedIds).toEqual([idA, idB]);
+    expect(store.getState().design.selectedIds).toEqual([]);
   });
 
   it('should deselect everything when clicking outside the shared selection bounds', () => {

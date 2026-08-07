@@ -242,6 +242,25 @@ parameterizable (no hook state at all), so those moved to
 helpers in `utils/`, stateful handlers in the hook body, and `useEffect` doing nothing but
 add/remove listeners.
 
+**Refinement — a handler can still move to `utils/` even if it needs `dispatch` or ref-backed
+state, as long as it only needs a *callback*, not the raw ref itself.** The dividing line above
+("needs a ref → stays in the hook") is about who owns the ref, not who's allowed to trigger it.
+`useSelectionTool.ts`'s `handlePointerDown` grew real "ifologia" (5-way branch: shift+hit,
+hit-in-multi-selection, hit-not-in-selection, gap-inside-group-bounds, empty click) and moved out
+to `utils/handlePointerDown/handlePointerDown.ts`, even though its logic needs both `dispatch` and
+`armDrag` (a closure the hook defines around its own `dragStateRef`). The ref (`dragStateRef`)
+itself never leaves the hook — only the handler that *calls* `armDrag` moved out, taking `dispatch`
+and `armDrag` as explicit parameters (`handlePointerDown(canvas, event, dispatch, armDrag)`),
+exactly like `canvas`/`event` are already passed explicitly. `armDrag`'s own type
+(`TArmDrag = (armIds: string[], pendingClickAction: TPendingClickAction | null, point: TPoint) =>
+void`) lives in the hook's `types.ts` since it's a hook-shaped callback signature, not a generic
+value type. The two heaviest branches (hit-in-multi-selection vs. gap-inside-group-bounds) split
+further into their own sibling files (`armHitDrag.ts`, `armGroupBoundsDrag.ts`) per the "ifologia"
+rule below — each is independently unit-tested (mocking `armDrag`/`dispatch` as plain `vi.fn()`s)
+in addition to the hook's own end-to-end `useSelectionTool.spec.tsx` coverage. The two remaining
+one-line branches (shift-toggle, empty-click-clears) stayed inline in the orchestrator — extracting
+a single `dispatch(...)` call into its own file would be indirection without reducing complexity.
+
 ## Split a function once its branching gets heavy ("ifologia")
 
 Not just effects/callbacks — a plain function that accumulates several `if`/`else` concerns in one

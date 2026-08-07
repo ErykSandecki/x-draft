@@ -162,25 +162,31 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       Hit-test w `useSelectionTool.ts` rozszerzony o `utils/isPointInGroupBounds.ts`: kliknięcie
       **gdziekolwiek w polu wspólnego bboxa** — nawet w pustym miejscu między zaznaczonymi
       node'ami, gdzie `getNodeAtPoint` nic nie trafia — łapie i przeciąga całą grupę naraz.
-      Puszczenie bez ruchu w tej luce **nie zwija** zaznaczenia (nie ma pojedynczego node'a do
-      zwinięcia — inaczej niż klik na konkretny, zaznaczony node z Etapu 5 wyżej)
+      Puszczenie bez ruchu w tej luce **czyści całe zaznaczenie** — nie trafiono w żaden
+      konkretny node, więc traktowane jak klik na pusty canvas, inaczej niż klik na konkretny,
+      zaznaczony node z Etapu 5 wyżej (ten zwija do jednego node'a)
 
   Pełna semantyka zaznaczania 1:1 z Figmy/x-design (`Element/utils/handleSelectElement.ts` +
   `MultipleElementsArea/ClickableArea/*`), ale spleciona w **jeden** hit-test-driven handler
   zamiast dwuwarstwowego systemu DOM-owego z x-design (`Element`-level handler +
   `ClickableArea` overlay z `stopPropagation`) — x-draft nie ma DOM-u per node (jeden canvas,
   ręczny hit-test), więc dwuwarstwowość x-design nie miała się w co przełożyć 1:1; ten sam efekt
-  wychodzi z jednej funkcji z `dragStateRef` (`pendingSelectionId` + `hasMoved`, ustalane na
-  pointerdown, rozstrzygane na pointerup):
+  wychodzi z jednej funkcji z `dragStateRef` (`pendingClickAction` — `{ kind: 'collapse', id }` /
+  `{ kind: 'deselect' }` / `null` — + `hasMoved`, ustalane na pointerdown, rozstrzygane na
+  pointerup):
   - klik (bez shift) na niezaznaczony node → zaznacza tylko jego
   - shift+klik na niezaznaczony → dokłada do zaznaczenia; shift+klik na zaznaczony → zdejmuje
   - klik (bez shift) na node będący częścią zaznaczenia 2+, puszczony **bez ruchu** → zwija
-    zaznaczenie do tego jednego node'a
+    zaznaczenie do tego jednego node'a (`pendingClickAction.kind === 'collapse'`)
   - klik+**przeciągnięcie** (bez shift) node'a z zaznaczenia 2+ → cała grupa przesuwa się
     razem, zaznaczenie **zostaje** nietknięte (nie zwija się do jednego)
   - klik na nowy, nigdy niezaznaczony node przy istniejącym zaznaczeniu 2+ → zastępuje całe
     zaznaczenie tym jednym (ta sama ścieżka co zwykły klik)
   - klik na pusty obszar canvasu → czyści całe zaznaczenie (shift+klik na pustym → no-op)
+  - klik (bez shift) w lukę wewnątrz wspólnego bboxa zaznaczenia 2+ (nie trafiając w żaden
+    node), puszczony **bez ruchu** → czyści całe zaznaczenie
+    (`pendingClickAction.kind === 'deselect'`); z ruchem → przeciąga całą grupę, zaznaczenie
+    nietknięte
 
 ## Etap 6 — Kolejne narzędzia rysujące
 

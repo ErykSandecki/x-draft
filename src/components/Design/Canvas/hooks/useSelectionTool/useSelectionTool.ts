@@ -2,32 +2,23 @@ import { RefObject, useEffect, useRef } from 'react';
 
 // store
 import { setSelection, updateNode } from 'store/design/slice';
-import {
-  selectActiveTool,
-  selectOrderedNodes,
-  selectSelectedIds,
-  selectSelectedNodes,
-  selectViewport,
-} from 'store/design/selectors';
+import { selectActiveTool, selectViewport } from 'store/design/selectors';
 import { store, useAppDispatch, useAppSelector } from 'store';
 
 // types
 import { ToolName } from 'types/design/enums';
+import { TPendingClickAction } from './types';
 import { TPoint } from 'types/canvas';
 
 // utils
-import { getNodeAtPoint } from './utils/getNodeAtPoint';
 import { getPointerPosition } from '../../utils/getPointerPosition';
-import { isPointInGroupBounds } from './utils/isPointInGroupBounds';
+import { handlePointerDown } from './utils/handlePointerDown/handlePointerDown';
 import { screenToWorld } from '../../utils/screenToWorld';
-import { toggleSelection } from './utils/toggleSelection';
-
-const PRIMARY_MOUSE_BUTTON = 0;
 
 type TDragState = {
   hasMoved: boolean;
   nodeOrigins: Record<string, TPoint>;
-  pendingSelectionId: string | null;
+  pendingClickAction: TPendingClickAction | null;
   pointerStart: TPoint;
 };
 
@@ -36,44 +27,15 @@ export const useSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>)
   const dispatch = useAppDispatch();
   const dragStateRef = useRef<TDragState | null>(null);
 
-  const armDrag = (armIds: string[], pendingSelectionId: string | null, point: TPoint): void => {
+  const armDrag = (armIds: string[], pendingClickAction: TPendingClickAction | null, point: TPoint): void => {
     const { nodes } = store.getState().design;
 
     dragStateRef.current = {
       hasMoved: false,
       nodeOrigins: Object.fromEntries(armIds.map((id) => [id, { x: nodes[id].x, y: nodes[id].y }])),
-      pendingSelectionId,
+      pendingClickAction,
       pointerStart: point,
     };
-  };
-
-  const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
-    if (event.button === PRIMARY_MOUSE_BUTTON) {
-      const state = store.getState();
-      const point = screenToWorld(getPointerPosition(canvas, event), selectViewport(state));
-      const hit = getNodeAtPoint(point, selectOrderedNodes(state));
-      const currentSelection = selectSelectedIds(state);
-
-      if (hit && event.shiftKey) {
-        dispatch(setSelection(toggleSelection(currentSelection, hit.id)));
-      } else if (hit) {
-        const isPartOfMultiSelection = currentSelection.length > 1 && currentSelection.includes(hit.id);
-
-        if (isPartOfMultiSelection) {
-          armDrag(currentSelection, hit.id, point);
-        } else {
-          dispatch(setSelection([hit.id]));
-          armDrag([hit.id], null, point);
-        }
-
-        canvas.setPointerCapture(event.pointerId);
-      } else if (!event.shiftKey && isPointInGroupBounds(point, selectSelectedNodes(state))) {
-        armDrag(currentSelection, null, point);
-        canvas.setPointerCapture(event.pointerId);
-      } else if (!event.shiftKey) {
-        dispatch(setSelection([]));
-      }
-    }
   };
 
   const handlePointerMove = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
@@ -91,8 +53,12 @@ export const useSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>)
 
   const handlePointerUp = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     if (dragStateRef.current) {
-      if (dragStateRef.current.pendingSelectionId && !dragStateRef.current.hasMoved) {
-        dispatch(setSelection([dragStateRef.current.pendingSelectionId]));
+      const { hasMoved, pendingClickAction } = dragStateRef.current;
+
+      if (pendingClickAction?.kind === 'collapse' && !hasMoved) {
+        dispatch(setSelection([pendingClickAction.id]));
+      } else if (pendingClickAction?.kind === 'deselect' && !hasMoved) {
+        dispatch(setSelection([]));
       }
 
       dragStateRef.current = null;
@@ -104,7 +70,7 @@ export const useSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>)
     const canvas = canvasRef.current;
 
     if (canvas && activeTool === ToolName.default) {
-      const onPointerDown = (event: PointerEvent): void => handlePointerDown(canvas, event);
+      const onPointerDown = (event: PointerEvent): void => handlePointerDown(canvas, event, dispatch, armDrag);
       const onPointerMove = (event: PointerEvent): void => handlePointerMove(canvas, event);
       const onPointerUp = (event: PointerEvent): void => handlePointerUp(canvas, event);
 
