@@ -1,10 +1,5 @@
 // types
-import { TDraftRect } from '../../../types';
-
-export type TPoint = {
-  x: number;
-  y: number;
-};
+import { TDraftRect, TPoint } from 'types/canvas';
 
 export const getRectCorners = (rect: TDraftRect): [TPoint, TPoint, TPoint, TPoint] => [
   { x: rect.x, y: rect.y },

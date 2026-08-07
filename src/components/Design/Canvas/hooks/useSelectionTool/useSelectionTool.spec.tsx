@@ -231,6 +231,70 @@ describe('useSelectionTool behaviors', () => {
     expect(nodes[idB]).toMatchObject({ x: 750, y: 710 });
   });
 
+  it('should move every node together when dragging from the gap inside the shared selection bounds', () => {
+    // mock
+    const idA = addFrameNode(1100, 700, 20);
+    const idB = addFrameNode(1160, 700, 20);
+
+    store.dispatch(setSelection([idA, idB]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action - click in the gap between the two nodes (1140,710 is inside neither node)
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 1140, 710));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 1150, 720));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 1150, 720));
+
+    // result
+    const { nodes, selectedIds } = store.getState().design;
+
+    expect(selectedIds).toEqual([idA, idB]);
+    expect(nodes[idA]).toMatchObject({ x: 1110, y: 710 });
+    expect(nodes[idB]).toMatchObject({ x: 1170, y: 710 });
+  });
+
+  it('should keep the selection untouched when clicking the gap without moving', () => {
+    // mock
+    const idA = addFrameNode(1200, 700, 20);
+    const idB = addFrameNode(1260, 700, 20);
+
+    store.dispatch(setSelection([idA, idB]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 1240, 710));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 1240, 710));
+
+    // result
+    expect(store.getState().design.selectedIds).toEqual([idA, idB]);
+  });
+
+  it('should deselect everything when clicking outside the shared selection bounds', () => {
+    // mock
+    const idA = addFrameNode(1300, 700, 20);
+    const idB = addFrameNode(1360, 700, 20);
+
+    store.dispatch(setSelection([idA, idB]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 1900, 1900));
+
+    // result
+    expect(store.getState().design.selectedIds).toEqual([]);
+  });
+
   it('should move a single selected node while dragging', () => {
     // mock
     const idA = addFrameNode(800, 800);

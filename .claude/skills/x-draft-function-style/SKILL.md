@@ -145,7 +145,7 @@ useEffect(() => {
 }, [canvasRef]);
 ```
 
-See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawFrame.ts` and
+See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawFrame/drawFrame.ts` and
 `.../utils/startRenderLoop.ts`, used from
 `components/Design/Canvas/hooks/useCanvasRenderLoop/useCanvasRenderLoop.ts` — the effect body no
 longer defines any function itself.
@@ -242,7 +242,80 @@ parameterizable (no hook state at all), so those moved to
 helpers in `utils/`, stateful handlers in the hook body, and `useEffect` doing nothing but
 add/remove listeners.
 
+## Split a function once its branching gets heavy ("ifologia")
+
+Not just effects/callbacks — a plain function that accumulates several `if`/`else` concerns in one
+body (e.g. "draw the background, then every node, then branch group-selection vs. per-node
+selection, then the draft rect") should be split one concern per named function, with the original
+function reduced to a thin orchestrator that just calls each in sequence. Each extracted piece
+becomes independently testable and readable on its own, instead of one long function requiring a
+reader to hold every branch in their head at once.
+
+Avoid — one function mixing every concern and its branching inline:
+
+```ts
+export const drawFrame = (gl, program, buffer, canvas, draftRect) => {
+  gl.colorMask(true, true, true, true);
+  drawBackground(gl);
+  gl.colorMask(true, true, true, false);
+
+  selectOrderedNodes(store.getState()).forEach((node) => drawRect(gl, program, buffer, node, ...));
+
+  const selectedNodes = selectSelectedNodes(store.getState());
+
+  if (isGroupSelection(selectedNodes)) {
+    // ...compute shared bounds, draw one outline + handles
+  } else {
+    selectedNodes.forEach((node) => {
+      // ...draw one outline + handles per node
+    });
+  }
+
+  if (draftRect) {
+    // ...draw draft outline + handles
+  }
+};
+```
+
+Prefer — each concern extracted to its own named function, orchestrator just sequences them:
+
+```ts
+export const drawFrame = (gl, program, buffer, canvas, draftRect) => {
+  const state = store.getState();
+  const viewport = selectViewport(state);
+  const { clientHeight, clientWidth } = canvas;
+
+  drawSceneBackground(gl);
+  drawSceneNodes(gl, program, buffer, selectOrderedNodes(state), clientWidth, clientHeight, viewport);
+  drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
+  drawDraftFrame(gl, program, buffer, draftRect, clientWidth, clientHeight, viewport);
+};
+
+// drawSelectionOutline itself still branches, but the branch is the *entire* body — nothing else
+// competes with it for the reader's attention:
+export const drawSelectionOutline = (gl, program, buffer, selectedNodes, canvasWidth, canvasHeight, viewport) => {
+  if (isGroupSelection(selectedNodes)) {
+    drawGroupSelectionOutline(gl, program, buffer, selectedNodes, canvasWidth, canvasHeight, viewport);
+  } else {
+    drawPerNodeSelectionOutlines(gl, program, buffer, selectedNodes, canvasWidth, canvasHeight, viewport);
+  }
+};
+```
+
+See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawFrame/drawFrame.ts` and its
+siblings (`drawSceneNodes.ts`, `drawSelectionOutline.ts`, `drawGroupSelectionOutline.ts`,
+`drawPerNodeSelectionOutlines.ts`, `drawDraftFrame.ts`) for the full split — `drawSceneBackground`
+itself ended up promoted one step further, to the global `utils/canvas/`, since it (like
+`drawBackground`/`drawCornerHandles`/`drawRect` before it) doesn't reference any Design-domain
+concept, unlike its siblings which all take `TSceneNode[]`/selection state; see
+[[x-draft-module-structure]] for that distinction. Once a function earns this split, that skill's
+folder-promotion rule kicks in too: the split-out pieces sit flat as siblings in their own folder
+(not a further nested `utils/`), and the original function's spec moves into a nested `test/`
+alongside them.
+
 ## Related
 
 [[x-draft-module-structure]] — once a helper like this is reused from more than one place, it moves
-out of the hook's file into its own `utils/<functionName>.ts`.
+out of the hook's file into its own `utils/<functionName>.ts`; once a function itself earns a split
+per the "ifologia" rule above, that skill also covers where the resulting files (and their own
+promoted folder) live.

@@ -9,7 +9,7 @@ import {
 } from '../../constants';
 
 // types
-import { TDraftRect } from '../../types';
+import { TDraftRect } from 'types/canvas';
 
 // utils
 import { createProgram } from './utils/createProgram';

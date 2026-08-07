@@ -12,7 +12,7 @@ import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 import styles from './canvas.module.scss';
 
 // types
-import { TDraftRect } from './types';
+import { TDraftRect } from 'types/canvas';
 
 const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

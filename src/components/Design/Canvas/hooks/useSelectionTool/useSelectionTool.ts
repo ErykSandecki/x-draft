@@ -2,16 +2,23 @@ import { RefObject, useEffect, useRef } from 'react';
 
 // store
 import { setSelection, updateNode } from 'store/design/slice';
-import { selectActiveTool, selectOrderedNodes, selectSelectedIds, selectViewport } from 'store/design/selectors';
+import {
+  selectActiveTool,
+  selectOrderedNodes,
+  selectSelectedIds,
+  selectSelectedNodes,
+  selectViewport,
+} from 'store/design/selectors';
 import { store, useAppDispatch, useAppSelector } from 'store';
 
 // types
 import { ToolName } from 'types/design/enums';
-import { TPoint } from '../../types';
+import { TPoint } from 'types/canvas';
 
 // utils
 import { getNodeAtPoint } from './utils/getNodeAtPoint';
 import { getPointerPosition } from '../../utils/getPointerPosition';
+import { isPointInGroupBounds } from './utils/isPointInGroupBounds';
 import { screenToWorld } from '../../utils/screenToWorld';
 import { toggleSelection } from './utils/toggleSelection';
 
@@ -59,6 +66,9 @@ export const useSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>)
           armDrag([hit.id], null, point);
         }
 
+        canvas.setPointerCapture(event.pointerId);
+      } else if (!event.shiftKey && isPointInGroupBounds(point, selectSelectedNodes(state))) {
+        armDrag(currentSelection, null, point);
         canvas.setPointerCapture(event.pointerId);
       } else if (!event.shiftKey) {
         dispatch(setSelection([]));

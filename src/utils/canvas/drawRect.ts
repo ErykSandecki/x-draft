@@ -1,5 +1,5 @@
 // types
-import { TDraftRect } from '../../../types';
+import { TDraftRect } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 // utils

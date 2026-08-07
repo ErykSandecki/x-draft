@@ -140,4 +140,108 @@ describe('drawFrame', () => {
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
   });
+
+  it('should draw one shared outline and 4 handles for a same-parent multi-selection, not per node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    store.dispatch(
+      addNode({
+        fill: '#0000ff',
+        height: 10,
+        name: 'Group A',
+        parentId: null,
+        rotation: 0,
+        type: NodeType.frame,
+        width: 10,
+        x: 100,
+        y: 100,
+      }),
+    );
+    store.dispatch(
+      addNode({
+        fill: '#0000ff',
+        height: 10,
+        name: 'Group B',
+        parentId: null,
+        rotation: 0,
+        type: NodeType.frame,
+        width: 10,
+        x: 200,
+        y: 100,
+      }),
+    );
+
+    const { rootOrder } = store.getState().design;
+    const [idA, idB] = rootOrder.slice(-2);
+
+    // action
+    store.dispatch(setSelection([idA, idB]));
+
+    // before
+    drawFrame(gl, program, buffer, canvas);
+
+    // result
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
+      ([mode]) => mode === gl.LINE_LOOP,
+    );
+
+    // one shared outline + 4 corner handles = 5 LINE_LOOP draws, not 10 (2 nodes x 5)
+    expect(lineLoopDraws).toHaveLength(5);
+  });
+
+  it('should fall back to per-node outlines when the selection spans different parents', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    store.dispatch(
+      addNode({
+        fill: '#ff00ff',
+        height: 10,
+        name: 'Child of A',
+        parentId: 'frame-a',
+        rotation: 0,
+        type: NodeType.frame,
+        width: 10,
+        x: 300,
+        y: 100,
+      }),
+    );
+    store.dispatch(
+      addNode({
+        fill: '#ff00ff',
+        height: 10,
+        name: 'Child of B',
+        parentId: 'frame-b',
+        rotation: 0,
+        type: NodeType.frame,
+        width: 10,
+        x: 400,
+        y: 100,
+      }),
+    );
+
+    const { rootOrder } = store.getState().design;
+    const [idA, idB] = rootOrder.slice(-2);
+
+    // action
+    store.dispatch(setSelection([idA, idB]));
+
+    // before
+    drawFrame(gl, program, buffer, canvas);
+
+    // result
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
+      ([mode]) => mode === gl.LINE_LOOP,
+    );
+
+    // 2 separate node outlines + handles = 10 LINE_LOOP draws, not 5 (one shared box)
+    expect(lineLoopDraws).toHaveLength(10);
+  });
 });

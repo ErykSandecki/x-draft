@@ -1,8 +1,8 @@
 // others
-import { CORNER_HANDLE_FILL, CORNER_HANDLE_SIZE } from '../../../constants';
+import { CORNER_HANDLE_FILL, CORNER_HANDLE_SIZE } from 'constant/canvas';
 
 // types
-import { TDraftRect } from '../../../types';
+import { TDraftRect } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 // utils

@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
-import { TDraftRect, TPoint } from '../../types';
+import { TDraftRect, TPoint } from 'types/canvas';
 
 // utils
 import { getPointerPosition } from '../../utils/getPointerPosition';

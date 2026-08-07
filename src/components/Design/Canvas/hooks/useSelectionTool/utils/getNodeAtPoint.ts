@@ -1,12 +1,12 @@
 // types
-import { TPoint } from '../../../types';
+import { TPoint } from 'types/canvas';
 import { TSceneNode } from 'types/design/types';
 
-const containsPoint = (node: TSceneNode, point: TPoint): boolean =>
-  point.x >= node.x && point.x <= node.x + node.width && point.y >= node.y && point.y <= node.y + node.height;
+// utils
+import { isPointInRect } from '../../../utils/isPointInRect';
 
 export const getNodeAtPoint = (point: TPoint, nodes: TSceneNode[]): TSceneNode | null => {
-  const hit = [...nodes].reverse().find((node) => containsPoint(node, point));
+  const hit = [...nodes].reverse().find((node) => isPointInRect(point, node));
 
   return hit ?? null;
 };

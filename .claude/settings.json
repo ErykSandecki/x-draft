@@ -38,7 +38,9 @@
       "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/shared/ZoomBox/hooks/**)",
       "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/utils/events/**)",
       "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-store-slice-logic)",
-      "Edit(/.claude/skills/x-draft-store-slice-logic/**)"
+      "Edit(/.claude/skills/x-draft-store-slice-logic/**)",
+      "Edit(/.claude/skills/x-draft-module-structure/**)",
+      "Edit(/.claude/skills/x-draft-function-style/**)"
     ],
     "additionalDirectories": [
       "/tmp",

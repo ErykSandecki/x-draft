@@ -1,5 +1,5 @@
 // others
-import { BACKGROUND_ALPHA, BACKGROUND_COLOR } from '../../../../constants';
+import { BACKGROUND_ALPHA, BACKGROUND_COLOR } from 'constant/canvas';
 
 // utils
 import { drawBackground } from '../drawBackground';

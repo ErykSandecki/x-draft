@@ -9,7 +9,7 @@ import { store, useAppDispatch } from 'store';
 import styles from '../../canvas.module.scss';
 
 // types
-import { TPoint } from '../../types';
+import { TPoint } from 'types/canvas';
 
 // utils
 import { applyDragPan } from './utils/applyDragPan';

@@ -1,10 +1,10 @@
 import { RefObject } from 'react';
 
 // types
-import { TDraftRect } from '../../../types';
+import { TDraftRect } from 'types/canvas';
 
 // utils
-import { drawFrame } from './drawFrame';
+import { drawFrame } from './drawFrame/drawFrame';
 
 type TFrameIdRef = { current: number };
 

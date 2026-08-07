@@ -4,7 +4,7 @@ import clamp from 'lodash/clamp';
 import { ZOOM_DELTA_THRESHOLD, ZOOM_MAX, ZOOM_MIN, ZOOM_STEP_TRACKPAD, ZOOM_STEP_WHEEL } from '../../../constants';
 
 // types
-import { TPoint } from '../../../types';
+import { TPoint } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 // utils

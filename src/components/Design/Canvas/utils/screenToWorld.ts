@@ -1,5 +1,5 @@
 // types
-import { TPoint } from '../types';
+import { TPoint } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 export const screenToWorld = (point: TPoint, viewport: TViewport): TPoint => ({

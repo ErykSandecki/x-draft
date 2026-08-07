@@ -12,7 +12,7 @@ import { TDesignState } from 'store/design/types';
 
 // types
 import { ToolName } from 'types/design/enums';
-import { TDraftRect } from '../../types';
+import { TDraftRect } from 'types/canvas';
 
 const createTestStore = (): EnhancedStore<{ design: TDesignState }> =>
   configureStore({ reducer: { design: designReducer } });

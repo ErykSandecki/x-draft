@@ -1,5 +1,5 @@
 // types
-import { TPoint } from '../types';
+import { TPoint } from 'types/canvas';
 
 export const getPointerPosition = (canvas: HTMLCanvasElement, event: PointerEvent | WheelEvent): TPoint => {
   const rect = canvas.getBoundingClientRect();

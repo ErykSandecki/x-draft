@@ -1,5 +1,5 @@
 // others
-import { CORNER_HANDLE_SIZE } from '../../../../constants';
+import { CORNER_HANDLE_SIZE } from 'constant/canvas';
 
 // utils
 import { drawCornerHandles } from '../drawCornerHandles';
