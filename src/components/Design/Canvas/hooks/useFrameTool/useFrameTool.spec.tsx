@@ -7,7 +7,7 @@ import { RefObject } from 'react';
 import { useFrameTool } from './useFrameTool';
 
 // store
-import designReducer, { setActiveTool } from 'store/design/designSlice';
+import designReducer, { setActiveTool, setSelection } from 'store/design/designSlice';
 import { TDesignState } from 'store/design/types';
 
 // types
@@ -100,6 +100,31 @@ describe('useFrameTool behaviors', () => {
     expect(design.nodes[design.rootOrder[0]]).toMatchObject({ height: 30, width: 50, x: 10, y: 10 });
     expect(design.activeTool).toBe(ToolName.default);
     expect(draftRef.current).toBeNull();
+  });
+
+  it('should clear any existing selection once drawing actually starts, not just on tool switch', () => {
+    // mock
+    const store = createTestStore();
+
+    store.dispatch(setSelection(['existing-node']));
+    store.dispatch(setActiveTool(ToolName.frame));
+
+    const canvasRef = createCanvasRef();
+    const draftRef: RefObject<TDraftRect | null> = { current: null };
+
+    // before
+    renderHook(() => useFrameTool(canvasRef, draftRef), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
+
+    // result
+    expect(store.getState().design.selectedIds).toEqual(['existing-node']);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+
+    // result
+    expect(store.getState().design.selectedIds).toEqual([]);
   });
 
   it('should ignore a non-primary button press', () => {

@@ -4,7 +4,7 @@ import { RefObject, useEffect, useRef } from 'react';
 import { MIN_FRAME_SIZE } from '../../constants';
 
 // store
-import { addNode, setActiveTool } from 'store/design/designSlice';
+import { addNode, setActiveTool, setSelection } from 'store/design/designSlice';
 import { selectActiveTool, selectViewport } from 'store/design/selectors';
 import { useAppDispatch, useAppSelector } from 'store';
 
@@ -31,6 +31,7 @@ export const useFrameTool = (
 
   const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     if (event.button === PRIMARY_MOUSE_BUTTON) {
+      dispatch(setSelection([]));
       startRef.current = screenToWorld(getPointerPosition(canvas, event), viewport);
       canvas.setPointerCapture(event.pointerId);
     }

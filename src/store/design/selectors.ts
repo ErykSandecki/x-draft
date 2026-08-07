@@ -12,4 +12,9 @@ export const selectNodes = (state: RootState): Record<string, TSceneNode> => sta
 export const selectOrderedNodes = (state: RootState): TSceneNode[] =>
   state.design.rootOrder.map((id) => state.design.nodes[id]);
 
+export const selectSelectedIds = (state: RootState): string[] => state.design.selectedIds;
+
+export const selectSelectedNodes = (state: RootState): TSceneNode[] =>
+  state.design.selectedIds.map((id) => state.design.nodes[id]);
+
 export const selectViewport = (state: RootState): TViewport => state.design.viewport;

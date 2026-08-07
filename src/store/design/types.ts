@@ -6,5 +6,6 @@ export type TDesignState = {
   activeTool: ToolName;
   nodes: Record<string, TSceneNode>;
   rootOrder: string[];
+  selectedIds: string[];
   viewport: TViewport;
 };

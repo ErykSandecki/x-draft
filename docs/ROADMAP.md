@@ -137,10 +137,38 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
 
 ## Etap 5 — Selekcja
 
-- [ ] hit-testing (klik w canvas → który node trafiony, z uwzględnieniem
-      zagnieżdżenia we frame'ach)
-- [ ] rysowanie selection outline + resize handles na canvasie
-- [ ] przeciąganie (move) i skalowanie (resize) zaznaczonego node'a
+- [x] hit-testing (klik w canvas → który node trafiony, z uwzględnieniem
+      zagnieżdżenia we frame'ach) — `useSelectionTool/utils/getNodeAtPoint.ts`, AABB w world
+      space (po `screenToWorld`), topmost wygrywa (ostatni w `rootOrder` = ostatnio narysowany).
+      Zagnieżdżenie we frame'ach nieaktualne na razie — jest tylko jeden typ node'a (frame),
+      `parentId` zawsze `null`, więc hit-test operuje na płaskiej liście; wraca jako temat przy
+      grupach/nested frames
+- [x] rysowanie selection outline + resize handles na canvasie — `drawFrame.ts` dorzuca po
+      pętli renderującej node'y drugą pętlę po `selectSelectedNodes`, reużywając bez zmian
+      `drawRect`/`drawCornerHandles` z Etapu 3/4 (już przyjmowały `viewport`, więc zadziałały
+      na dowolnym node'ie, nie tylko na draft-rekcie draw-in-progress)
+- [x] przeciąganie (move) zaznaczonego node'a (lub kilku naraz) — `useSelectionTool.ts`.
+      **Skalowanie (resize) uchwytami świadomie odłożone** — to osobny kawałek roboty
+      (hit-testing per-uchwyt, matematyka resize w 8 kierunkach, zmiana kursora), nie było
+      częścią tego, co zostało opisane do zrobienia teraz; uchwyty są już rysowane (patrz wyżej),
+      samo przeciąganie ich do zmiany rozmiaru to naturalny następny mikro-krok
+
+  Pełna semantyka zaznaczania 1:1 z Figmy/x-design (`Element/utils/handleSelectElement.ts` +
+  `MultipleElementsArea/ClickableArea/*`), ale spleciona w **jeden** hit-test-driven handler
+  zamiast dwuwarstwowego systemu DOM-owego z x-design (`Element`-level handler +
+  `ClickableArea` overlay z `stopPropagation`) — x-draft nie ma DOM-u per node (jeden canvas,
+  ręczny hit-test), więc dwuwarstwowość x-design nie miała się w co przełożyć 1:1; ten sam efekt
+  wychodzi z jednej funkcji z `dragStateRef` (`pendingSelectionId` + `hasMoved`, ustalane na
+  pointerdown, rozstrzygane na pointerup):
+  - klik (bez shift) na niezaznaczony node → zaznacza tylko jego
+  - shift+klik na niezaznaczony → dokłada do zaznaczenia; shift+klik na zaznaczony → zdejmuje
+  - klik (bez shift) na node będący częścią zaznaczenia 2+, puszczony **bez ruchu** → zwija
+    zaznaczenie do tego jednego node'a
+  - klik+**przeciągnięcie** (bez shift) node'a z zaznaczenia 2+ → cała grupa przesuwa się
+    razem, zaznaczenie **zostaje** nietknięte (nie zwija się do jednego)
+  - klik na nowy, nigdy niezaznaczony node przy istniejącym zaznaczeniu 2+ → zastępuje całe
+    zaznaczenie tym jednym (ta sama ścieżka co zwykły klik)
+  - klik na pusty obszar canvasu → czyści całe zaznaczenie (shift+klik na pustym → no-op)
 
 ## Etap 6 — Kolejne narzędzia rysujące
 

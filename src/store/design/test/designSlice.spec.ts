@@ -1,5 +1,5 @@
 // store
-import reducer, { addNode, setActiveTool, setViewport, updateNode } from '../designSlice';
+import reducer, { addNode, setActiveTool, setSelection, setViewport, updateNode } from '../designSlice';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -24,6 +24,7 @@ describe('designSlice reducer', () => {
       activeTool: ToolName.default,
       nodes: {},
       rootOrder: [],
+      selectedIds: [],
       viewport: { x: 0, y: 0, zoom: 1 },
     });
   });
@@ -72,5 +73,13 @@ describe('designSlice reducer', () => {
 
     // result
     expect(state.viewport).toEqual({ x: 10, y: 20, zoom: 2 });
+  });
+
+  it('should set the selection', () => {
+    // before
+    const state = reducer(undefined, setSelection(['a', 'b']));
+
+    // result
+    expect(state.selectedIds).toEqual(['a', 'b']);
   });
 });

@@ -1,5 +1,12 @@
 // selectors
-import { selectActiveTool, selectNodes, selectOrderedNodes, selectViewport } from '../selectors';
+import {
+  selectActiveTool,
+  selectNodes,
+  selectOrderedNodes,
+  selectSelectedIds,
+  selectSelectedNodes,
+  selectViewport,
+} from '../selectors';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -23,6 +30,7 @@ const state = {
     activeTool: ToolName.frame,
     nodes: { [node.id]: node },
     rootOrder: [node.id],
+    selectedIds: [node.id],
     viewport: { x: 5, y: 10, zoom: 2 },
   },
 } as any;
@@ -46,5 +54,15 @@ describe('design selectors', () => {
   it('should select the viewport', () => {
     // result
     expect(selectViewport(state)).toEqual({ x: 5, y: 10, zoom: 2 });
+  });
+
+  it('should select the selected ids', () => {
+    // result
+    expect(selectSelectedIds(state)).toEqual([node.id]);
+  });
+
+  it('should select the selected nodes', () => {
+    // result
+    expect(selectSelectedNodes(state)).toEqual([node]);
   });
 });

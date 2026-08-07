@@ -1,5 +1,5 @@
 // store
-import { addNode } from 'store/design/designSlice';
+import { addNode, setSelection } from 'store/design/designSlice';
 import { store } from 'store';
 
 // types
@@ -105,5 +105,39 @@ describe('drawFrame', () => {
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
+  });
+
+  it('should draw a selection outline and corner handles for each selected node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    store.dispatch(
+      addNode({
+        fill: '#00ff00',
+        height: 20,
+        name: 'Frame 2',
+        parentId: null,
+        rotation: 0,
+        type: NodeType.frame,
+        width: 10,
+        x: 0,
+        y: 0,
+      }),
+    );
+
+    const { rootOrder } = store.getState().design;
+    const selectedId = rootOrder[rootOrder.length - 1];
+
+    // action
+    store.dispatch(setSelection([selectedId]));
+
+    // before
+    drawFrame(gl, program, buffer, canvas);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
   });
 });

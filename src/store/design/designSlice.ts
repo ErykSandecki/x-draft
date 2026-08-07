@@ -12,6 +12,7 @@ const initialState: TDesignState = {
   activeTool: DEFAULT_TOOL,
   nodes: {},
   rootOrder: [],
+  selectedIds: [],
   viewport: DEFAULT_VIEWPORT,
 };
 
@@ -29,6 +30,9 @@ const designSlice = createSlice({
     setActiveTool: (state, action: PayloadAction<ToolName>) => {
       state.activeTool = action.payload;
     },
+    setSelection: (state, action: PayloadAction<string[]>) => {
+      state.selectedIds = action.payload;
+    },
     setViewport: (state, action: PayloadAction<TViewport>) => {
       state.viewport = action.payload;
     },
@@ -42,6 +46,6 @@ const designSlice = createSlice({
   },
 });
 
-export const { addNode, setActiveTool, setViewport, updateNode } = designSlice.actions;
+export const { addNode, setActiveTool, setSelection, setViewport, updateNode } = designSlice.actions;
 
 export default designSlice.reducer;

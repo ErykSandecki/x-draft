@@ -6,6 +6,7 @@ import { useCanvasPanZoom } from './hooks/useCanvasPanZoom/useCanvasPanZoom';
 import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRenderLoop';
 import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
 import { useFrameTool } from './hooks/useFrameTool/useFrameTool';
+import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
 // styles
 import styles from './canvas.module.scss';
@@ -21,6 +22,7 @@ const Canvas: FC = () => {
   useCanvasPanZoom(canvasRef);
   useCanvasDragPan(canvasRef);
   useFrameTool(canvasRef, draftRef);
+  useSelectionTool(canvasRef);
   useCanvasRenderLoop(canvasRef, draftRef);
 
   return (
