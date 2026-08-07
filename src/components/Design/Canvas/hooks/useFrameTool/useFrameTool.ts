@@ -18,6 +18,8 @@ import { getRandomColor } from './utils/getRandomColor';
 import { screenToWorld } from '../../utils/screenToWorld';
 import { toDraftRect } from './utils/toDraftRect';
 
+const PRIMARY_MOUSE_BUTTON = 0;
+
 export const useFrameTool = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   draftRef: RefObject<TDraftRect | null>,
@@ -28,8 +30,10 @@ export const useFrameTool = (
   const startRef = useRef<TPoint | null>(null);
 
   const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
-    startRef.current = screenToWorld(getPointerPosition(canvas, event), viewport);
-    canvas.setPointerCapture(event.pointerId);
+    if (event.button === PRIMARY_MOUSE_BUTTON) {
+      startRef.current = screenToWorld(getPointerPosition(canvas, event), viewport);
+      canvas.setPointerCapture(event.pointerId);
+    }
   };
 
   const handlePointerMove = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
