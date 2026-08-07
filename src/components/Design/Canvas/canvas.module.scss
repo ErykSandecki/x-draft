@@ -5,6 +5,10 @@
   top: 0;
   width: 100%;
 
+  * {
+    -webkit-user-drag: none;
+  }
+
   &__texture {
     background-color: #000000;
     background-image: url('../../../assets/images/texture--dark.svg');
