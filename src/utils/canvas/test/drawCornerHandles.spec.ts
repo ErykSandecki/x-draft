@@ -76,4 +76,27 @@ describe('drawCornerHandles', () => {
 
     expect(worldWidth).toBeCloseTo(CORNER_HANDLE_SIZE);
   });
+
+  it('should keep the handle a constant size on screen regardless of zoom', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+
+    // before
+    drawCornerHandles(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 100, 100, {
+      x: 0,
+      y: 0,
+      zoom: 4,
+    });
+
+    // result
+    const [firstFillCall] = (gl.bufferData as ReturnType<typeof vi.fn>).mock.calls;
+    const vertices: Float32Array = firstFillCall[1];
+    const worldWidth = Math.abs(vertices[2] - vertices[0]);
+    const screenWidth = worldWidth * 4;
+
+    expect(worldWidth).toBeCloseTo(CORNER_HANDLE_SIZE / 4);
+    expect(screenWidth).toBeCloseTo(CORNER_HANDLE_SIZE);
+  });
 });
