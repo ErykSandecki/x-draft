@@ -1,12 +1,9 @@
 import { RefObject, useEffect } from 'react';
 
 // others
-import {
-  FRAGMENT_SHADER_SOURCE,
-  VERTEX_SHADER_SOURCE,
-  WEBGL_CONTEXT_ATTRIBUTES,
-  WEBGL_CONTEXT_ID,
-} from '../../constants';
+import FRAGMENT_SHADER_SOURCE from 'constant/webgl/fragmentShaderSource';
+import VERTEX_SHADER_SOURCE from 'constant/webgl/vertexShaderSource';
+import { WEBGL_CONTEXT_ATTRIBUTES, WEBGL_CONTEXT_ID } from '../../constants';
 
 // types
 import { TDraftRect } from 'types/canvas';
