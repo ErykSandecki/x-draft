@@ -4,8 +4,40 @@
       "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-design/.claude/skills/x-design-scss-import-order)",
       "Edit(/.claude/skills/x-design-scss-import-order/**)",
       "WebFetch(domain:github.com)",
-      "WebSearch"
+      "WebSearch",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_drag",
+      "mcp__playwright__browser_drop",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_file_upload",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_find",
+      "mcp__playwright__browser_handle_dialog",
+      "mcp__playwright__browser_hover",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_navigate_back",
+      "mcp__playwright__browser_network_request",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_resize",
+      "mcp__playwright__browser_run_code_unsafe",
+      "mcp__playwright__browser_select_option",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_tabs",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_wait_for",
+      "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-playwright-mcp-testing)",
+      "Edit(/.claude/skills/x-draft-playwright-mcp-testing/**)"
     ],
-    "additionalDirectories": ["/tmp", "/Users/eryksandecki/Desktop/Work/Figma/x-design/.claude/skills"]
+    "additionalDirectories": [
+      "/tmp",
+      "/Users/eryksandecki/Desktop/Work/Figma/x-design/.claude/skills",
+      "/Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills"
+    ]
   }
 }
