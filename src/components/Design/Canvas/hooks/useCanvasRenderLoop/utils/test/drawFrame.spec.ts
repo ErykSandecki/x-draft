@@ -1,5 +1,5 @@
 // store
-import { addNode, setSelection } from 'store/design/designSlice';
+import { addNode, setSelection } from 'store/design/slice';
 import { store } from 'store';
 
 // types
@@ -43,7 +43,7 @@ describe('drawFrame', () => {
     drawFrame(gl, program, buffer, canvas);
 
     // result
-    expect(gl.colorMask.mock.calls).toEqual([
+    expect((gl.colorMask as ReturnType<typeof vi.fn>).mock.calls).toEqual([
       [true, true, true, true],
       [true, true, true, false],
     ]);

@@ -11,7 +11,8 @@ export const getPressedKeys = ({
   ctrlKey,
   metaKey,
   shiftKey,
-}: KeyboardEvent | ReactKeyboardEvent<HTMLElement>): number => [altKey, ctrlKey, metaKey, shiftKey].filter(Boolean).length;
+}: KeyboardEvent | ReactKeyboardEvent<HTMLElement>): number =>
+  [altKey, ctrlKey, metaKey, shiftKey].filter(Boolean).length;
 
 export const triggerActions = (
   event: KeyboardEvent | ReactKeyboardEvent<HTMLElement>,

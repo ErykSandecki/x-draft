@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 // store
-import designReducer from './design/designSlice';
+import designReducer from './design/slice';
 
 export const store = configureStore({
   reducer: {

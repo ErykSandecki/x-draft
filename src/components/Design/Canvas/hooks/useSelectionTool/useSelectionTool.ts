@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef } from 'react';
 
 // store
-import { setSelection, updateNode } from 'store/design/designSlice';
+import { setSelection, updateNode } from 'store/design/slice';
 import { selectActiveTool, selectOrderedNodes, selectSelectedIds, selectViewport } from 'store/design/selectors';
 import { store, useAppDispatch, useAppSelector } from 'store';
 

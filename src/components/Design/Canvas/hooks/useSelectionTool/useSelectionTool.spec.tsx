@@ -6,7 +6,7 @@ import { RefObject } from 'react';
 import { useSelectionTool } from './useSelectionTool';
 
 // store
-import { addNode, setActiveTool, setSelection } from 'store/design/designSlice';
+import { addNode, setActiveTool, setSelection } from 'store/design/slice';
 import { store } from 'store';
 
 // types

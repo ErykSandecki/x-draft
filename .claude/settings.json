@@ -36,7 +36,9 @@
       "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/components/PageBuilder/ViewBox/hooks/**)",
       "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/pages/PageBuilderPage/hooks/**)",
       "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/shared/ZoomBox/hooks/**)",
-      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/utils/events/**)"
+      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/utils/events/**)",
+      "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-store-slice-logic)",
+      "Edit(/.claude/skills/x-draft-store-slice-logic/**)"
     ],
     "additionalDirectories": [
       "/tmp",

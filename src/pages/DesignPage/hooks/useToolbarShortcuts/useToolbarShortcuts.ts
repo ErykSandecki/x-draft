@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { TKeysMap, useKeyboardHandler } from 'hooks';
 
 // store
-import { setActiveTool } from 'store/design/designSlice';
+import { setActiveTool } from 'store/design/slice';
 import { useAppDispatch } from 'store';
 
 // types

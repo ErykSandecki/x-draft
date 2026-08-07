@@ -43,7 +43,15 @@ describe('drawRect', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawRect(gl, program, buffer, { height: 10, stroke: '#ffffff', width: 10, x: 0, y: 0 }, 100, 100, IDENTITY_VIEWPORT);
+    drawRect(
+      gl,
+      program,
+      buffer,
+      { height: 10, stroke: '#ffffff', width: 10, x: 0, y: 0 },
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);

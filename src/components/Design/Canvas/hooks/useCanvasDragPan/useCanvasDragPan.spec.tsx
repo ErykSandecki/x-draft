@@ -6,7 +6,7 @@ import { RefObject } from 'react';
 import { useCanvasDragPan } from './useCanvasDragPan';
 
 // store
-import { setViewport } from 'store/design/designSlice';
+import { setViewport } from 'store/design/slice';
 import { store } from 'store';
 
 // types

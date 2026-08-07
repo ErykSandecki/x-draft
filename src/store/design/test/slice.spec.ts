@@ -1,5 +1,5 @@
 // store
-import reducer, { addNode, setActiveTool, setSelection, setViewport, updateNode } from '../designSlice';
+import slice, { addNode, setActiveTool, setSelection, setViewport, updateNode } from '../slice';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -17,10 +17,10 @@ const frameNodePayload: Omit<TSceneNode, 'id'> = {
   y: 0,
 };
 
-describe('designSlice reducer', () => {
+describe('design slice', () => {
   it('should return the initial state', () => {
     // result
-    expect(reducer(undefined, { type: 'unknown' })).toEqual({
+    expect(slice(undefined, { type: 'unknown' })).toEqual({
       activeTool: ToolName.default,
       nodes: {},
       rootOrder: [],
@@ -31,7 +31,7 @@ describe('designSlice reducer', () => {
 
   it('should set the active tool', () => {
     // before
-    const state = reducer(undefined, setActiveTool(ToolName.frame));
+    const state = slice(undefined, setActiveTool(ToolName.frame));
 
     // result
     expect(state.activeTool).toBe(ToolName.frame);
@@ -39,7 +39,7 @@ describe('designSlice reducer', () => {
 
   it('should add a node with a generated id', () => {
     // before
-    const state = reducer(undefined, addNode(frameNodePayload));
+    const state = slice(undefined, addNode(frameNodePayload));
     const [id] = state.rootOrder;
 
     // result
@@ -49,11 +49,11 @@ describe('designSlice reducer', () => {
 
   it('should update an existing node', () => {
     // before
-    const withNode = reducer(undefined, addNode(frameNodePayload));
+    const withNode = slice(undefined, addNode(frameNodePayload));
     const [id] = withNode.rootOrder;
 
     // action
-    const state = reducer(withNode, updateNode({ changes: { width: 300 }, id }));
+    const state = slice(withNode, updateNode({ changes: { width: 300 }, id }));
 
     // result
     expect(state.nodes[id].width).toBe(300);
@@ -61,7 +61,7 @@ describe('designSlice reducer', () => {
 
   it('should do nothing when updating a node that does not exist', () => {
     // before
-    const state = reducer(undefined, updateNode({ changes: { width: 300 }, id: 'missing' }));
+    const state = slice(undefined, updateNode({ changes: { width: 300 }, id: 'missing' }));
 
     // result
     expect(state.nodes).toEqual({});
@@ -69,7 +69,7 @@ describe('designSlice reducer', () => {
 
   it('should set the viewport', () => {
     // before
-    const state = reducer(undefined, setViewport({ x: 10, y: 20, zoom: 2 }));
+    const state = slice(undefined, setViewport({ x: 10, y: 20, zoom: 2 }));
 
     // result
     expect(state.viewport).toEqual({ x: 10, y: 20, zoom: 2 });
@@ -77,7 +77,7 @@ describe('designSlice reducer', () => {
 
   it('should set the selection', () => {
     // before
-    const state = reducer(undefined, setSelection(['a', 'b']));
+    const state = slice(undefined, setSelection(['a', 'b']));
 
     // result
     expect(state.selectedIds).toEqual(['a', 'b']);

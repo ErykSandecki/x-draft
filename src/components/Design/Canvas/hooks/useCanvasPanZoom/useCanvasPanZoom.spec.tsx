@@ -6,7 +6,7 @@ import { RefObject } from 'react';
 import { useCanvasPanZoom } from './useCanvasPanZoom';
 
 // store
-import { setViewport } from 'store/design/designSlice';
+import { setViewport } from 'store/design/slice';
 import { store } from 'store';
 
 // types

@@ -10,7 +10,7 @@ import { TOOL_ICON, TOOLBAR_ORDER, TOOLS_WITH_DROPDOWN } from '../constants';
 
 // store
 import { selectActiveTool } from 'store/design/selectors';
-import { setActiveTool } from 'store/design/designSlice';
+import { setActiveTool } from 'store/design/slice';
 import { useAppDispatch, useAppSelector } from 'store';
 
 // styles

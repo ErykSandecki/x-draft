@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { useToolbarShortcuts } from './useToolbarShortcuts';
 
 // store
-import designReducer, { setActiveTool } from 'store/design/designSlice';
+import designReducer, { setActiveTool } from 'store/design/slice';
 import { TDesignState } from 'store/design/types';
 
 // types

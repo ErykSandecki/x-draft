@@ -1,7 +1,7 @@
 import { RefObject, useEffect } from 'react';
 
 // store
-import { setViewport } from 'store/design/designSlice';
+import { setViewport } from 'store/design/slice';
 import { selectViewport } from 'store/design/selectors';
 import { store, useAppDispatch } from 'store';
 

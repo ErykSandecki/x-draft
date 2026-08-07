@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef } from 'react';
 
 // store
-import { setViewport } from 'store/design/designSlice';
+import { setViewport } from 'store/design/slice';
 import { selectViewport } from 'store/design/selectors';
 import { store, useAppDispatch } from 'store';
 
@@ -35,9 +35,7 @@ export const useCanvasDragPan = (canvasRef: RefObject<HTMLCanvasElement | null>)
       const point = getPointerPosition(canvas, event);
       const viewport = selectViewport(store.getState());
 
-      dispatch(
-        setViewport(applyDragPan(viewport, point.x - lastPointRef.current.x, point.y - lastPointRef.current.y)),
-      );
+      dispatch(setViewport(applyDragPan(viewport, point.x - lastPointRef.current.x, point.y - lastPointRef.current.y)));
       lastPointRef.current = point;
     }
   };

@@ -9,7 +9,7 @@ import { KEYBOARD_SHORTCUTS } from '../../../keys';
 import { TOOL_ICON, TOOL_LABEL } from '../../constants';
 
 // store
-import { setActiveTool } from 'store/design/designSlice';
+import { setActiveTool } from 'store/design/slice';
 import { useAppDispatch } from 'store';
 
 // styles

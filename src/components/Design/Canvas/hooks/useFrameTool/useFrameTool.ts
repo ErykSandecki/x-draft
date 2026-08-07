@@ -4,7 +4,7 @@ import { RefObject, useEffect, useRef } from 'react';
 import { MIN_FRAME_SIZE } from '../../constants';
 
 // store
-import { addNode, setActiveTool, setSelection } from 'store/design/designSlice';
+import { addNode, setActiveTool, setSelection } from 'store/design/slice';
 import { selectActiveTool, selectViewport } from 'store/design/selectors';
 import { useAppDispatch, useAppSelector } from 'store';
 

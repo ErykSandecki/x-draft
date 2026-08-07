@@ -7,7 +7,7 @@ import { RefObject } from 'react';
 import { useFrameTool } from './useFrameTool';
 
 // store
-import designReducer, { setActiveTool, setSelection } from 'store/design/designSlice';
+import designReducer, { setActiveTool, setSelection } from 'store/design/slice';
 import { TDesignState } from 'store/design/types';
 
 // types

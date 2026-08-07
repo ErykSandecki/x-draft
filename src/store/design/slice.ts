@@ -8,6 +8,10 @@ import { TDesignState } from './types';
 import { ToolName } from 'types/design/enums';
 import { TSceneNode, TViewport } from 'types/design/types';
 
+// utils
+import { handleAddNode } from './utils/handleAddNode';
+import { handleUpdateNode } from './utils/handleUpdateNode';
+
 const initialState: TDesignState = {
   activeTool: DEFAULT_TOOL,
   nodes: {},
@@ -22,10 +26,7 @@ const designSlice = createSlice({
   reducers: {
     addNode: {
       prepare: (node: Omit<TSceneNode, 'id'>) => ({ payload: { ...node, id: nanoid() } as TSceneNode }),
-      reducer: (state, action: PayloadAction<TSceneNode>) => {
-        state.nodes[action.payload.id] = action.payload;
-        state.rootOrder.push(action.payload.id);
-      },
+      reducer: (state, action: PayloadAction<TSceneNode>) => handleAddNode(state, action.payload),
     },
     setActiveTool: (state, action: PayloadAction<ToolName>) => {
       state.activeTool = action.payload;
@@ -36,13 +37,8 @@ const designSlice = createSlice({
     setViewport: (state, action: PayloadAction<TViewport>) => {
       state.viewport = action.payload;
     },
-    updateNode: (state, action: PayloadAction<{ changes: Partial<TSceneNode>; id: string }>) => {
-      const node = state.nodes[action.payload.id];
-
-      if (node) {
-        Object.assign(node, action.payload.changes);
-      }
-    },
+    updateNode: (state, action: PayloadAction<{ changes: Partial<TSceneNode>; id: string }>) =>
+      handleUpdateNode(state, action.payload),
   },
 });
 
