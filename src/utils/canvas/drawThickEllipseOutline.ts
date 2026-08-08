@@ -1,26 +1,20 @@
+// others
+import { ELLIPSE_SEGMENTS } from 'constant/canvas';
+
 // types
 import { TDraftRect } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 // utils
+import { getEllipsePoints } from './getEllipsePoints';
+import { getQuadVertices } from './drawThickOutline';
 import { hexToRgbaFloat } from './hexToRgbaFloat';
 
-export const getQuadVertices = (
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  x3: number,
-  y3: number,
-  x4: number,
-  y4: number,
-): number[] => [x1, y1, x2, y2, x3, y3, x1, y1, x3, y3, x4, y4];
-
-export const drawThickOutline = (
+export const drawThickEllipseOutline = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
   buffer: WebGLBuffer,
-  rect: TDraftRect,
+  ellipse: TDraftRect,
   color: string,
   strokeWidth: number,
   canvasWidth: number,
@@ -33,21 +27,30 @@ export const drawThickOutline = (
   const zoomLocation = gl.getUniformLocation(program, 'u_zoom');
   const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
   const halfWidth = strokeWidth / viewport.zoom / 2;
-  const outerX1 = rect.x - halfWidth;
-  const outerY1 = rect.y - halfWidth;
-  const outerX2 = rect.x + rect.width + halfWidth;
-  const outerY2 = rect.y + rect.height + halfWidth;
-  const innerX1 = rect.x + halfWidth;
-  const innerY1 = rect.y + halfWidth;
-  const innerX2 = rect.x + rect.width - halfWidth;
-  const innerY2 = rect.y + rect.height - halfWidth;
 
-  const vertices = [
-    ...getQuadVertices(outerX1, outerY1, outerX2, outerY1, outerX2, innerY1, outerX1, innerY1), // top
-    ...getQuadVertices(outerX1, innerY2, outerX2, innerY2, outerX2, outerY2, outerX1, outerY2), // bottom
-    ...getQuadVertices(outerX1, innerY1, innerX1, innerY1, innerX1, innerY2, outerX1, innerY2), // left
-    ...getQuadVertices(innerX2, innerY1, outerX2, innerY1, outerX2, innerY2, innerX2, innerY2), // right
-  ];
+  const outerPoints = getEllipsePoints(
+    { height: ellipse.height + halfWidth * 2, width: ellipse.width + halfWidth * 2, x: ellipse.x - halfWidth, y: ellipse.y - halfWidth },
+    ELLIPSE_SEGMENTS,
+  );
+  const innerPoints = getEllipsePoints(
+    { height: ellipse.height - halfWidth * 2, width: ellipse.width - halfWidth * 2, x: ellipse.x + halfWidth, y: ellipse.y + halfWidth },
+    ELLIPSE_SEGMENTS,
+  );
+
+  const vertices = outerPoints.flatMap((outerPoint, index) => {
+    const nextIndex = (index + 1) % ELLIPSE_SEGMENTS;
+
+    return getQuadVertices(
+      outerPoint.x,
+      outerPoint.y,
+      outerPoints[nextIndex].x,
+      outerPoints[nextIndex].y,
+      innerPoints[nextIndex].x,
+      innerPoints[nextIndex].y,
+      innerPoints[index].x,
+      innerPoints[index].y,
+    );
+  });
 
   gl.useProgram(program);
   gl.uniform2f(viewportOffsetLocation, viewport.x, viewport.y);
@@ -59,5 +62,5 @@ export const drawThickOutline = (
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
   gl.uniform4fv(colorLocation, hexToRgbaFloat(color));
-  gl.drawArrays(gl.TRIANGLES, 0, 24);
+  gl.drawArrays(gl.TRIANGLES, 0, ELLIPSE_SEGMENTS * 6);
 };

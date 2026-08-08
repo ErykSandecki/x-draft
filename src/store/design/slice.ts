@@ -1,7 +1,7 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 
 // others
-import { DEFAULT_TOOL, DEFAULT_VIEWPORT } from './constants';
+import { DEFAULT_SHAPE_TOOL, DEFAULT_TOOL, DEFAULT_VIEWPORT } from './constants';
 
 // types
 import { TDesignState } from './types';
@@ -10,10 +10,12 @@ import { TSceneNode, TViewport } from 'types/design/types';
 
 // utils
 import { handleAddNode } from './utils/handleAddNode';
+import { handleSetActiveTool } from './utils/handleSetActiveTool';
 import { handleUpdateNode } from './utils/handleUpdateNode';
 
 const initialState: TDesignState = {
   activeTool: DEFAULT_TOOL,
+  lastShapeTool: DEFAULT_SHAPE_TOOL,
   nodes: {},
   rootOrder: [],
   selectedIds: [],
@@ -28,9 +30,7 @@ const designSlice = createSlice({
       prepare: (node: Omit<TSceneNode, 'id'>) => ({ payload: { ...node, id: nanoid() } as TSceneNode }),
       reducer: (state, action: PayloadAction<TSceneNode>) => handleAddNode(state, action.payload),
     },
-    setActiveTool: (state, action: PayloadAction<ToolName>) => {
-      state.activeTool = action.payload;
-    },
+    setActiveTool: (state, action: PayloadAction<ToolName>) => handleSetActiveTool(state, action.payload),
     setSelection: (state, action: PayloadAction<string[]>) => {
       state.selectedIds = action.payload;
     },

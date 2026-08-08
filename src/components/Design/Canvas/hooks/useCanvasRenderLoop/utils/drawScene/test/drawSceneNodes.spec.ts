@@ -10,6 +10,7 @@ const createGlMock = (): WebGL2RenderingContext =>
     LINE_LOOP: 2,
     STATIC_DRAW: 35044,
     TRIANGLES: 4,
+    TRIANGLE_FAN: 6,
     bindBuffer: vi.fn(),
     bufferData: vi.fn(),
     createBuffer: vi.fn(() => ({})),
@@ -67,5 +68,19 @@ describe('drawSceneNodes', () => {
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(2);
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
+  });
+
+  it('should draw a filled ellipse for an ellipse node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const nodes = [buildNode({ id: 'a', type: NodeType.ellipse })];
+
+    // before
+    drawSceneNodes(gl, program, buffer, nodes, 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
   });
 });

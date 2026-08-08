@@ -7,6 +7,8 @@ import { TSceneNode, TViewport } from 'types/design/types';
 
 export const selectActiveTool = (state: RootState): ToolName => state.design.activeTool;
 
+export const selectLastShapeTool = (state: RootState): ToolName => state.design.lastShapeTool;
+
 export const selectNodes = (state: RootState): Record<string, TSceneNode> => state.design.nodes;
 
 export const selectOrderedNodes = (state: RootState): TSceneNode[] => state.design.rootOrder.map((id) => state.design.nodes[id]);

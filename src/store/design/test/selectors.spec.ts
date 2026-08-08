@@ -1,5 +1,13 @@
 // selectors
-import { selectActiveTool, selectNodes, selectOrderedNodes, selectSelectedIds, selectSelectedNodes, selectViewport } from '../selectors';
+import {
+  selectActiveTool,
+  selectLastShapeTool,
+  selectNodes,
+  selectOrderedNodes,
+  selectSelectedIds,
+  selectSelectedNodes,
+  selectViewport,
+} from '../selectors';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -21,6 +29,7 @@ const node: TSceneNode = {
 const state = {
   design: {
     activeTool: ToolName.frame,
+    lastShapeTool: ToolName.ellipse,
     nodes: { [node.id]: node },
     rootOrder: [node.id],
     selectedIds: [node.id],
@@ -32,6 +41,11 @@ describe('design selectors', () => {
   it('should select the active tool', () => {
     // result
     expect(selectActiveTool(state)).toBe(ToolName.frame);
+  });
+
+  it('should select the last shape tool', () => {
+    // result
+    expect(selectLastShapeTool(state)).toBe(ToolName.ellipse);
   });
 
   it('should select the nodes record', () => {

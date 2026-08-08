@@ -63,4 +63,24 @@ describe('ToolDropdown behaviors', () => {
     // result
     expect(store.getState().design.activeTool).toBe(ToolName.frame);
   });
+
+  it('should list every tool in the rectangle group and select the last shape tool used', async () => {
+    // mock
+    const user = userEvent.setup();
+
+    // before
+    render(
+      <Provider store={store}>
+        <ToolDropdown tool={ToolName.rectangle} />
+      </Provider>,
+    );
+
+    // action
+    await user.click(screen.getByRole('button', { name: 'rectangle options' }));
+    await user.click(screen.getByText('Ellipse'));
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.ellipse);
+    expect(store.getState().design.lastShapeTool).toBe(ToolName.ellipse);
+  });
 });

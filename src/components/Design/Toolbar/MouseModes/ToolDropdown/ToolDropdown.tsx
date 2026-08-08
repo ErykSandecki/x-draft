@@ -6,11 +6,12 @@ import { Icon, Popover, PopoverCompound } from 'shared';
 
 // others
 import { KEYBOARD_SHORTCUTS } from '../../../keys';
-import { TOOL_ICON, TOOL_LABEL } from '../../constants';
+import { TOOL_GROUP_ITEMS, TOOL_ICON, TOOL_LABEL } from '../../constants';
 
 // store
+import { selectLastShapeTool } from 'store/design/selectors';
 import { setActiveTool } from 'store/design/slice';
-import { useAppDispatch } from 'store';
+import { useAppDispatch, useAppSelector } from 'store';
 
 // styles
 import styles from './tool-dropdown.module.scss';
@@ -26,17 +27,23 @@ export type TToolDropdownProps = {
 
 const ToolDropdown: FC<TToolDropdownProps> = ({ tool }) => {
   const dispatch = useAppDispatch();
+  const lastShapeTool = useAppSelector(selectLastShapeTool);
   const { t } = useTranslation();
+  const groupItems = TOOL_GROUP_ITEMS[tool];
+  const selectedTool = groupItems ? lastShapeTool : tool;
 
   return (
     <Popover trigger={<Icon name="ChevronDown" size={5} />} triggerAriaLabel={`${tool} options`} triggerClassName={styles.ToolDropdown}>
-      <PopoverItem
-        icon={TOOL_ICON[tool]}
-        label={t(TOOL_LABEL[tool])}
-        onClick={() => dispatch(setActiveTool(tool))}
-        selected
-        shortcut={KEYBOARD_SHORTCUTS[tool].join('')}
-      />
+      {(groupItems ?? [tool]).map((groupTool) => (
+        <PopoverItem
+          icon={TOOL_ICON[groupTool]}
+          key={groupTool}
+          label={t(TOOL_LABEL[groupTool])}
+          onClick={() => dispatch(setActiveTool(groupTool))}
+          selected={groupTool === selectedTool}
+          shortcut={KEYBOARD_SHORTCUTS[groupTool].join('')}
+        />
+      ))}
     </Popover>
   );
 };

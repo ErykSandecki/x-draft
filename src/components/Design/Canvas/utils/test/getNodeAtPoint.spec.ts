@@ -57,4 +57,13 @@ describe('getNodeAtPoint', () => {
     // result
     expect(getNodeAtPoint({ x: 0, y: 0 }, [])).toBeNull();
   });
+
+  it('should use elliptical hit-testing for ellipse nodes, not the bounding box', () => {
+    // mock
+    const node = buildNode({ height: 10, type: NodeType.ellipse, width: 20, x: 0, y: 0 });
+
+    // result — the bounding box's (0, 0) corner sits outside the inscribed ellipse
+    expect(getNodeAtPoint({ x: 0, y: 0 }, [node])).toBeNull();
+    expect(getNodeAtPoint({ x: 10, y: 5 }, [node])).toEqual(node);
+  });
 });

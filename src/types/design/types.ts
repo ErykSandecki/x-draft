@@ -12,6 +12,11 @@ export type TBaseNode = {
   y: number;
 };
 
+export type TEllipseNode = TBaseNode & {
+  fill: string;
+  type: NodeType.ellipse;
+};
+
 export type TFrameNode = TBaseNode & {
   fill: string;
   type: NodeType.frame;
@@ -22,7 +27,7 @@ export type TRectangleNode = TBaseNode & {
   type: NodeType.rectangle;
 };
 
-export type TSceneNode = TFrameNode | TRectangleNode;
+export type TSceneNode = TEllipseNode | TFrameNode | TRectangleNode;
 
 export type TViewport = {
   x: number;

@@ -3,6 +3,7 @@
   "app.themeToggle.switchToLight": "Switch to light theme",
   "design.toolbar.tool.comment": "Comment",
   "design.toolbar.tool.default": "Move",
+  "design.toolbar.tool.ellipse": "Ellipse",
   "design.toolbar.tool.frame": "Frame",
   "design.toolbar.tool.rectangle": "Rectangle",
   "home.description": "A minimal starter template.",

@@ -22,6 +22,17 @@ branch.
 | 1   | Drawing a rectangle with the Rectangle tool renders it and reverts the active tool to `default` |  —   | ✅ `create-rectangle.spec.ts` |
 | 2   | Pressing "R" activates the Rectangle tool, then dragging draws a rectangle                      |  —   | ✅ `create-rectangle.spec.ts` |
 
+## Ellipse drawing (Etap 6)
+
+Ellipse shares its toolbar button with Rectangle (`TOOL_GROUP_ITEMS`, `MouseModes.tsx`) — the
+button shows whichever of the two was picked last (`lastShapeTool` in `store/design`), and reverts
+to unchecked (but keeps showing that icon) once a shape finishes drawing, same as Frame/Rectangle.
+
+| #   | Scenario                                                                                                                           | Unit |             E2E             |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------- | :--: | :-------------------------: |
+| 1   | Picking "Ellipse" from the Rectangle dropdown draws an ellipse, and the shared button stays showing Ellipse (unchecked) afterwards |  —   | ✅ `create-ellipse.spec.ts` |
+| 2   | Pressing "O" activates the Ellipse tool, then dragging draws an ellipse                                                            |  —   | ✅ `create-ellipse.spec.ts` |
+
 ## Selection (Etap 5)
 
 Setup shorthand: **A**, **B**, **C** are frames drawn left-to-right with a gap between each, all
@@ -114,6 +125,7 @@ it (no layers panel/inspector exists — verified absent, see [[x-draft-playwrig
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--: | :----------------: |
 | 19  | Moving the pointer onto a frame (no button held) shows its outline; moving off clears it                                                                     |  ✅  | ✅ `hover.spec.ts` |
 | 20  | The hover outline never updates while any button is held (`event.buttons !== 0`), so it can't flicker mid-drag onto whatever the cursor happens to pass over |  ✅  |         —          |
+| 21  | Hit-testing an ellipse uses its actual curve (`isPointInEllipse`), not its bounding box — resting inside the box but outside the curve does not hover it     |  ✅  | ✅ `hover.spec.ts` |
 
 #20 is unit-only on purpose: proving "the ref was never written" is a one-line
 `expect(hoverRef.current).toBeNull()` in `useHoverHighlight.spec.tsx`, but not cleanly provable via

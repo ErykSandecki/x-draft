@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export type TToolName = 'comment' | 'default' | 'frame' | 'rectangle';
+export type TToolName = 'comment' | 'default' | 'ellipse' | 'frame' | 'rectangle';
 
 export class DesignPage {
   readonly page: Page;
@@ -23,6 +23,11 @@ export class DesignPage {
     await this.toolRadio(tool).click();
   }
 
+  async selectToolFromDropdown(group: TToolName, label: string): Promise<void> {
+    await this.page.getByRole('button', { name: `${group} options` }).click();
+    await this.page.getByText(label, { exact: true }).click();
+  }
+
   async drawFrame(x1: number, y1: number, x2: number, y2: number): Promise<void> {
     await this.selectTool('frame');
     await this.pointerDown(x1, y1);
@@ -32,6 +37,13 @@ export class DesignPage {
 
   async drawRectangle(x1: number, y1: number, x2: number, y2: number): Promise<void> {
     await this.selectTool('rectangle');
+    await this.pointerDown(x1, y1);
+    await this.page.mouse.move(x2, y2, { steps: 5 });
+    await this.pointerUp();
+  }
+
+  async drawEllipse(x1: number, y1: number, x2: number, y2: number): Promise<void> {
+    await this.page.keyboard.press('o');
     await this.pointerDown(x1, y1);
     await this.page.mouse.move(x2, y2, { steps: 5 });
     await this.pointerUp();

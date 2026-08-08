@@ -68,4 +68,19 @@ describe('drawHoverOutline', () => {
     expect(gl.drawArrays).toHaveBeenCalledTimes(1);
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 24);
   });
+
+  it('should draw an elliptical thick outline for a hovered ellipse node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const node = buildNode({ height: 20, type: NodeType.ellipse, width: 10, x: 0, y: 0 });
+
+    // before
+    drawHoverOutline(gl, program, buffer, node, 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+    expect(gl.drawArrays).not.toHaveBeenCalledWith(gl.TRIANGLES, 0, 24);
+  });
 });

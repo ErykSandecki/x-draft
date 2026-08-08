@@ -10,7 +10,7 @@ import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
 // others
-import { FRAME_TOOL_SETTINGS, RECTANGLE_TOOL_SETTINGS } from './toolSettings';
+import { ELLIPSE_TOOL_SETTINGS, FRAME_TOOL_SETTINGS, RECTANGLE_TOOL_SETTINGS } from './toolSettings';
 
 // styles
 import styles from './canvas.module.scss';
@@ -29,6 +29,7 @@ const Canvas: FC = () => {
   useCanvasDragPan(canvasRef);
   useDrawShapeTool(canvasRef, draftRef, FRAME_TOOL_SETTINGS);
   useDrawShapeTool(canvasRef, draftRef, RECTANGLE_TOOL_SETTINGS);
+  useDrawShapeTool(canvasRef, draftRef, ELLIPSE_TOOL_SETTINGS);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);
   useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef);

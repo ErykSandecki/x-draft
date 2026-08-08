@@ -1,3 +1,4 @@
+export const ELLIPSE_FILL = '#D9D9D9';
 export const FRAME_FILL = '#FFFFFF';
 export const RECTANGLE_FILL = '#D9D9D9';
 export const RESIZE_DEBOUNCE_MS = 500;

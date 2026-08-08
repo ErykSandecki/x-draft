@@ -11,6 +11,7 @@ export const translationNameSpace = `${parentNameSpace}.toolbar`;
 
 export const TOOL_ICON: Record<ToolName, keyof typeof Icons> = {
   [ToolName.default]: 'MoveTool',
+  [ToolName.ellipse]: 'EllipseTool',
   [ToolName.frame]: 'FrameTool',
   [ToolName.rectangle]: 'RectangleTool',
   [ToolName.comment]: 'Comment',
@@ -19,8 +20,13 @@ export const TOOL_ICON: Record<ToolName, keyof typeof Icons> = {
 export const TOOL_LABEL: Record<ToolName, string> = {
   [ToolName.comment]: `${translationNameSpace}.tool.comment`,
   [ToolName.default]: `${translationNameSpace}.tool.default`,
+  [ToolName.ellipse]: `${translationNameSpace}.tool.ellipse`,
   [ToolName.frame]: `${translationNameSpace}.tool.frame`,
   [ToolName.rectangle]: `${translationNameSpace}.tool.rectangle`,
+};
+
+export const TOOL_GROUP_ITEMS: Partial<Record<ToolName, ToolName[]>> = {
+  [ToolName.rectangle]: [ToolName.rectangle, ToolName.ellipse],
 };
 
 export const TOOLS_WITH_DROPDOWN: ToolName[] = [ToolName.default, ToolName.frame, ToolName.rectangle];

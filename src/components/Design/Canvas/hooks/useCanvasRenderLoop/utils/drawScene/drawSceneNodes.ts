@@ -1,7 +1,9 @@
 // types
+import { NodeType } from 'types/design/enums';
 import { TSceneNode, TViewport } from 'types/design/types';
 
 // utils
+import { drawEllipse } from 'utils/canvas/drawEllipse';
 import { drawRect } from 'utils/canvas/drawRect';
 
 export const drawSceneNodes = (
@@ -14,6 +16,10 @@ export const drawSceneNodes = (
   viewport: TViewport,
 ): void => {
   nodes.forEach((node) => {
-    drawRect(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+    if (node.type === NodeType.ellipse) {
+      drawEllipse(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+    } else {
+      drawRect(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+    }
   });
 };

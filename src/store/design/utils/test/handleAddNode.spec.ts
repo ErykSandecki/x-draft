@@ -24,6 +24,7 @@ describe('handleAddNode', () => {
     // mock
     const state: TDesignState = {
       activeTool: ToolName.default,
+      lastShapeTool: ToolName.rectangle,
       nodes: {},
       rootOrder: [],
       selectedIds: [],
@@ -42,6 +43,7 @@ describe('handleAddNode', () => {
     // mock
     const state: TDesignState = {
       activeTool: ToolName.default,
+      lastShapeTool: ToolName.rectangle,
       nodes: { existing: { ...node, id: 'existing' } },
       rootOrder: ['existing'],
       selectedIds: [],

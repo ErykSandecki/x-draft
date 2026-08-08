@@ -22,6 +22,7 @@ describe('design slice', () => {
     // result
     expect(slice(undefined, { type: 'unknown' })).toEqual({
       activeTool: ToolName.default,
+      lastShapeTool: ToolName.rectangle,
       nodes: {},
       rootOrder: [],
       selectedIds: [],
@@ -35,6 +36,25 @@ describe('design slice', () => {
 
     // result
     expect(state.activeTool).toBe(ToolName.frame);
+  });
+
+  it('should remember the last shape tool when switching to a shape tool', () => {
+    // before
+    const state = slice(undefined, setActiveTool(ToolName.ellipse));
+
+    // result
+    expect(state.lastShapeTool).toBe(ToolName.ellipse);
+  });
+
+  it('should keep the last shape tool when switching to a non-shape tool', () => {
+    // before
+    const withEllipse = slice(undefined, setActiveTool(ToolName.ellipse));
+
+    // action
+    const state = slice(withEllipse, setActiveTool(ToolName.default));
+
+    // result
+    expect(state.lastShapeTool).toBe(ToolName.ellipse);
   });
 
   it('should add a node with a generated id', () => {
