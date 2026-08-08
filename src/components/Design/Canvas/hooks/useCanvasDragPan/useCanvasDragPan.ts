@@ -9,20 +9,19 @@ import { store, useAppDispatch } from 'store';
 import styles from '../../canvas.module.scss';
 
 // types
+import { MouseButton } from 'types/enums';
 import { TPoint } from 'types/canvas';
 
 // utils
 import { applyDragPan } from './utils/applyDragPan';
 import { getPointerPosition } from '../../utils/getPointerPosition';
 
-const MIDDLE_MOUSE_BUTTON = 1;
-
 export const useCanvasDragPan = (canvasRef: RefObject<HTMLCanvasElement | null>): void => {
   const dispatch = useAppDispatch();
   const lastPointRef = useRef<TPoint | null>(null);
 
   const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
-    if (event.button === MIDDLE_MOUSE_BUTTON) {
+    if (event.button === MouseButton.middle) {
       event.preventDefault();
       lastPointRef.current = getPointerPosition(canvas, event);
       canvas.setPointerCapture(event.pointerId);

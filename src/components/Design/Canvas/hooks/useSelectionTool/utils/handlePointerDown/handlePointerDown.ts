@@ -7,6 +7,7 @@ import { AppDispatch, store } from 'store';
 
 // types
 import { TArmDrag } from '../../types';
+import { MouseButton } from 'types/enums';
 import { TPoint } from 'types/canvas';
 
 // utils
@@ -19,8 +20,6 @@ import { isPointInGroupBounds } from '../isPointInGroupBounds';
 import { screenToWorld } from '../../../../utils/screenToWorld';
 import { toggleSelection } from '../toggleSelection';
 
-const PRIMARY_MOUSE_BUTTON = 0;
-
 export const handlePointerDown = (
   canvas: HTMLCanvasElement,
   event: PointerEvent,
@@ -28,7 +27,7 @@ export const handlePointerDown = (
   armDrag: TArmDrag,
   marqueeStartRef: RefObject<TPoint | null>,
 ): void => {
-  if (event.button === PRIMARY_MOUSE_BUTTON) {
+  if (event.button === MouseButton.primary) {
     const state = store.getState();
     const point = screenToWorld(getPointerPosition(canvas, event), selectViewport(state));
     const hit = getNodeAtPoint(point, selectOrderedNodes(state));

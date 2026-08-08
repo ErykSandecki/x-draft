@@ -18,6 +18,7 @@ export const useToolbarShortcuts = (): void => {
     () => [
       { action: (): any => dispatch(setActiveTool(ToolName.default)), secondaryKey: KeyboardKeys.v },
       { action: (): any => dispatch(setActiveTool(ToolName.frame)), secondaryKey: KeyboardKeys.f },
+      { action: (): any => dispatch(setActiveTool(ToolName.rectangle)), secondaryKey: KeyboardKeys.r },
       { action: (): any => dispatch(setActiveTool(ToolName.comment)), secondaryKey: KeyboardKeys.c },
       { action: (): any => dispatch(setActiveTool(ToolName.default)), secondaryKey: KeyboardKeys.escape },
     ],

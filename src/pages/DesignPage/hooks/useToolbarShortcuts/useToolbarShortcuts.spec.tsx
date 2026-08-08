@@ -36,6 +36,20 @@ describe('useToolbarShortcuts behaviors', () => {
     expect(store.getState().design.activeTool).toBe(ToolName.frame);
   });
 
+  it('should switch to the rectangle tool on "R"', () => {
+    // mock
+    const store = createTestStore();
+
+    // before
+    renderShortcuts(store);
+
+    // action
+    fireEvent.keyDown(window, { code: 'KeyR' });
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.rectangle);
+  });
+
   it('should switch to the comment tool on "C"', () => {
     // mock
     const store = createTestStore();

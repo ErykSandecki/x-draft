@@ -15,6 +15,13 @@ branch.
 | --- | --------------------------------------------------------------------------------------- | :--: | :-----------------------: |
 | 1   | Drawing a frame with the Frame tool renders it and reverts the active tool to `default` |  —   | ✅ `create-frame.spec.ts` |
 
+## Rectangle drawing (Etap 6)
+
+| #   | Scenario                                                                                         | Unit |              E2E              |
+| --- | -------------------------------------------------------------------------------------------------- | :--: | :----------------------------: |
+| 1   | Drawing a rectangle with the Rectangle tool renders it and reverts the active tool to `default` |  —   | ✅ `create-rectangle.spec.ts` |
+| 2   | Pressing "R" activates the Rectangle tool, then dragging draws a rectangle                      |  —   | ✅ `create-rectangle.spec.ts` |
+
 ## Selection (Etap 5)
 
 Setup shorthand: **A**, **B**, **C** are frames drawn left-to-right with a gap between each, all

@@ -1,9 +1,22 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(git -C /Users/eryksandecki/Desktop/Work/Figma/x-draft status --short)",
+      "Bash(git -C /Users/eryksandecki/Desktop/Work/Figma/x-draft log --oneline -15 -- src/components/Design/Canvas/hooks/useFrameTool/useFrameTool.ts)",
+      "Bash(cat /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/settings.local.json 2>/dev/null; echo \"---global---\"; cat ~/.claude/settings.json 2>/dev/null)",
+      "Read(//Users/eryksandecki/.claude/**)",
+      "Bash(git -C /Users/eryksandecki/Desktop/Work/Figma/x-draft mv src/assets/svg/recatangle.svg src/assets/svg/rectangle.svg)",
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Read(//private/tmp/**)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot"
+    ],
     "defaultMode": "bypassPermissions"
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "playwright"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }

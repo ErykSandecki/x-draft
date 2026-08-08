@@ -7,6 +7,7 @@ import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRender
 import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
 import { useFrameTool } from './hooks/useFrameTool/useFrameTool';
 import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
+import { useRectangleTool } from './hooks/useRectangleTool/useRectangleTool';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
 // styles
@@ -25,6 +26,7 @@ const Canvas: FC = () => {
   useCanvasPanZoom(canvasRef);
   useCanvasDragPan(canvasRef);
   useFrameTool(canvasRef, draftRef);
+  useRectangleTool(canvasRef, draftRef);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);
   useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef);

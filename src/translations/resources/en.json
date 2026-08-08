@@ -4,6 +4,7 @@
   "design.toolbar.tool.comment": "Comment",
   "design.toolbar.tool.default": "Move",
   "design.toolbar.tool.frame": "Frame",
+  "design.toolbar.tool.rectangle": "Rectangle",
   "home.description": "A minimal starter template.",
   "home.subtitle": "Vite + React + TypeScript",
   "notFound.description": "Page not found.",

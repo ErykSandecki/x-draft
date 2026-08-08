@@ -75,6 +75,7 @@ import Plus from './svg/plus.svg?react';
 import PositionSwitcher from './svg/position-switcher.svg?react';
 import Properties from './svg/properties.svg?react';
 import Protractor from './svg/protractor.svg?react';
+import RectangleTool from './svg/rectangle-tool.svg?react';
 import Rows from './svg/rows.svg?react';
 import Sample from './svg/sample.svg?react';
 import StepBackwardOutlined from './svg/step-backward-outlined.svg?react';
@@ -161,6 +162,7 @@ export const Icons = {
   PositionSwitcher,
   Properties,
   Protractor,
+  RectangleTool,
   Rows,
   Sample,
   StepBackwardOutlined,

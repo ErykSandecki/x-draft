@@ -4,6 +4,7 @@
   "design.toolbar.tool.comment": "Komentarz",
   "design.toolbar.tool.default": "Przesuń",
   "design.toolbar.tool.frame": "Ramka",
+  "design.toolbar.tool.rectangle": "Prostokąt",
   "home.description": "Minimalny szablon startowy.",
   "home.subtitle": "Vite + React + TypeScript",
   "notFound.description": "Nie znaleziono strony.",

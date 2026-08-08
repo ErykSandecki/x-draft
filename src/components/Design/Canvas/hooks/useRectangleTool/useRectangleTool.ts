@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef } from 'react';
 
 // others
-import { FRAME_FILL, MIN_SHAPE_SIZE } from '../../constants';
+import { MIN_SHAPE_SIZE, RECTANGLE_FILL } from '../../constants';
 
 // store
 import { addNode, setActiveTool, setSelection } from 'store/design/slice';
@@ -18,7 +18,7 @@ import { getPointerPosition } from '../../utils/getPointerPosition';
 import { screenToWorld } from '../../utils/screenToWorld';
 import { toDraftRect } from '../../utils/toDraftRect';
 
-export const useFrameTool = (
+export const useRectangleTool = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   draftRef: RefObject<TDraftRect | null>,
 ): void => {
@@ -49,11 +49,11 @@ export const useFrameTool = (
         dispatch(
           addNode({
             ...rect,
-            fill: FRAME_FILL,
-            name: 'Frame',
+            fill: RECTANGLE_FILL,
+            name: 'Rectangle',
             parentId: null,
             rotation: 0,
-            type: NodeType.frame,
+            type: NodeType.rectangle,
           }),
         );
       }
@@ -68,7 +68,7 @@ export const useFrameTool = (
   useEffect(() => {
     const canvas = canvasRef.current;
 
-    if (canvas && activeTool === ToolName.frame) {
+    if (canvas && activeTool === ToolName.rectangle) {
       const onPointerDown = (event: PointerEvent): void => handlePointerDown(canvas, event);
       const onPointerMove = (event: PointerEvent): void => handlePointerMove(canvas, event);
       const onPointerUp = (event: PointerEvent): void => handlePointerUp(canvas, event);

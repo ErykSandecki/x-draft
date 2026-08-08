@@ -12,3 +12,8 @@ export enum KeyboardKeys {
   shift = 'Shift',
   v = 'KeyV',
 }
+
+export enum MouseButton {
+  middle = 1,
+  primary = 0,
+}

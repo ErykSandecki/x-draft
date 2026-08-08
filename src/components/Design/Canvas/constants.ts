@@ -1,5 +1,7 @@
+export const FRAME_FILL = '#FFFFFF';
+export const RECTANGLE_FILL = '#D9D9D9';
 export const RESIZE_DEBOUNCE_MS = 500;
-export const MIN_FRAME_SIZE = 2;
+export const MIN_SHAPE_SIZE = 2;
 export const WEBGL_CONTEXT_ID = 'webgl2';
 export const WEBGL_CONTEXT_ATTRIBUTES: WebGLContextAttributes = { premultipliedAlpha: false };
 export const ZOOM_MIN = 0.1;

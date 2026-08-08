@@ -6,4 +6,5 @@ export const KEYBOARD_SHORTCUTS: TKeyboardShortcuts = {
   [ToolName.comment]: ['C'],
   [ToolName.default]: ['V'],
   [ToolName.frame]: ['F'],
+  [ToolName.rectangle]: ['R'],
 };
