@@ -37,8 +37,7 @@ const designSlice = createSlice({
     setViewport: (state, action: PayloadAction<TViewport>) => {
       state.viewport = action.payload;
     },
-    updateNode: (state, action: PayloadAction<{ changes: Partial<TSceneNode>; id: string }>) =>
-      handleUpdateNode(state, action.payload),
+    updateNode: (state, action: PayloadAction<{ changes: Partial<TSceneNode>; id: string }>) => handleUpdateNode(state, action.payload),
   },
 });
 

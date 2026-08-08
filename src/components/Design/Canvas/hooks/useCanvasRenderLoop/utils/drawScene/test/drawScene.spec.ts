@@ -216,9 +216,7 @@ describe('drawScene', () => {
     drawScene(gl, program, buffer, canvas);
 
     // result
-    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
-      ([mode]) => mode === gl.LINE_LOOP,
-    );
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
 
     // one shared outline + 4 corner handles = 5 LINE_LOOP draws, not 10 (2 nodes x 5)
     expect(lineLoopDraws).toHaveLength(5);
@@ -268,9 +266,7 @@ describe('drawScene', () => {
     drawScene(gl, program, buffer, canvas);
 
     // result
-    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
-      ([mode]) => mode === gl.LINE_LOOP,
-    );
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
 
     // 2 separate node outlines + handles = 10 LINE_LOOP draws, not 5 (one shared box)
     expect(lineLoopDraws).toHaveLength(10);

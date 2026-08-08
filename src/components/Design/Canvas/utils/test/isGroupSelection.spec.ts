@@ -37,8 +37,6 @@ describe('isGroupSelection', () => {
 
   it('should return false when parents differ', () => {
     // result
-    expect(
-      isGroupSelection([buildNode({ id: 'a', parentId: 'frame-1' }), buildNode({ id: 'b', parentId: 'frame-2' })]),
-    ).toBe(false);
+    expect(isGroupSelection([buildNode({ id: 'a', parentId: 'frame-1' }), buildNode({ id: 'b', parentId: 'frame-2' })])).toBe(false);
   });
 });

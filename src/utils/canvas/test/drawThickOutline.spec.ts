@@ -29,17 +29,7 @@ describe('drawThickOutline', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawThickOutline(
-      gl,
-      program,
-      buffer,
-      { height: 20, width: 10, x: 0, y: 0 },
-      '#0d99ff',
-      2,
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
+    drawThickOutline(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 2, 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(1);
@@ -77,17 +67,7 @@ describe('drawThickOutline', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawThickOutline(
-      gl,
-      program,
-      buffer,
-      { height: 20, width: 10, x: 0, y: 0 },
-      '#0d99ff',
-      2,
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
+    drawThickOutline(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 2, 100, 100, IDENTITY_VIEWPORT);
 
     // result
     const [firstCall] = (gl.bufferData as ReturnType<typeof vi.fn>).mock.calls;

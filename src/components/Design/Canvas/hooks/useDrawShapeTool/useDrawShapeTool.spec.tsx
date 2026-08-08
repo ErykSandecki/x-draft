@@ -4,18 +4,18 @@ import { renderHook } from '@testing-library/react';
 import { RefObject } from 'react';
 
 // hooks
-import { useFrameTool } from './useFrameTool';
+import { useDrawShapeTool } from './useDrawShapeTool';
 
 // store
 import designReducer, { setActiveTool, setSelection } from 'store/design/slice';
 import { TDesignState } from 'store/design/types';
 
 // types
-import { ToolName } from 'types/design/enums';
+import { NodeType, ToolName } from 'types/design/enums';
 import { TDraftRect } from 'types/canvas';
+import { TShapeToolConfig } from './useDrawShapeTool';
 
-const createTestStore = (): EnhancedStore<{ design: TDesignState }> =>
-  configureStore({ reducer: { design: designReducer } });
+const createTestStore = (): EnhancedStore<{ design: TDesignState }> => configureStore({ reducer: { design: designReducer } });
 
 const createCanvasRef = (): RefObject<HTMLCanvasElement | null> => {
   const canvas = document.createElement('canvas');
@@ -32,15 +32,23 @@ const createCanvasRef = (): RefObject<HTMLCanvasElement | null> => {
 const pointerEvent = (type: string, x: number, y: number, button = 0): PointerEvent =>
   new PointerEvent(type, { button, clientX: x, clientY: y, pointerId: 1 });
 
-describe('useFrameTool behaviors', () => {
-  it('should not react to pointer events when the frame tool is not active', () => {
+const CONFIGS: { config: TShapeToolConfig; label: string }[] = [
+  { config: { fill: '#FFFFFF', name: 'Frame', tool: ToolName.frame, type: NodeType.frame }, label: 'frame' },
+  {
+    config: { fill: '#D9D9D9', name: 'Rectangle', tool: ToolName.rectangle, type: NodeType.rectangle },
+    label: 'rectangle',
+  },
+];
+
+describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
+  it('should not react to pointer events when the tool is not active', () => {
     // mock
     const store = createTestStore();
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -56,13 +64,13 @@ describe('useFrameTool behaviors', () => {
     // mock
     const store = createTestStore();
 
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -74,17 +82,17 @@ describe('useFrameTool behaviors', () => {
     expect(draftRef.current).toEqual({ height: 30, width: 50, x: 10, y: 10 });
   });
 
-  it('should commit a frame node and switch back to the default tool on pointer up', () => {
+  it('should commit a node with the configured fill and switch back to the default tool on pointer up', () => {
     // mock
     const store = createTestStore();
 
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -97,7 +105,15 @@ describe('useFrameTool behaviors', () => {
     const { design } = store.getState();
 
     expect(design.rootOrder).toHaveLength(1);
-    expect(design.nodes[design.rootOrder[0]]).toMatchObject({ height: 30, width: 50, x: 10, y: 10 });
+    expect(design.nodes[design.rootOrder[0]]).toMatchObject({
+      fill: config.fill,
+      height: 30,
+      name: config.name,
+      type: config.type,
+      width: 50,
+      x: 10,
+      y: 10,
+    });
     expect(design.activeTool).toBe(ToolName.default);
     expect(draftRef.current).toBeNull();
   });
@@ -107,13 +123,13 @@ describe('useFrameTool behaviors', () => {
     const store = createTestStore();
 
     store.dispatch(setSelection(['existing-node']));
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -131,13 +147,13 @@ describe('useFrameTool behaviors', () => {
     // mock
     const store = createTestStore();
 
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -149,17 +165,17 @@ describe('useFrameTool behaviors', () => {
     expect(draftRef.current).toBeNull();
   });
 
-  it('should not add a node when only one dimension meets the minimum frame size', () => {
+  it('should not add a node when only one dimension meets the minimum shape size', () => {
     // mock
     const store = createTestStore();
 
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -171,17 +187,17 @@ describe('useFrameTool behaviors', () => {
     expect(store.getState().design.rootOrder).toHaveLength(0);
   });
 
-  it('should not add a node when only the other dimension meets the minimum frame size', () => {
+  it('should not add a node when only the other dimension meets the minimum shape size', () => {
     // mock
     const store = createTestStore();
 
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -197,13 +213,13 @@ describe('useFrameTool behaviors', () => {
     // mock
     const store = createTestStore();
 
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 
@@ -211,20 +227,20 @@ describe('useFrameTool behaviors', () => {
     canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 10));
 
     // result
-    expect(store.getState().design.activeTool).toBe(ToolName.frame);
+    expect(store.getState().design.activeTool).toBe(config.tool);
   });
 
   it('should switch back to the default tool without adding a node when the drag is too small', () => {
     // mock
     const store = createTestStore();
 
-    store.dispatch(setActiveTool(ToolName.frame));
+    store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
     const draftRef: RefObject<TDraftRect | null> = { current: null };
 
     // before
-    renderHook(() => useFrameTool(canvasRef, draftRef), {
+    renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
       wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
 

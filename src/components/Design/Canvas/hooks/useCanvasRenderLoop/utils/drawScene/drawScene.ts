@@ -28,15 +28,7 @@ export const drawScene = (
 
   drawSceneBackground(gl);
   drawSceneNodes(gl, program, buffer, selectOrderedNodes(state), clientWidth, clientHeight, viewport);
-  drawHoverOutline(
-    gl,
-    program,
-    buffer,
-    hoveredNodeId ? selectNodes(state)[hoveredNodeId] : null,
-    clientWidth,
-    clientHeight,
-    viewport,
-  );
+  drawHoverOutline(gl, program, buffer, hoveredNodeId ? selectNodes(state)[hoveredNodeId] : null, clientWidth, clientHeight, viewport);
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
   drawFrame(gl, program, buffer, draftRect, clientWidth, clientHeight, viewport);
   drawMarquee(gl, program, buffer, marqueeRect, clientWidth, clientHeight, viewport);

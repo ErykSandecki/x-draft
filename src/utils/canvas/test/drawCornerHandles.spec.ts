@@ -33,16 +33,7 @@ describe('drawCornerHandles', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawCornerHandles(
-      gl,
-      program,
-      buffer,
-      { height: 20, width: 10, x: 0, y: 0 },
-      '#0d99ff',
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
+    drawCornerHandles(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(8);
@@ -57,16 +48,7 @@ describe('drawCornerHandles', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawCornerHandles(
-      gl,
-      program,
-      buffer,
-      { height: 20, width: 10, x: 0, y: 0 },
-      '#0d99ff',
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
+    drawCornerHandles(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, '#0d99ff', 100, 100, IDENTITY_VIEWPORT);
 
     // result
     const bufferDataCalls = (gl.bufferData as ReturnType<typeof vi.fn>).mock.calls;

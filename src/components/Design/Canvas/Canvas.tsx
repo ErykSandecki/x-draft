@@ -5,15 +5,18 @@ import { useCanvasDragPan } from './hooks/useCanvasDragPan/useCanvasDragPan';
 import { useCanvasPanZoom } from './hooks/useCanvasPanZoom/useCanvasPanZoom';
 import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRenderLoop';
 import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
-import { useFrameTool } from './hooks/useFrameTool/useFrameTool';
+import { useDrawShapeTool } from './hooks/useDrawShapeTool/useDrawShapeTool';
 import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
-import { useRectangleTool } from './hooks/useRectangleTool/useRectangleTool';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
+
+// others
+import { FRAME_FILL, RECTANGLE_FILL } from './constants';
 
 // styles
 import styles from './canvas.module.scss';
 
 // types
+import { NodeType, ToolName } from 'types/design/enums';
 import { TDraftRect } from 'types/canvas';
 
 const Canvas: FC = () => {
@@ -25,8 +28,8 @@ const Canvas: FC = () => {
   useCanvasResize(canvasRef);
   useCanvasPanZoom(canvasRef);
   useCanvasDragPan(canvasRef);
-  useFrameTool(canvasRef, draftRef);
-  useRectangleTool(canvasRef, draftRef);
+  useDrawShapeTool(canvasRef, draftRef, { fill: FRAME_FILL, name: 'Frame', tool: ToolName.frame, type: NodeType.frame });
+  useDrawShapeTool(canvasRef, draftRef, { fill: RECTANGLE_FILL, name: 'Rectangle', tool: ToolName.rectangle, type: NodeType.rectangle });
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);
   useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef);

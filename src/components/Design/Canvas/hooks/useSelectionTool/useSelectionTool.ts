@@ -25,10 +25,7 @@ type TDragState = {
   pointerStart: TPoint;
 };
 
-export const useSelectionTool = (
-  canvasRef: RefObject<HTMLCanvasElement | null>,
-  marqueeRef: RefObject<TDraftRect | null>,
-): void => {
+export const useSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>, marqueeRef: RefObject<TDraftRect | null>): void => {
   const activeTool = useAppSelector(selectActiveTool);
   const dispatch = useAppDispatch();
   const dragStateRef = useRef<TDragState | null>(null);
@@ -93,8 +90,7 @@ export const useSelectionTool = (
     const canvas = canvasRef.current;
 
     if (canvas && activeTool === ToolName.default) {
-      const onPointerDown = (event: PointerEvent): void =>
-        handlePointerDown(canvas, event, dispatch, armDrag, marqueeStartRef);
+      const onPointerDown = (event: PointerEvent): void => handlePointerDown(canvas, event, dispatch, armDrag, marqueeStartRef);
       const onPointerMove = (event: PointerEvent): void => handlePointerMove(canvas, event);
       const onPointerUp = (event: PointerEvent): void => handlePointerUp(canvas, event);
 

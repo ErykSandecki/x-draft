@@ -52,9 +52,7 @@ describe('drawGroupSelectionOutline', () => {
     drawGroupSelectionOutline(gl, program, buffer, nodes, 100, 100, IDENTITY_VIEWPORT);
 
     // result
-    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
-      ([mode]) => mode === gl.LINE_LOOP,
-    );
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
 
     expect(lineLoopDraws).toHaveLength(5);
   });

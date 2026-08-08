@@ -25,9 +25,4 @@ export const TOOL_LABEL: Record<ToolName, string> = {
 
 export const TOOLS_WITH_DROPDOWN: ToolName[] = [ToolName.default, ToolName.frame, ToolName.rectangle];
 
-export const TOOLBAR_ORDER: ToolName[] = [
-  ToolName.default,
-  ToolName.frame,
-  ToolName.rectangle,
-  ToolName.comment,
-];
+export const TOOLBAR_ORDER: ToolName[] = [ToolName.default, ToolName.frame, ToolName.rectangle, ToolName.comment];

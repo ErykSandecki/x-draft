@@ -19,13 +19,7 @@ export const Icon: FC<TIconProps> = ({ color = 'neutral1', name, size = 16, styl
   const SVG = useMemo(() => Icons[name], [name]);
 
   return (
-    <SVG
-      className={styles.Icon}
-      height={size}
-      style={{ color: colors[color], ...style } as CSSProperties}
-      width={size}
-      {...restProps}
-    />
+    <SVG className={styles.Icon} height={size} style={{ color: colors[color], ...style } as CSSProperties} width={size} {...restProps} />
   );
 };
 

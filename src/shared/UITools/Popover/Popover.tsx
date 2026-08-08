@@ -17,14 +17,7 @@ export type TPopoverProps = {
   triggerClassName?: string;
 };
 
-export const Popover: FC<TPopoverProps> = ({
-  align = 'start',
-  children,
-  sideOffset = 8,
-  trigger,
-  triggerAriaLabel,
-  triggerClassName,
-}) => (
+export const Popover: FC<TPopoverProps> = ({ align = 'start', children, sideOffset = 8, trigger, triggerAriaLabel, triggerClassName }) => (
   <PopoverPrimitive.Root>
     <PopoverPrimitive.Trigger aria-label={triggerAriaLabel} className={triggerClassName}>
       {trigger}

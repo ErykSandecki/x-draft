@@ -12,8 +12,7 @@ import { TDesignState } from 'store/design/types';
 // types
 import { ToolName } from 'types/design/enums';
 
-const createTestStore = (): EnhancedStore<{ design: TDesignState }> =>
-  configureStore({ reducer: { design: designReducer } });
+const createTestStore = (): EnhancedStore<{ design: TDesignState }> => configureStore({ reducer: { design: designReducer } });
 
 const renderShortcuts = (store: EnhancedStore<{ design: TDesignState }>): void => {
   renderHook(() => useToolbarShortcuts(), {

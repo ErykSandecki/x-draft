@@ -1,12 +1,5 @@
 // selectors
-import {
-  selectActiveTool,
-  selectNodes,
-  selectOrderedNodes,
-  selectSelectedIds,
-  selectSelectedNodes,
-  selectViewport,
-} from '../selectors';
+import { selectActiveTool, selectNodes, selectOrderedNodes, selectSelectedIds, selectSelectedNodes, selectViewport } from '../selectors';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';

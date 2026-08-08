@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef } from 'react';
 
 // others
-import { MIN_SHAPE_SIZE, RECTANGLE_FILL } from '../../constants';
+import { MIN_SHAPE_SIZE } from '../../constants';
 
 // store
 import { addNode, setActiveTool, setSelection } from 'store/design/slice';
@@ -18,9 +18,17 @@ import { getPointerPosition } from '../../utils/getPointerPosition';
 import { screenToWorld } from '../../utils/screenToWorld';
 import { toDraftRect } from '../../utils/toDraftRect';
 
-export const useRectangleTool = (
+export type TShapeToolConfig = {
+  fill: string;
+  name: string;
+  tool: ToolName;
+  type: NodeType;
+};
+
+export const useDrawShapeTool = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   draftRef: RefObject<TDraftRect | null>,
+  { fill, name, tool, type }: TShapeToolConfig,
 ): void => {
   const activeTool = useAppSelector(selectActiveTool);
   const viewport = useAppSelector(selectViewport);
@@ -46,16 +54,7 @@ export const useRectangleTool = (
       const rect = toDraftRect(startRef.current, screenToWorld(getPointerPosition(canvas, event), viewport));
 
       if (rect.width >= MIN_SHAPE_SIZE && rect.height >= MIN_SHAPE_SIZE) {
-        dispatch(
-          addNode({
-            ...rect,
-            fill: RECTANGLE_FILL,
-            name: 'Rectangle',
-            parentId: null,
-            rotation: 0,
-            type: NodeType.rectangle,
-          }),
-        );
+        dispatch(addNode({ ...rect, fill, name, parentId: null, rotation: 0, type }));
       }
 
       startRef.current = null;
@@ -68,7 +67,7 @@ export const useRectangleTool = (
   useEffect(() => {
     const canvas = canvasRef.current;
 
-    if (canvas && activeTool === ToolName.rectangle) {
+    if (canvas && activeTool === tool) {
       const onPointerDown = (event: PointerEvent): void => handlePointerDown(canvas, event);
       const onPointerMove = (event: PointerEvent): void => handlePointerMove(canvas, event);
       const onPointerUp = (event: PointerEvent): void => handlePointerUp(canvas, event);
@@ -83,5 +82,5 @@ export const useRectangleTool = (
         canvas.removeEventListener('pointerup', onPointerUp);
       };
     }
-  }, [activeTool, canvasRef, dispatch, draftRef, viewport]);
+  }, [activeTool, canvasRef, dispatch, draftRef, fill, name, tool, type, viewport]);
 };

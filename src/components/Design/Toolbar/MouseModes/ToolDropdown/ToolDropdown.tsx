@@ -29,11 +29,7 @@ const ToolDropdown: FC<TToolDropdownProps> = ({ tool }) => {
   const { t } = useTranslation();
 
   return (
-    <Popover
-      trigger={<Icon name="ChevronDown" size={5} />}
-      triggerAriaLabel={`${tool} options`}
-      triggerClassName={styles.ToolDropdown}
-    >
+    <Popover trigger={<Icon name="ChevronDown" size={5} />} triggerAriaLabel={`${tool} options`} triggerClassName={styles.ToolDropdown}>
       <PopoverItem
         icon={TOOL_ICON[tool]}
         label={t(TOOL_LABEL[tool])}

@@ -17,16 +17,6 @@ export const drawHoverOutline = (
   viewport: TViewport,
 ): void => {
   if (hoveredNode) {
-    drawThickOutline(
-      gl,
-      program,
-      buffer,
-      hoveredNode,
-      DRAFT_FRAME_STROKE,
-      HOVER_OUTLINE_WIDTH,
-      canvasWidth,
-      canvasHeight,
-      viewport,
-    );
+    drawThickOutline(gl, program, buffer, hoveredNode, DRAFT_FRAME_STROKE, HOVER_OUTLINE_WIDTH, canvasWidth, canvasHeight, viewport);
   }
 };

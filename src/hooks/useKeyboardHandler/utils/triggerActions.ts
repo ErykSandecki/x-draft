@@ -6,12 +6,7 @@ import { TKeysMap } from '../types';
 // utils
 import { handleLockBrowserEvents } from './handleLockBrowserEvents';
 
-export const getPressedKeys = ({
-  altKey,
-  ctrlKey,
-  metaKey,
-  shiftKey,
-}: KeyboardEvent | ReactKeyboardEvent<HTMLElement>): number =>
+export const getPressedKeys = ({ altKey, ctrlKey, metaKey, shiftKey }: KeyboardEvent | ReactKeyboardEvent<HTMLElement>): number =>
   [altKey, ctrlKey, metaKey, shiftKey].filter(Boolean).length;
 
 export const triggerActions = (

@@ -12,10 +12,7 @@ import { getNodeAtPoint } from '../../utils/getNodeAtPoint';
 import { getPointerPosition } from '../../utils/getPointerPosition';
 import { screenToWorld } from '../../utils/screenToWorld';
 
-export const useHoverHighlight = (
-  canvasRef: RefObject<HTMLCanvasElement | null>,
-  hoverRef: RefObject<string | null>,
-): void => {
+export const useHoverHighlight = (canvasRef: RefObject<HTMLCanvasElement | null>, hoverRef: RefObject<string | null>): void => {
   const activeTool = useAppSelector(selectActiveTool);
 
   const handlePointerMove = (canvas: HTMLCanvasElement, event: PointerEvent): void => {

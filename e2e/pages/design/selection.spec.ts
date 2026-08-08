@@ -21,9 +21,7 @@ test('shift-click adds a second frame to the selection and draws the shared grou
   expect(groupSelection.equals(singleSelection)).toBe(false);
 });
 
-test('clicking an unselected frame inside a multi-selection does not replace the selection until release', async ({
-  page,
-}) => {
+test('clicking an unselected frame inside a multi-selection does not replace the selection until release', async ({ page }) => {
   const designPage = new DesignPage(page);
 
   await designPage.goto('e2e-test-selection-gap-click');
@@ -98,9 +96,7 @@ test('selecting a frame still works after zooming the canvas', async ({ page }) 
   expect(selected.equals(deselected)).toBe(false);
 });
 
-test('dragging a marquee live-selects the frames it covers, then keeps the selection after release', async ({
-  page,
-}) => {
+test('dragging a marquee live-selects the frames it covers, then keeps the selection after release', async ({ page }) => {
   const designPage = new DesignPage(page);
 
   await designPage.goto('e2e-test-selection-marquee-live');

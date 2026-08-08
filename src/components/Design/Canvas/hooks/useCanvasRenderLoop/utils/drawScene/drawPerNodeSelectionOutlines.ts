@@ -20,15 +20,7 @@ export const drawPerNodeSelectionOutlines = (
   selectedNodes.forEach((node) => {
     const { height, width, x, y } = node;
 
-    drawRect(
-      gl,
-      program,
-      buffer,
-      { height, stroke: DRAFT_FRAME_STROKE, width, x, y },
-      canvasWidth,
-      canvasHeight,
-      viewport,
-    );
+    drawRect(gl, program, buffer, { height, stroke: DRAFT_FRAME_STROKE, width, x, y }, canvasWidth, canvasHeight, viewport);
     drawCornerHandles(gl, program, buffer, node, DRAFT_FRAME_STROKE, canvasWidth, canvasHeight, viewport);
   });
 };

@@ -11,8 +11,7 @@ export type TUseKeyboardHandler = {
   onKeyDown: TFunc<[KeyboardEvent | ReactKeyboardEvent<HTMLElement>]>;
 };
 
-const isPrimaryKey = (key: string): boolean =>
-  [KeyboardKeys.alt, KeyboardKeys.control, KeyboardKeys.shift].includes(key as KeyboardKeys);
+const isPrimaryKey = (key: string): boolean => [KeyboardKeys.alt, KeyboardKeys.control, KeyboardKeys.shift].includes(key as KeyboardKeys);
 
 export const useKeyboardHandler = (
   attachListener: boolean,

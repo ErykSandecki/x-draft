@@ -46,18 +46,13 @@ describe('drawPerNodeSelectionOutlines', () => {
     const gl = createGlMock();
     const program = {} as WebGLProgram;
     const buffer = {} as WebGLBuffer;
-    const nodes = [
-      buildNode({ id: 'a', parentId: 'frame-a', x: 0, y: 0 }),
-      buildNode({ id: 'b', parentId: 'frame-b', x: 40, y: 0 }),
-    ];
+    const nodes = [buildNode({ id: 'a', parentId: 'frame-a', x: 0, y: 0 }), buildNode({ id: 'b', parentId: 'frame-b', x: 40, y: 0 })];
 
     // before
     drawPerNodeSelectionOutlines(gl, program, buffer, nodes, 100, 100, IDENTITY_VIEWPORT);
 
     // result
-    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
-      ([mode]) => mode === gl.LINE_LOOP,
-    );
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
 
     expect(lineLoopDraws).toHaveLength(10);
   });
