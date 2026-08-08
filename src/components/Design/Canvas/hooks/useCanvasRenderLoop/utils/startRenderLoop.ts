@@ -4,7 +4,7 @@ import { RefObject } from 'react';
 import { TDraftRect } from 'types/canvas';
 
 // utils
-import { drawFrame } from './drawFrame/drawFrame';
+import { drawScene } from './drawScene/drawScene';
 
 type TFrameIdRef = { current: number };
 
@@ -17,7 +17,7 @@ const tick = (
   draftRef?: RefObject<TDraftRect | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
 ): void => {
-  drawFrame(gl, program, buffer, canvas, draftRef?.current, marqueeRef?.current);
+  drawScene(gl, program, buffer, canvas, draftRef?.current, marqueeRef?.current);
   frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef, draftRef, marqueeRef));
 };
 

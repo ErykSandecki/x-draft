@@ -79,16 +79,16 @@ hooks/
     useCanvasRenderLoop.ts
     useCanvasRenderLoop.spec.tsx
     utils/
-      drawFrame/
-        drawFrame.ts
+      drawScene/
+        drawScene.ts
         drawSceneNodes.ts
         drawSelectionOutline.ts
         drawGroupSelectionOutline.ts
         drawPerNodeSelectionOutlines.ts
-        drawDraftFrame.ts
+        drawFrame.ts
         ...
         test/
-          drawFrame.spec.ts
+          drawScene.spec.ts
           drawSceneNodes.spec.ts
           ...
       startRenderLoop.ts
@@ -104,6 +104,16 @@ hooks/
       resizeCanvas.ts
       test/resizeCanvas.spec.ts
 ```
+
+**Naming, corrected by the user:** this folder/orchestrator was originally called `drawFrame`/
+`drawFrame.ts`, and the per-tool draft-preview drawer (below) was `drawDraftFrame.ts`. Both names
+collided the word "frame" across two unrelated meanings: a *render* frame (one tick of the
+`requestAnimationFrame` loop — what the orchestrator actually draws, the whole scene each tick)
+and a Design **Frame** (`NodeType.frame`, what the draft-preview drawer actually draws — the
+in-progress frame node being dragged out with the Frame tool). Renamed so each name means only one
+thing: the orchestrator is `drawScene`/`drawScene.ts` (folder `drawScene/`), and the function that
+used to be `drawDraftFrame` is now simply `drawFrame.ts` — it's the one function in this codebase
+that's actually about drawing a Design frame.
 
 `drawSceneBackground.ts`, `drawBackground.ts`, `drawCornerHandles.ts`, and `drawRect.ts` used to sit in
 this tree too, but moved out to the global `utils/canvas/` — see the next section for why.
@@ -127,24 +137,25 @@ not the shared one.
 The same promotion applies one level deeper, to a single util function, not only to hooks: once a
 function accumulates heavy branching ("ifologia" — nested `if`/`else` chains covering several
 draw/compute cases) it should be split into smaller named helper functions **and** promoted from a
-flat file to its own folder, exactly like a hook is. `drawFrame.ts` is the worked example —
-it used to be one flat file mixing background-clear, per-node fill, selection-outline branching
-(group vs. per-node), and draft-rect drawing in one function body. Split into
-`drawSceneBackground`/`drawSceneNodes`/`drawSelectionOutline` (+ its own
-`drawGroupSelectionOutline`/`drawPerNodeSelectionOutlines` branches) /`drawDraftFrame`, with
-`drawFrame.ts` itself reduced to a thin orchestrator calling each in sequence — see the tree above.
+flat file to its own folder, exactly like a hook is. `drawScene.ts` (originally named `drawFrame.ts`
+— see the naming note above) is the worked example — it used to be one flat file mixing
+background-clear, per-node fill, selection-outline branching (group vs. per-node), and draft-rect
+drawing in one function body. Split into `drawSceneBackground`/`drawSceneNodes`/
+`drawSelectionOutline` (+ its own `drawGroupSelectionOutline`/`drawPerNodeSelectionOutlines`
+branches) /`drawFrame` (the draft-preview drawer, originally `drawDraftFrame`), with `drawScene.ts`
+itself reduced to a thin orchestrator calling each in sequence — see the tree above.
 
 Rules for this promotion, confirmed by re-running `grep -rl` for every export name after the split:
 
-- The split-out pieces sit **flat as siblings** inside the new folder (`drawFrame/drawSceneNodes.ts`),
+- The split-out pieces sit **flat as siblings** inside the new folder (`drawScene/drawSceneNodes.ts`),
   **not** in a further nested `utils/` — one extra folder level is enough; don't nest a `utils/`
   inside a `utils/`-owned function folder too.
   ([[x-draft-function-style]] covers the split itself — small named functions, positive if-guards —
   this skill only governs where the resulting files live.)
   User correction: the first pass of this exact split nested the new pieces under a
-  `drawFrame/utils/` subfolder — the user asked for them flat under `drawFrame/` directly instead,
+  `drawScene/utils/` subfolder — the user asked for them flat under `drawScene/` directly instead,
   which is now the standard for this pattern.
-- Its spec moves into a **nested `test/`** (`drawFrame/test/drawFrame.spec.ts`), same as any other
+- Its spec moves into a **nested `test/`** (`drawScene/test/drawScene.spec.ts`), same as any other
   function inside a `utils/`-style folder — unlike a promoted hook, a promoted function does **not**
   get a co-located spec, since it was never co-located to begin with (it was already in a
   `utils/test/` folder before the promotion).
@@ -156,9 +167,9 @@ Rules for this promotion, confirmed by re-running `grep -rl` for every export na
 whether the function's own parameters/body reference the *feature's* domain vocabulary
 (`TSceneNode`, "selection", "draft rect", `store`/selectors) or whether it only ever talks about
 generic primitives (a rect's x/y/width/height, a hex color, a WebGL context) that any canvas-drawing
-feature could reuse — regardless of who happens to import it today. `drawFrame.ts` and its direct
+feature could reuse — regardless of who happens to import it today. `drawScene.ts` and its direct
 siblings (`drawSceneNodes`, `drawSelectionOutline`, `drawGroupSelectionOutline`,
-`drawPerNodeSelectionOutlines`, `drawDraftFrame`) stayed in `drawFrame/`: every one of them takes or
+`drawPerNodeSelectionOutlines`, `drawFrame`) stayed in `drawScene/`: every one of them takes or
 branches on `TSceneNode[]`/selection state, i.e. Design-domain concepts. `drawSceneBackground`,
 `drawBackground`, `drawCornerHandles`, `drawRect`, `getRectCorners`, `hexToRgbFloat`, and
 `hexToRgbaFloat` all moved to the **global `src/utils/canvas/`** (one function per file + `test/`,

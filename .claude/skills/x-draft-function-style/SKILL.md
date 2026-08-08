@@ -87,7 +87,7 @@ The same rule applies when the inline closure recurses on itself and closes over
 effect-local values (a GL context, a program, a buffer, ...), not just one. Splitting it into two
 utils keeps each piece testable on its own:
 
-- a pure "do one unit of work" function (e.g. `drawFrame(gl, program, buffer, canvas, ...)`) —
+- a pure "do one unit of work" function (e.g. `drawScene(gl, program, buffer, canvas, ...)`) —
   no recursion, no scheduling, just draws/computes.
 - a "run the loop" function (e.g. `startRenderLoop(gl, program, buffer, canvas, ...)`) that owns the
   `tick`/`requestAnimationFrame` recursion and returns a stop callback, mirroring the
@@ -115,8 +115,8 @@ useEffect(() => {
 Prefer:
 
 ```ts
-// utils/drawFrame.ts
-export const drawFrame = (gl: WebGL2RenderingContext, program: WebGLProgram, buffer: WebGLBuffer, canvas: HTMLCanvasElement): void => {
+// utils/drawScene.ts
+export const drawScene = (gl: WebGL2RenderingContext, program: WebGLProgram, buffer: WebGLBuffer, canvas: HTMLCanvasElement): void => {
   // ...draws one frame
 };
 
@@ -125,7 +125,7 @@ export const startRenderLoop = (gl: WebGL2RenderingContext, program: WebGLProgra
   let frameId: number;
 
   const tick = (): void => {
-    drawFrame(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, canvas);
     frameId = requestAnimationFrame(tick);
   };
 
@@ -145,7 +145,7 @@ useEffect(() => {
 }, [canvasRef]);
 ```
 
-See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawFrame/drawFrame.ts` and
+See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawScene/drawScene.ts` and
 `.../utils/startRenderLoop.ts`, used from
 `components/Design/Canvas/hooks/useCanvasRenderLoop/useCanvasRenderLoop.ts` — the effect body no
 longer defines any function itself.
@@ -163,7 +163,7 @@ just applied to a value that changes over time instead of a static one:
 type TFrameIdRef = { current: number };
 
 const tick = (gl: WebGL2RenderingContext, program: WebGLProgram, buffer: WebGLBuffer, canvas: HTMLCanvasElement, frameIdRef: TFrameIdRef): void => {
-  drawFrame(gl, program, buffer, canvas);
+  drawScene(gl, program, buffer, canvas);
   frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef));
 };
 
@@ -273,7 +273,7 @@ reader to hold every branch in their head at once.
 Avoid — one function mixing every concern and its branching inline:
 
 ```ts
-export const drawFrame = (gl, program, buffer, canvas, draftRect) => {
+export const drawScene = (gl, program, buffer, canvas, draftRect) => {
   gl.colorMask(true, true, true, true);
   drawBackground(gl);
   gl.colorMask(true, true, true, false);
@@ -299,7 +299,7 @@ export const drawFrame = (gl, program, buffer, canvas, draftRect) => {
 Prefer — each concern extracted to its own named function, orchestrator just sequences them:
 
 ```ts
-export const drawFrame = (gl, program, buffer, canvas, draftRect) => {
+export const drawScene = (gl, program, buffer, canvas, draftRect) => {
   const state = store.getState();
   const viewport = selectViewport(state);
   const { clientHeight, clientWidth } = canvas;
@@ -307,7 +307,7 @@ export const drawFrame = (gl, program, buffer, canvas, draftRect) => {
   drawSceneBackground(gl);
   drawSceneNodes(gl, program, buffer, selectOrderedNodes(state), clientWidth, clientHeight, viewport);
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
-  drawDraftFrame(gl, program, buffer, draftRect, clientWidth, clientHeight, viewport);
+  drawFrame(gl, program, buffer, draftRect, clientWidth, clientHeight, viewport);
 };
 
 // drawSelectionOutline itself still branches, but the branch is the *entire* body — nothing else
@@ -321,10 +321,13 @@ export const drawSelectionOutline = (gl, program, buffer, selectedNodes, canvasW
 };
 ```
 
-See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawFrame/drawFrame.ts` and its
+See `components/Design/Canvas/hooks/useCanvasRenderLoop/utils/drawScene/drawScene.ts` and its
 siblings (`drawSceneNodes.ts`, `drawSelectionOutline.ts`, `drawGroupSelectionOutline.ts`,
-`drawPerNodeSelectionOutlines.ts`, `drawDraftFrame.ts`) for the full split — `drawSceneBackground`
-itself ended up promoted one step further, to the global `utils/canvas/`, since it (like
+`drawPerNodeSelectionOutlines.ts`, `drawFrame.ts` — the draft-frame-preview drawer, renamed from
+`drawDraftFrame` once the orchestrator itself stopped being called `drawFrame`, since "frame" as a
+bare name was ambiguous between a render-loop tick and a Design `NodeType.frame`; see
+[[x-draft-module-structure]]'s naming note) for the full split — `drawSceneBackground` itself ended
+up promoted one step further, to the global `utils/canvas/`, since it (like
 `drawBackground`/`drawCornerHandles`/`drawRect` before it) doesn't reference any Design-domain
 concept, unlike its siblings which all take `TSceneNode[]`/selection state; see
 [[x-draft-module-structure]] for that distinction. Once a function earns this split, that skill's

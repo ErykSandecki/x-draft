@@ -143,8 +143,8 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       Zagnieżdżenie we frame'ach nieaktualne na razie — jest tylko jeden typ node'a (frame),
       `parentId` zawsze `null`, więc hit-test operuje na płaskiej liście; wraca jako temat przy
       grupach/nested frames
-- [x] rysowanie selection outline + resize handles na canvasie — `drawFrame/drawSelectionOutline.ts`
-      (wywoływane z `drawFrame.ts` po narysowaniu node'ów) rysuje outline po `selectSelectedNodes`,
+- [x] rysowanie selection outline + resize handles na canvasie — `drawScene/drawSelectionOutline.ts`
+      (wywoływane z `drawScene.ts` po narysowaniu node'ów) rysuje outline po `selectSelectedNodes`,
       reużywając bez zmian `drawRect`/`drawCornerHandles` z Etapu 3/4 (już przyjmowały `viewport`,
       więc zadziałały na dowolnym node'ie, nie tylko na draft-rekcie draw-in-progress)
 - [x] przeciąganie (move) zaznaczonego node'a (lub kilku naraz) — `useSelectionTool.ts`.
@@ -155,9 +155,9 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
 - [x] **wspólny outline dla zaznaczenia 2+** — gdy zaznaczone są 2+ node'y **i mają ten sam
       `parentId`** (`Canvas/utils/haveSameParent.ts` + `isGroupSelection.ts` — dziś zawsze `true`,
       bo `parentId` jest zawsze `null`, wraca do gry przy grupach/nested frames),
-      `drawFrame/drawGroupSelectionOutline.ts` rysuje **jeden wspólny outline**
+      `drawScene/drawGroupSelectionOutline.ts` rysuje **jeden wspólny outline**
       (`Canvas/utils/getSelectionBounds.ts` — combined AABB) + 4 uchwyty zamiast osobnych per node
-      (`drawFrame/drawPerNodeSelectionOutlines.ts`), wybierane przez `drawSelectionOutline.ts` na
+      (`drawScene/drawPerNodeSelectionOutlines.ts`), wybierane przez `drawSelectionOutline.ts` na
       podstawie `isGroupSelection`.
       Hit-test w `useSelectionTool.ts` rozszerzony o `utils/isPointInGroupBounds.ts`: kliknięcie
       **gdziekolwiek w polu wspólnego bboxa** — nawet w pustym miejscu między zaznaczonymi

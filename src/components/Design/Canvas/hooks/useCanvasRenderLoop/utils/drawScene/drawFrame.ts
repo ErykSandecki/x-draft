@@ -9,7 +9,7 @@ import { TViewport } from 'types/design/types';
 import { drawCornerHandles } from 'utils/canvas/drawCornerHandles';
 import { drawRect } from 'utils/canvas/drawRect';
 
-export const drawDraftFrame = (
+export const drawFrame = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
   buffer: WebGLBuffer,

@@ -6,7 +6,7 @@ import { store } from 'store';
 import { NodeType } from 'types/design/enums';
 
 // utils
-import { drawFrame } from '../drawFrame';
+import { drawScene } from '../drawScene';
 
 const createGlMock = (): WebGL2RenderingContext =>
   ({
@@ -31,7 +31,7 @@ const createGlMock = (): WebGL2RenderingContext =>
     vertexAttribPointer: vi.fn(),
   }) as unknown as WebGL2RenderingContext;
 
-describe('drawFrame', () => {
+describe('drawScene', () => {
   it('should re-enable alpha writes for the background clear, then lock them for foreground drawing', () => {
     // mock
     const gl = createGlMock();
@@ -40,7 +40,7 @@ describe('drawFrame', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    drawFrame(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, canvas);
 
     // result
     expect((gl.colorMask as ReturnType<typeof vi.fn>).mock.calls).toEqual([
@@ -58,7 +58,7 @@ describe('drawFrame', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    drawFrame(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, canvas);
 
     // result
     expect(gl.drawArrays).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('drawFrame', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    drawFrame(gl, program, buffer, canvas, { height: 20, width: 10, x: 0, y: 0 });
+    drawScene(gl, program, buffer, canvas, { height: 20, width: 10, x: 0, y: 0 });
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
@@ -101,7 +101,7 @@ describe('drawFrame', () => {
     );
 
     // before
-    drawFrame(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, canvas);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
@@ -135,7 +135,7 @@ describe('drawFrame', () => {
     store.dispatch(setSelection([selectedId]));
 
     // before
-    drawFrame(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, canvas);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
@@ -182,7 +182,7 @@ describe('drawFrame', () => {
     store.dispatch(setSelection([idA, idB]));
 
     // before
-    drawFrame(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, canvas);
 
     // result
     const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
@@ -234,7 +234,7 @@ describe('drawFrame', () => {
     store.dispatch(setSelection([idA, idB]));
 
     // before
-    drawFrame(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, canvas);
 
     // result
     const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(

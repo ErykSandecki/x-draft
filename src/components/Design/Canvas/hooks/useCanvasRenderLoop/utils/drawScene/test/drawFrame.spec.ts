@@ -1,5 +1,5 @@
 // utils
-import { drawDraftFrame } from '../drawDraftFrame';
+import { drawFrame } from '../drawFrame';
 
 const createGlMock = (): WebGL2RenderingContext =>
   ({
@@ -22,7 +22,7 @@ const createGlMock = (): WebGL2RenderingContext =>
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-describe('drawDraftFrame', () => {
+describe('drawFrame', () => {
   it('should draw nothing when no draft rect is given', () => {
     // mock
     const gl = createGlMock();
@@ -30,7 +30,7 @@ describe('drawDraftFrame', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawDraftFrame(gl, program, buffer, null, 100, 100, IDENTITY_VIEWPORT);
+    drawFrame(gl, program, buffer, null, 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).not.toHaveBeenCalled();
@@ -43,7 +43,7 @@ describe('drawDraftFrame', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawDraftFrame(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, 100, 100, IDENTITY_VIEWPORT);
+    drawFrame(gl, program, buffer, { height: 20, width: 10, x: 0, y: 0 }, 100, 100, IDENTITY_VIEWPORT);
 
     // result
     const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(
