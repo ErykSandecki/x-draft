@@ -1,5 +1,5 @@
 // store
-import { selectOrderedNodes, selectSelectedNodes, selectViewport } from 'store/design/selectors';
+import { selectNodes, selectOrderedNodes, selectSelectedNodes, selectViewport } from 'store/design/selectors';
 import { store } from 'store';
 
 // types
@@ -7,6 +7,7 @@ import { TDraftRect } from 'types/canvas';
 
 // utils
 import { drawFrame } from './drawFrame';
+import { drawHoverOutline } from './drawHoverOutline';
 import { drawMarquee } from 'utils/canvas/drawMarquee';
 import { drawSceneBackground } from 'utils/canvas/drawSceneBackground';
 import { drawSceneNodes } from './drawSceneNodes';
@@ -19,6 +20,7 @@ export const drawScene = (
   canvas: HTMLCanvasElement,
   draftRect?: TDraftRect | null,
   marqueeRect?: TDraftRect | null,
+  hoveredNodeId?: string | null,
 ): void => {
   const state = store.getState();
   const viewport = selectViewport(state);
@@ -26,6 +28,15 @@ export const drawScene = (
 
   drawSceneBackground(gl);
   drawSceneNodes(gl, program, buffer, selectOrderedNodes(state), clientWidth, clientHeight, viewport);
+  drawHoverOutline(
+    gl,
+    program,
+    buffer,
+    hoveredNodeId ? selectNodes(state)[hoveredNodeId] : null,
+    clientWidth,
+    clientHeight,
+    viewport,
+  );
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
   drawFrame(gl, program, buffer, draftRect, clientWidth, clientHeight, viewport);
   drawMarquee(gl, program, buffer, marqueeRect, clientWidth, clientHeight, viewport);

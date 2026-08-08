@@ -6,6 +6,7 @@ import { useCanvasPanZoom } from './hooks/useCanvasPanZoom/useCanvasPanZoom';
 import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRenderLoop';
 import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
 import { useFrameTool } from './hooks/useFrameTool/useFrameTool';
+import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
 // styles
@@ -18,13 +19,15 @@ const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const draftRef = useRef<TDraftRect | null>(null);
   const marqueeRef = useRef<TDraftRect | null>(null);
+  const hoverRef = useRef<string | null>(null);
 
   useCanvasResize(canvasRef);
   useCanvasPanZoom(canvasRef);
   useCanvasDragPan(canvasRef);
   useFrameTool(canvasRef, draftRef);
   useSelectionTool(canvasRef, marqueeRef);
-  useCanvasRenderLoop(canvasRef, draftRef, marqueeRef);
+  useHoverHighlight(canvasRef, hoverRef);
+  useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef);
 
   return (
     <div className={styles.Canvas}>

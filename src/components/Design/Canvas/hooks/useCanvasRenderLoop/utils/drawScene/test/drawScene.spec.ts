@@ -107,6 +107,37 @@ describe('drawScene', () => {
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
   });
 
+  it('should draw a hover outline for the given hoveredNodeId', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const canvas = document.createElement('canvas');
+
+    store.dispatch(
+      addNode({
+        fill: '#ff9900',
+        height: 20,
+        name: 'Frame 3',
+        parentId: null,
+        rotation: 0,
+        type: NodeType.frame,
+        width: 10,
+        x: 0,
+        y: 0,
+      }),
+    );
+
+    const { rootOrder } = store.getState().design;
+    const hoveredId = rootOrder[rootOrder.length - 1];
+
+    // before
+    drawScene(gl, program, buffer, canvas, null, null, hoveredId);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 24);
+  });
+
   it('should draw a selection outline and corner handles for each selected node', () => {
     // mock
     const gl = createGlMock();

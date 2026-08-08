@@ -16,9 +16,12 @@ const tick = (
   frameIdRef: TFrameIdRef,
   draftRef?: RefObject<TDraftRect | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
+  hoverRef?: RefObject<string | null>,
 ): void => {
-  drawScene(gl, program, buffer, canvas, draftRef?.current, marqueeRef?.current);
-  frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef, draftRef, marqueeRef));
+  drawScene(gl, program, buffer, canvas, draftRef?.current, marqueeRef?.current, hoverRef?.current);
+  frameIdRef.current = requestAnimationFrame(() =>
+    tick(gl, program, buffer, canvas, frameIdRef, draftRef, marqueeRef, hoverRef),
+  );
 };
 
 export const startRenderLoop = (
@@ -28,10 +31,13 @@ export const startRenderLoop = (
   canvas: HTMLCanvasElement,
   draftRef?: RefObject<TDraftRect | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
+  hoverRef?: RefObject<string | null>,
 ): (() => void) => {
   const frameIdRef: TFrameIdRef = { current: 0 };
 
-  frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef, draftRef, marqueeRef));
+  frameIdRef.current = requestAnimationFrame(() =>
+    tick(gl, program, buffer, canvas, frameIdRef, draftRef, marqueeRef, hoverRef),
+  );
 
   return (): void => cancelAnimationFrame(frameIdRef.current);
 };

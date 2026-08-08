@@ -184,6 +184,28 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       każdym `pointermove`, więc przełączenie Control w trakcie przeciągania natychmiast zmienia
       wynik. Zaznaczenie aktualizuje się **na żywo** podczas przeciągania (dispatch przy każdym
       ruchu), nie dopiero po puszczeniu — zgodnie z x-design.
+- [x] **hover highlight** — najechanie kursorem (bez wciśniętego przycisku) na node pokazuje sam
+      outline, **bez** uchwytów w rogach (`useHoverHighlight/useHoverHighlight.ts` +
+      `drawScene/drawHoverOutline.ts`). Stan hover trzymany w `hoverRef` (nie w redux — czysto
+      renderingowa sprawa, nic więcej w apce na to nie reaguje), podpięty przez `drawScene`
+      dokładnie jak `draftRef`/`marqueeRef`. Osobny hook od `useSelectionTool` — hover to
+      luźno powiązana sprawa (żadnego drag/selection state), więc dostał własny plik zgodnie z
+      "jeden hook = jedna sprawa" (`useFrameTool`, `useSelectionTool`, `useCanvasPanZoom`,
+      `useCanvasDragPan`, `useCanvasResize` już tak działają). `getNodeAtPoint.ts` przeniesiony z
+      `useSelectionTool/utils/` do współdzielonego `Canvas/utils/`, bo teraz używają go dwa hooki
+      (ten sam powód co przeniesienie `toDraftRect.ts` wcześniej). Guard `event.buttons === 0` —
+      hover nie aktualizuje się, gdy jakikolwiek przycisk jest wciśnięty (nie miga po node'ach,
+      przez które przelatuje kursor w trakcie osobnego draggowania/marquee).
+      **Pogrubiony outline** (2px, `HOVER_OUTLINE_WIDTH`, jak w Figmie) — sprawdzone na żywo:
+      `gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)` zwraca `[1, 1]` w tym środowisku (Chrome/
+      ANGLE), więc `gl.lineWidth()` jest całkowicie zablokowany na 1px i nie da się go użyć.
+      Zamiast tego `utils/canvas/drawThickOutline.ts` (nowy, globalny prymityw) rysuje ramkę jako
+      4 wypełnione, cienkie prostokąty (triangle-based border), nie jako `LINE_LOOP` — jedyny
+      niezawodny sposób na WebGL-owy gruby stroke. Skalowany przez zoom identycznie jak
+      `CORNER_HANDLE_SIZE` (dzielenie przez `viewport.zoom`), więc zostaje stałej grubości na
+      ekranie. Świadomie **nie** dotyka współdzielonego `drawRect.ts` (używanego też przez
+      zaznaczenie/draft-frame/marquee) — to osobna funkcja, bo grubszy outline miał dotyczyć
+      wyłącznie hover.
 
   Pełna semantyka zaznaczania 1:1 z Figmy/x-design (`Element/utils/handleSelectElement.ts` +
   `MultipleElementsArea/ClickableArea/*`), ale spleciona w **jeden** hit-test-driven handler

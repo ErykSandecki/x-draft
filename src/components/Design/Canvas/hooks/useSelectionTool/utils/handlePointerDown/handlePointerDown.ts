@@ -13,7 +13,7 @@ import { TPoint } from 'types/canvas';
 import { armGroupBoundsDrag } from './armGroupBoundsDrag';
 import { armHitDrag } from './armHitDrag';
 import { armMarqueeDrag } from './armMarqueeDrag';
-import { getNodeAtPoint } from '../getNodeAtPoint';
+import { getNodeAtPoint } from '../../../../utils/getNodeAtPoint';
 import { getPointerPosition } from '../../../../utils/getPointerPosition';
 import { isPointInGroupBounds } from '../isPointInGroupBounds';
 import { screenToWorld } from '../../../../utils/screenToWorld';

@@ -94,6 +94,39 @@ test sidesteps computing which exact pixels differ: it drags the identical marqu
 without, once with Control) and asserts the two resulting screenshots simply differ — proof enough
 that the partially-overlapped frame's selection state flipped between the two runs.
 
+## Hover highlight (Etap 5)
+
+Moving the pointer over a frame with no button held shows a plain outline (no corner handles) —
+see `useHoverHighlight/useHoverHighlight.ts` and
+`useCanvasRenderLoop/utils/drawScene/drawHoverOutline.ts`. Hover state lives in a ref
+(`hoverRef`, threaded through `drawScene` exactly like `draftRef`/`marqueeRef`), not Redux — it's
+a pure rendering concern, updated every `pointermove`, with no other part of the app reacting to
+it (no layers panel/inspector exists — verified absent, see [[x-draft-playwright-mcp-testing]]).
+
+| #   | Scenario                                                                                                                                                     | Unit |        E2E         |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--: | :----------------: |
+| 19  | Moving the pointer onto a frame (no button held) shows its outline; moving off clears it                                                                     |  ✅  | ✅ `hover.spec.ts` |
+| 20  | The hover outline never updates while any button is held (`event.buttons !== 0`), so it can't flicker mid-drag onto whatever the cursor happens to pass over |  ✅  |         —          |
+
+#20 is unit-only on purpose: proving "the ref was never written" is a one-line
+`expect(hoverRef.current).toBeNull()` in `useHoverHighlight.spec.tsx`, but not cleanly provable via
+screenshot diff in e2e — during an actual drag something else on screen is usually changing too
+(a dragged node moving, a marquee's live selection), so a screenshot difference can't isolate
+"did hover specifically fire" from "did the thing actually being dragged change". #19 stays e2e
+because it's the same kind of real-paint-timing claim as the pan/zoom scenarios above: the unit
+test can assert the ref value in jsdom, but only a real browser proves the WebGL canvas actually
+repaints in response.
+
+**Gotcha for other e2e tests**: hover highlight is active by default whenever the pointer rests
+over a frame with `activeTool === default`, so `page.mouse.move`/`pointerDown` calls elsewhere can
+now change what a screenshot looks like _just by resting on a different frame_, independent of
+whatever that test is actually checking. `selection.spec.ts`'s gap-click test hit this: it used to
+assert a held-button screenshot was byte-identical to the pre-press one, but `pointerDown`'s own
+internal `mouse.move` (which happens before `mouse.down`, so `buttons === 0` at that instant) now
+shifts the hover target to the node about to be pressed. Fix: explicitly `pointerMove` onto that
+same point _before_ capturing the "before" screenshot too, so hover state matches in both
+captures and the comparison isolates the thing actually under test.
+
 ## Why so few scenarios get e2e coverage
 
 Most of the branches above are two-line Redux-state assertions in the unit suite — an e2e

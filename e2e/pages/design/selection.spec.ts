@@ -35,6 +35,11 @@ test('clicking an unselected frame inside a multi-selection does not replace the
 
   await designPage.click(120, 120); // select A
   await designPage.click(320, 120, { shift: true }); // add B — shared outline now spans A..B, covering C
+
+  // rest the cursor on C first so the hover outline is already there for both captures below —
+  // otherwise the hover highlight introduced by useHoverHighlight would itself make the two
+  // screenshots differ, unrelated to what this test is actually checking
+  await designPage.pointerMove(220, 120);
   const groupSelection = await designPage.canvas.screenshot();
 
   // pressing down on C must not flicker the outline away from the group while the button is held

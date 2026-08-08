@@ -4,3 +4,4 @@ export const CORNER_HANDLE_SIZE = 6;
 export const CORNER_HANDLE_FILL = '#ffffff';
 export const DRAFT_FRAME_STROKE = '#0d99ff';
 export const MARQUEE_FILL_ALPHA = 0.2;
+export const HOVER_OUTLINE_WIDTH = 2;
