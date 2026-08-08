@@ -17,10 +17,11 @@ import styles from './canvas.module.scss';
 
 // types
 import { TDraftRect } from 'types/canvas';
+import { TDraftShape } from 'types/design/types';
 
 const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const draftRef = useRef<TDraftRect | null>(null);
+  const draftRef = useRef<TDraftShape | null>(null);
   const marqueeRef = useRef<TDraftRect | null>(null);
   const hoverRef = useRef<string | null>(null);
 

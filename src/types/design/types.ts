@@ -1,5 +1,11 @@
 // types
 import { NodeType } from './enums';
+import { TDraftRect } from 'types/canvas';
+
+export type TDraftShape = TDraftRect & {
+  fill: string;
+  type: NodeType;
+};
 
 export type TBaseNode = {
   height: number;

@@ -12,7 +12,7 @@ import { TDesignState } from 'store/design/types';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
-import { TDraftRect } from 'types/canvas';
+import { TDraftShape } from 'types/design/types';
 import { TShapeToolConfig } from './useDrawShapeTool';
 
 const createTestStore = (): EnhancedStore<{ design: TDesignState }> => configureStore({ reducer: { design: designReducer } });
@@ -45,7 +45,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     // mock
     const store = createTestStore();
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -67,7 +67,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -79,7 +79,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 60, 40));
 
     // result
-    expect(draftRef.current).toEqual({ height: 30, width: 50, x: 10, y: 10 });
+    expect(draftRef.current).toEqual({ fill: config.fill, height: 30, type: config.type, width: 50, x: 10, y: 10 });
   });
 
   it('should commit a node with the configured fill and switch back to the default tool on pointer up', () => {
@@ -89,7 +89,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -126,7 +126,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -150,7 +150,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -172,7 +172,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -194,7 +194,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -216,7 +216,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {
@@ -237,7 +237,7 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     store.dispatch(setActiveTool(config.tool));
 
     const canvasRef = createCanvasRef();
-    const draftRef: RefObject<TDraftRect | null> = { current: null };
+    const draftRef: RefObject<TDraftShape | null> = { current: null };
 
     // before
     renderHook(() => useDrawShapeTool(canvasRef, draftRef, config), {

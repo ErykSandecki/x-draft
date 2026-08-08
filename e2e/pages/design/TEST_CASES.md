@@ -21,6 +21,7 @@ branch.
 | --- | ----------------------------------------------------------------------------------------------- | :--: | :---------------------------: |
 | 1   | Drawing a rectangle with the Rectangle tool renders it and reverts the active tool to `default` |  —   | ✅ `create-rectangle.spec.ts` |
 | 2   | Pressing "R" activates the Rectangle tool, then dragging draws a rectangle                      |  —   | ✅ `create-rectangle.spec.ts` |
+| 3   | While dragging (before release), the rectangle's own fill is already visible, unlike Frame's fill-less draft |  ✅  | ✅ `create-rectangle.spec.ts` |
 
 ## Ellipse drawing (Etap 6)
 
@@ -32,6 +33,7 @@ to unchecked (but keeps showing that icon) once a shape finishes drawing, same a
 | --- | ---------------------------------------------------------------------------------------------------------------------------------- | :--: | :-------------------------: |
 | 1   | Picking "Ellipse" from the Rectangle dropdown draws an ellipse, and the shared button stays showing Ellipse (unchecked) afterwards |  —   | ✅ `create-ellipse.spec.ts` |
 | 2   | Pressing "O" activates the Ellipse tool, then dragging draws an ellipse                                                            |  —   | ✅ `create-ellipse.spec.ts` |
+| 3   | While dragging (before release), the ellipse's own fill is already visible, unlike Frame's fill-less draft                        |  ✅  | ✅ `create-ellipse.spec.ts` |
 
 ## Selection (Etap 5)
 

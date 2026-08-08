@@ -4,6 +4,7 @@ import { store } from 'store';
 
 // types
 import { TDraftRect } from 'types/canvas';
+import { TDraftShape } from 'types/design/types';
 
 // utils
 import { drawFrame } from './drawFrame';
@@ -18,7 +19,7 @@ export const drawScene = (
   program: WebGLProgram,
   buffer: WebGLBuffer,
   canvas: HTMLCanvasElement,
-  draftRect?: TDraftRect | null,
+  draftShape?: TDraftShape | null,
   marqueeRect?: TDraftRect | null,
   hoveredNodeId?: string | null,
 ): void => {
@@ -30,6 +31,6 @@ export const drawScene = (
   drawSceneNodes(gl, program, buffer, selectOrderedNodes(state), clientWidth, clientHeight, viewport);
   drawHoverOutline(gl, program, buffer, hoveredNodeId ? selectNodes(state)[hoveredNodeId] : null, clientWidth, clientHeight, viewport);
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
-  drawFrame(gl, program, buffer, draftRect, clientWidth, clientHeight, viewport);
+  drawFrame(gl, program, buffer, draftShape, clientWidth, clientHeight, viewport);
   drawMarquee(gl, program, buffer, marqueeRect, clientWidth, clientHeight, viewport);
 };

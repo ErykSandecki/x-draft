@@ -71,3 +71,39 @@ test('draws an ellipse with the "O" keyboard shortcut', async ({ page }) => {
   const after = await designPage.canvas.screenshot();
   expect(after.equals(before)).toBe(false);
 });
+
+test('shows the ellipse\'s fill live while dragging, unlike the fill-less Frame draft', async ({ page }) => {
+  const designPage = new DesignPage(page);
+
+  await designPage.goto('e2e-test-project');
+  await expect(designPage.canvas).toBeVisible();
+
+  const box = await designPage.canvas.boundingBox();
+  if (!box) {
+    throw new Error('Canvas bounding box unavailable');
+  }
+
+  const startX = box.x + box.width * 0.3;
+  const startY = box.y + box.height * 0.3;
+  const endX = box.x + box.width * 0.6;
+  const endY = box.y + box.height * 0.6;
+
+  await designPage.selectTool('frame');
+  await designPage.pointerDown(startX, startY);
+  await designPage.pointerMove(endX, endY);
+  const frameMidDrag = await designPage.canvas.screenshot();
+  await designPage.pointerUp();
+
+  // reload for a clean canvas, then drag the exact same box with the Ellipse tool
+  await designPage.goto('e2e-test-project');
+  await expect(designPage.canvas).toBeVisible();
+
+  await page.keyboard.press('o');
+  await designPage.pointerDown(startX, startY);
+  await designPage.pointerMove(endX, endY);
+  const ellipseMidDrag = await designPage.canvas.screenshot();
+  await designPage.pointerUp();
+
+  // same box, same outline and corner handles — only the ellipse's own fill should differ them
+  expect(ellipseMidDrag.equals(frameMidDrag)).toBe(false);
+});

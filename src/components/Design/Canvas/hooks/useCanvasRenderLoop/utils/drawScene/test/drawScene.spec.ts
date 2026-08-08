@@ -72,7 +72,7 @@ describe('drawScene', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    drawScene(gl, program, buffer, canvas, { height: 20, width: 10, x: 0, y: 0 });
+    drawScene(gl, program, buffer, canvas, { fill: '#FFFFFF', height: 20, type: NodeType.frame, width: 10, x: 0, y: 0 });
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);

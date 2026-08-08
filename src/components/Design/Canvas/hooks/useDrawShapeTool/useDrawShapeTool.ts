@@ -11,7 +11,8 @@ import { useAppDispatch, useAppSelector } from 'store';
 // types
 import { NodeType, ToolName } from 'types/design/enums';
 import { MouseButton } from 'types/enums';
-import { TDraftRect, TPoint } from 'types/canvas';
+import { TDraftShape } from 'types/design/types';
+import { TPoint } from 'types/canvas';
 
 // utils
 import { getPointerPosition } from '../../utils/getPointerPosition';
@@ -27,7 +28,7 @@ export type TShapeToolConfig = {
 
 export const useDrawShapeTool = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
-  draftRef: RefObject<TDraftRect | null>,
+  draftRef: RefObject<TDraftShape | null>,
   { fill, name, tool, type }: TShapeToolConfig,
 ): void => {
   const activeTool = useAppSelector(selectActiveTool);
@@ -45,7 +46,9 @@ export const useDrawShapeTool = (
 
   const handlePointerMove = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     if (startRef.current) {
-      draftRef.current = toDraftRect(startRef.current, screenToWorld(getPointerPosition(canvas, event), viewport));
+      const rect = toDraftRect(startRef.current, screenToWorld(getPointerPosition(canvas, event), viewport));
+
+      draftRef.current = { ...rect, fill, type };
     }
   };
 
