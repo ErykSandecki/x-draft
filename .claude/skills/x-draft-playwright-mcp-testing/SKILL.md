@@ -69,3 +69,10 @@ All `mcp__playwright__*` tool names are individually allow-listed in `.claude/se
 (a `mcp__playwright__*` wildcard entry does **not** suppress prompts — list exact tool names).
 This project's `.claude/settings.local.json` also sets `permissions.defaultMode:
 "bypassPermissions"` for this user, so nothing in this project prompts at all.
+
+## Related
+
+[[x-draft-e2e-coverage]] — a live MCP demo (path 2 above) proves a feature works once, in that
+session, and leaves nothing behind; it does not substitute for a committed test under `e2e/`. That
+skill covers *whether* a change owes a permanent regression test — load it once implementation is
+done, before reporting the change complete.

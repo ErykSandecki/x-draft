@@ -1,8 +1,7 @@
 // utils
 import { armGroupBoundsDrag } from '../armGroupBoundsDrag';
 
-const createCanvasMock = (): HTMLCanvasElement =>
-  ({ setPointerCapture: vi.fn() }) as unknown as HTMLCanvasElement;
+const createCanvasMock = (): HTMLCanvasElement => ({ setPointerCapture: vi.fn() }) as unknown as HTMLCanvasElement;
 
 describe('armGroupBoundsDrag', () => {
   it('should arm a deselect drag for the current selection and capture the pointer', () => {

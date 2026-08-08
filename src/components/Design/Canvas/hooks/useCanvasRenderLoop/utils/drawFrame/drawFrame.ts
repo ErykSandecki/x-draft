@@ -7,6 +7,7 @@ import { TDraftRect } from 'types/canvas';
 
 // utils
 import { drawDraftFrame } from './drawDraftFrame';
+import { drawMarquee } from 'utils/canvas/drawMarquee';
 import { drawSceneBackground } from 'utils/canvas/drawSceneBackground';
 import { drawSceneNodes } from './drawSceneNodes';
 import { drawSelectionOutline } from './drawSelectionOutline';
@@ -17,6 +18,7 @@ export const drawFrame = (
   buffer: WebGLBuffer,
   canvas: HTMLCanvasElement,
   draftRect?: TDraftRect | null,
+  marqueeRect?: TDraftRect | null,
 ): void => {
   const state = store.getState();
   const viewport = selectViewport(state);
@@ -26,4 +28,5 @@ export const drawFrame = (
   drawSceneNodes(gl, program, buffer, selectOrderedNodes(state), clientWidth, clientHeight, viewport);
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
   drawDraftFrame(gl, program, buffer, draftRect, clientWidth, clientHeight, viewport);
+  drawMarquee(gl, program, buffer, marqueeRect, clientWidth, clientHeight, viewport);
 };

@@ -15,9 +15,10 @@ const tick = (
   canvas: HTMLCanvasElement,
   frameIdRef: TFrameIdRef,
   draftRef?: RefObject<TDraftRect | null>,
+  marqueeRef?: RefObject<TDraftRect | null>,
 ): void => {
-  drawFrame(gl, program, buffer, canvas, draftRef?.current);
-  frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef, draftRef));
+  drawFrame(gl, program, buffer, canvas, draftRef?.current, marqueeRef?.current);
+  frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef, draftRef, marqueeRef));
 };
 
 export const startRenderLoop = (
@@ -26,10 +27,11 @@ export const startRenderLoop = (
   buffer: WebGLBuffer,
   canvas: HTMLCanvasElement,
   draftRef?: RefObject<TDraftRect | null>,
+  marqueeRef?: RefObject<TDraftRect | null>,
 ): (() => void) => {
   const frameIdRef: TFrameIdRef = { current: 0 };
 
-  frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef, draftRef));
+  frameIdRef.current = requestAnimationFrame(() => tick(gl, program, buffer, canvas, frameIdRef, draftRef, marqueeRef));
 
   return (): void => cancelAnimationFrame(frameIdRef.current);
 };

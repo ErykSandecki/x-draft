@@ -40,7 +40,11 @@
       "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-store-slice-logic)",
       "Edit(/.claude/skills/x-draft-store-slice-logic/**)",
       "Edit(/.claude/skills/x-draft-module-structure/**)",
-      "Edit(/.claude/skills/x-draft-function-style/**)"
+      "Edit(/.claude/skills/x-draft-function-style/**)",
+      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/components/PageBuilder/ViewBox/SelectableArea/**)",
+      "Read(//Users/eryksandecki/Desktop/Work/Figma/x-design/src/components/PageBuilder/ViewBox/utils/**)",
+      "Bash(mkdir -p /Users/eryksandecki/Desktop/Work/Figma/x-draft/.claude/skills/x-draft-e2e-coverage)",
+      "Edit(/.claude/skills/x-draft-e2e-coverage/**)"
     ],
     "additionalDirectories": [
       "/tmp",

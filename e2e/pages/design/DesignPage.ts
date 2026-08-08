@@ -55,7 +55,6 @@ export class DesignPage {
     await this.page.mouse.up();
   }
 
-  /** Pans the viewport by (dx, dy) screen pixels via a middle-mouse-button drag. */
   async panBy(dx: number, dy: number): Promise<void> {
     const startX = 500;
     const startY = 500;
@@ -66,10 +65,6 @@ export class DesignPage {
     await this.page.mouse.up({ button: 'middle' });
   }
 
-  /**
-   * Zooms with the given point as the anchor (Ctrl/Cmd + wheel), so that same screen point still
-   * maps to the same world point afterwards. Negative deltaY zooms in, positive zooms out.
-   */
   async zoomAt(x: number, y: number, deltaY: number): Promise<void> {
     await this.page.mouse.move(x, y);
     await this.page.keyboard.down('Control');

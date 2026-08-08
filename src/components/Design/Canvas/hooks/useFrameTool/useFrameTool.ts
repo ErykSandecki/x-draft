@@ -16,7 +16,7 @@ import { TDraftRect, TPoint } from 'types/canvas';
 import { getPointerPosition } from '../../utils/getPointerPosition';
 import { getRandomColor } from './utils/getRandomColor';
 import { screenToWorld } from '../../utils/screenToWorld';
-import { toDraftRect } from './utils/toDraftRect';
+import { toDraftRect } from '../../utils/toDraftRect';
 
 const PRIMARY_MOUSE_BUTTON = 0;
 

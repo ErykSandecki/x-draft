@@ -15,6 +15,7 @@ import { startRenderLoop } from './utils/startRenderLoop';
 export const useCanvasRenderLoop = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   draftRef?: RefObject<TDraftRect | null>,
+  marqueeRef?: RefObject<TDraftRect | null>,
 ): void => {
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,12 +27,12 @@ export const useCanvasRenderLoop = (
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-      const stopRenderLoop = startRenderLoop(gl, program, buffer, canvas, draftRef);
+      const stopRenderLoop = startRenderLoop(gl, program, buffer, canvas, draftRef, marqueeRef);
 
       return (): void => {
         stopRenderLoop();
         gl.deleteBuffer(buffer);
       };
     }
-  }, [canvasRef, draftRef]);
+  }, [canvasRef, draftRef, marqueeRef]);
 };

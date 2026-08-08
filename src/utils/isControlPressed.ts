@@ -1,1 +1,1 @@
-export const isControlPressed = (event: WheelEvent): boolean => event.metaKey || event.ctrlKey;
+export const isControlPressed = (event: MouseEvent): boolean => event.metaKey || event.ctrlKey;

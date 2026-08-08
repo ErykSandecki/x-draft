@@ -25,4 +25,12 @@ describe('isControlPressed', () => {
     // result
     expect(isControlPressed(event)).toBe(false);
   });
+
+  it('should work with any MouseEvent, e.g. a PointerEvent from a drag gesture', () => {
+    // before
+    const event = new PointerEvent('pointermove', { ctrlKey: true });
+
+    // result
+    expect(isControlPressed(event)).toBe(true);
+  });
 });

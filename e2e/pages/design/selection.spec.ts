@@ -92,3 +92,59 @@ test('selecting a frame still works after zooming the canvas', async ({ page }) 
 
   expect(selected.equals(deselected)).toBe(false);
 });
+
+test('dragging a marquee live-selects the frames it covers, then keeps the selection after release', async ({
+  page,
+}) => {
+  const designPage = new DesignPage(page);
+
+  await designPage.goto('e2e-test-selection-marquee-live');
+  await expect(designPage.canvas).toBeVisible();
+
+  await designPage.drawFrame(100, 100, 140, 140); // P
+  const baseline = await designPage.canvas.screenshot();
+
+  // drag a marquee box that fully covers P — selection (and the marquee overlay itself) must
+  // update live, before the button is released
+  await designPage.pointerDown(80, 80);
+  await designPage.pointerMove(160, 160);
+  const midDrag = await designPage.canvas.screenshot();
+
+  expect(midDrag.equals(baseline)).toBe(false);
+
+  await designPage.pointerUp();
+  const afterRelease = await designPage.canvas.screenshot();
+
+  // the marquee overlay itself disappears on release, so mid-drag and post-release frames differ,
+  // but the selection outline on P must still be there — both must differ from the empty baseline
+  expect(afterRelease.equals(midDrag)).toBe(false);
+  expect(afterRelease.equals(baseline)).toBe(false);
+});
+
+test('marquee selection distinguishes a touched frame from a fully-contained one via Control', async ({ page }) => {
+  const designPage = new DesignPage(page);
+
+  await designPage.goto('e2e-test-selection-marquee-control');
+  await expect(designPage.canvas).toBeVisible();
+
+  await designPage.drawFrame(100, 100, 140, 140); // P — fully inside the marquee below
+  await designPage.drawFrame(180, 100, 240, 140); // Q — only partially overlapped by the marquee
+
+  // touch mode (no modifier): the marquee only needs to touch a frame to select it
+  await designPage.pointerDown(90, 90);
+  await designPage.pointerMove(230, 150);
+  await designPage.pointerUp();
+  const touchModeSelection = await designPage.canvas.screenshot();
+
+  // clear, then drag the identical box again with Control held — full containment required now
+  await designPage.click(10, 10);
+  await page.keyboard.down('Control');
+  await designPage.pointerDown(90, 90);
+  await designPage.pointerMove(230, 150);
+  await designPage.pointerUp();
+  await page.keyboard.up('Control');
+  const containModeSelection = await designPage.canvas.screenshot();
+
+  // Q is selected in touch mode but not in contain mode — the two results must differ
+  expect(touchModeSelection.equals(containModeSelection)).toBe(false);
+});

@@ -1,3 +1,5 @@
+import { RefObject } from 'react';
+
 // store
 import { setSelection } from 'store/design/slice';
 import { selectOrderedNodes, selectSelectedIds, selectSelectedNodes, selectViewport } from 'store/design/selectors';
@@ -5,10 +7,12 @@ import { AppDispatch, store } from 'store';
 
 // types
 import { TArmDrag } from '../../types';
+import { TPoint } from 'types/canvas';
 
 // utils
 import { armGroupBoundsDrag } from './armGroupBoundsDrag';
 import { armHitDrag } from './armHitDrag';
+import { armMarqueeDrag } from './armMarqueeDrag';
 import { getNodeAtPoint } from '../getNodeAtPoint';
 import { getPointerPosition } from '../../../../utils/getPointerPosition';
 import { isPointInGroupBounds } from '../isPointInGroupBounds';
@@ -22,6 +26,7 @@ export const handlePointerDown = (
   event: PointerEvent,
   dispatch: AppDispatch,
   armDrag: TArmDrag,
+  marqueeStartRef: RefObject<TPoint | null>,
 ): void => {
   if (event.button === PRIMARY_MOUSE_BUTTON) {
     const state = store.getState();
@@ -37,7 +42,7 @@ export const handlePointerDown = (
     } else if (!event.shiftKey && isPointInGroupBounds(point, selectedNodes)) {
       armGroupBoundsDrag(canvas, event, armDrag, currentSelection, point);
     } else if (!event.shiftKey) {
-      dispatch(setSelection([]));
+      armMarqueeDrag(canvas, event, dispatch, marqueeStartRef, point);
     }
   }
 };

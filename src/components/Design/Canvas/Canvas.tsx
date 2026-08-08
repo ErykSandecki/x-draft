@@ -17,13 +17,14 @@ import { TDraftRect } from 'types/canvas';
 const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const draftRef = useRef<TDraftRect | null>(null);
+  const marqueeRef = useRef<TDraftRect | null>(null);
 
   useCanvasResize(canvasRef);
   useCanvasPanZoom(canvasRef);
   useCanvasDragPan(canvasRef);
   useFrameTool(canvasRef, draftRef);
-  useSelectionTool(canvasRef);
-  useCanvasRenderLoop(canvasRef, draftRef);
+  useSelectionTool(canvasRef, marqueeRef);
+  useCanvasRenderLoop(canvasRef, draftRef, marqueeRef);
 
   return (
     <div className={styles.Canvas}>

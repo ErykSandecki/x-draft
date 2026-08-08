@@ -23,8 +23,7 @@ const buildNode = (overrides: Partial<TSceneNode>): TSceneNode => ({
   ...overrides,
 });
 
-const createCanvasMock = (): HTMLCanvasElement =>
-  ({ setPointerCapture: vi.fn() }) as unknown as HTMLCanvasElement;
+const createCanvasMock = (): HTMLCanvasElement => ({ setPointerCapture: vi.fn() }) as unknown as HTMLCanvasElement;
 
 describe('armHitDrag', () => {
   beforeEach(() => {

@@ -11,6 +11,7 @@ import { store } from 'store';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
+import { TDraftRect } from 'types/canvas';
 
 const createCanvasRef = (): RefObject<HTMLCanvasElement | null> => {
   const canvas = document.createElement('canvas');
@@ -47,10 +48,14 @@ const addFrameNode = (x: number, y: number, size = 20): string => {
   return rootOrder[rootOrder.length - 1];
 };
 
-const renderSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>): void => {
-  renderHook(() => useSelectionTool(canvasRef), {
+const renderSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>): RefObject<TDraftRect | null> => {
+  const marqueeRef: RefObject<TDraftRect | null> = { current: null };
+
+  renderHook(() => useSelectionTool(canvasRef, marqueeRef), {
     wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
   });
+
+  return marqueeRef;
 };
 
 describe('useSelectionTool behaviors', () => {
@@ -424,5 +429,48 @@ describe('useSelectionTool behaviors', () => {
 
     // result
     expect(store.getState().design.selectedIds).toEqual([]);
+  });
+
+  it('should select every node the marquee touches while dragging, and clear the marquee on release', () => {
+    // mock
+    const idP = addFrameNode(2000, 700, 20); // fully inside the marquee
+    const idQ = addFrameNode(2050, 700, 20); // only partially overlapped by the marquee
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    const marqueeRef = renderSelectionTool(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 1990, 690));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 2060, 730));
+
+    // result
+    expect(store.getState().design.selectedIds).toEqual([idP, idQ]);
+    expect(marqueeRef.current).toEqual({ height: 40, width: 70, x: 1990, y: 690 });
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 2060, 730));
+
+    // result
+    expect(marqueeRef.current).toBeNull();
+  });
+
+  it('should only select fully-contained nodes when Control is held during the marquee drag', () => {
+    // mock
+    const idP = addFrameNode(2100, 700, 20); // fully inside the marquee
+    addFrameNode(2150, 700, 20); // Q, only partially overlapped — must stay unselected under Control
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 2090, 690, { ctrlKey: true }));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 2160, 730, { ctrlKey: true }));
+
+    // result
+    expect(store.getState().design.selectedIds).toEqual([idP]);
   });
 });

@@ -71,6 +71,29 @@ There is no "reset view" action anywhere in the app (checked: no keyboard shortc
 button — `useToolbarShortcuts.ts` only has tool-switching keys) — nothing exists yet to write a
 test case for. If that's wanted, it's a product feature to build first, not a test gap.
 
+## Marquee selection (Etap 5, drag-select)
+
+Dragging on empty canvas (no node hit, not inside an existing multi-selection's shared bounds)
+arms a marquee instead of immediately clearing the selection — see
+`useSelectionTool/utils/handlePointerDown/armMarqueeDrag.ts` and
+`Canvas/utils/getCollidedNodes.ts`. Pattern ported from x-design's
+`ViewBox/utils/getCollidedElements.ts` + `SelectableArea`.
+
+| #   | Scenario                                                                                                    | Unit |          E2E           |
+| --- | ----------------------------------------------------------------------------------------------------------- | :--: | :--------------------: |
+| 16  | Dragging a marquee live-updates the selection (and its rendered overlay) on every move, before release      |  ✅  | ✅ `selection.spec.ts` |
+| 17  | A frame the marquee only **touches** (partial overlap) gets selected in the default (no-modifier) mode      |  ✅  | ✅ `selection.spec.ts` |
+| 18  | The same partially-overlapped frame is **excluded** when Control/Cmd is held — full containment is required |  ✅  | ✅ `selection.spec.ts` |
+
+This is the one marquee scenario where e2e earns its keep the same way scenarios 14/15 do: the
+default-vs-Control distinction is a live `event.ctrlKey`/`metaKey` read inside a browser pointer
+event (`isControlPressed`, widened this session from `WheelEvent` to `MouseEvent` specifically so
+`useSelectionTool` could reuse it for `PointerEvent`), not just branch logic — worth proving against
+a real browser event, not only a synthetic `PointerEvent` in jsdom. `selection.spec.ts`'s Control
+test sidesteps computing which exact pixels differ: it drags the identical marquee box twice (once
+without, once with Control) and asserts the two resulting screenshots simply differ — proof enough
+that the partially-overlapped frame's selection state flipped between the two runs.
+
 ## Why so few scenarios get e2e coverage
 
 Most of the branches above are two-line Redux-state assertions in the unit suite — an e2e

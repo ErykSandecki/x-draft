@@ -1,5 +1,5 @@
 // others
-import { DRAFT_FRAME_STROKE } from '../../../../constants';
+import { DRAFT_FRAME_STROKE } from 'constant/canvas';
 
 // types
 import { TDraftRect } from 'types/canvas';

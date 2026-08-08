@@ -1,6 +1,5 @@
 export const RESIZE_DEBOUNCE_MS = 500;
 export const MIN_FRAME_SIZE = 2;
-export const DRAFT_FRAME_STROKE = '#0d99ff';
 export const WEBGL_CONTEXT_ID = 'webgl2';
 export const WEBGL_CONTEXT_ATTRIBUTES: WebGLContextAttributes = { premultipliedAlpha: false };
 export const ZOOM_MIN = 0.1;

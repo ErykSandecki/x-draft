@@ -165,6 +165,25 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       Puszczenie bez ruchu w tej luce **czyści całe zaznaczenie** — nie trafiono w żaden
       konkretny node, więc traktowane jak klik na pusty canvas, inaczej niż klik na konkretny,
       zaznaczony node z Etapu 5 wyżej (ten zwija do jednego node'a)
+- [x] **zaznaczanie przez przeciągnięcie ramki (marquee)** — klik+drag na pustym canvasie
+      (bez trafienia w node i poza wspólnym bboxem istniejącego zaznaczenia) uzbraja marquee
+      zamiast od razu czyścić zaznaczenie. Wzorzec 1:1 z x-design
+      (`ViewBox/utils/getCollidedElements.ts` + `SelectableArea`), przeniesiony na architekturę
+      x-draft (jeden WebGL canvas zamiast DOM-u per element): `Canvas/utils/getCollidedNodes.ts`
+      operuje na `TSceneNode[]` z redux zamiast na DOM `rectCoordinates`, a sam prostokąt renderuje
+      się przez `utils/canvas/drawMarquee.ts` (WebGL, nie SVG-overlay) — półprzezroczyste
+      wypełnienie (`MARQUEE_FILL_ALPHA = 0.2`, ten sam pattern co x-design'owe
+      `color-mix(..., 20%, transparent)`) + obrys, oba w `DRAFT_FRAME_STROKE`. Rendering
+      podpięty przez `marqueeRef` dokładnie tak jak istniejący `draftRef` z Etapu 4
+      (`useFrameTool`/`useCanvasRenderLoop`) — ref, nie redux, żeby nie wymuszać re-renderu na
+      każdą klatkę przeciągania.
+      Kolizja domyślnie **dotyka** (`!(x2<x1 || x1>x2 || y2<y1 || y1>y2)` — standardowy test
+      nachodzenia AABB); z wciśniętym **Control/Cmd** (`utils/isControlPressed.ts`, rozszerzony
+      z `WheelEvent` na `MouseEvent`, żeby przyjmował też `PointerEvent`) kolizja wymaga **pełnego
+      zawierania** node'a w ramce. Tryb odczytywany na bieżąco z `event.ctrlKey`/`metaKey` przy
+      każdym `pointermove`, więc przełączenie Control w trakcie przeciągania natychmiast zmienia
+      wynik. Zaznaczenie aktualizuje się **na żywo** podczas przeciągania (dispatch przy każdym
+      ruchu), nie dopiero po puszczeniu — zgodnie z x-design.
 
   Pełna semantyka zaznaczania 1:1 z Figmy/x-design (`Element/utils/handleSelectElement.ts` +
   `MultipleElementsArea/ClickableArea/*`), ale spleciona w **jeden** hit-test-driven handler
