@@ -10,13 +10,12 @@ import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
 // others
-import { FRAME_FILL, RECTANGLE_FILL } from './constants';
+import { FRAME_TOOL_SETTINGS, RECTANGLE_TOOL_SETTINGS } from './toolSettings';
 
 // styles
 import styles from './canvas.module.scss';
 
 // types
-import { NodeType, ToolName } from 'types/design/enums';
 import { TDraftRect } from 'types/canvas';
 
 const Canvas: FC = () => {
@@ -28,8 +27,8 @@ const Canvas: FC = () => {
   useCanvasResize(canvasRef);
   useCanvasPanZoom(canvasRef);
   useCanvasDragPan(canvasRef);
-  useDrawShapeTool(canvasRef, draftRef, { fill: FRAME_FILL, name: 'Frame', tool: ToolName.frame, type: NodeType.frame });
-  useDrawShapeTool(canvasRef, draftRef, { fill: RECTANGLE_FILL, name: 'Rectangle', tool: ToolName.rectangle, type: NodeType.rectangle });
+  useDrawShapeTool(canvasRef, draftRef, FRAME_TOOL_SETTINGS);
+  useDrawShapeTool(canvasRef, draftRef, RECTANGLE_TOOL_SETTINGS);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);
   useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef);
