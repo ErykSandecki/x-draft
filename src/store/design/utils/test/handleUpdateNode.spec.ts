@@ -1,12 +1,12 @@
 // types
 import { NodeType, ToolName } from 'types/design/enums';
 import { TDesignState } from '../../types';
-import { TSceneNode } from 'types/design/types';
+import { TFrameNode } from 'types/design/types';
 
 // utils
 import { handleUpdateNode } from '../handleUpdateNode';
 
-const node: TSceneNode = {
+const node: TFrameNode = {
   fill: '#ff0000',
   height: 10,
   id: 'node-1',
@@ -35,7 +35,7 @@ describe('handleUpdateNode', () => {
     handleUpdateNode(state, { changes: { width: 300 }, id: node.id });
 
     // result
-    expect(state.nodes[node.id].width).toBe(300);
+    expect((state.nodes[node.id] as TFrameNode).width).toBe(300);
   });
 
   it('should do nothing when the node does not exist', () => {

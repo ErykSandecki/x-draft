@@ -157,4 +157,22 @@ describe('drawFrame', () => {
 
     expect(trianglesDraws).toHaveLength(4);
   });
+
+  it('should draw a live segment and 2 endpoint handles for a line draft, not a box outline', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+
+    // before
+    drawFrame(gl, program, buffer, { stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 }, 100, 100, IDENTITY_VIEWPORT);
+
+    // result — 1 segment fill + 2 endpoint-handle fills = 3 TRIANGLES draws, 2 endpoint-handle
+    // strokes = 2 LINE_LOOP draws
+    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
+
+    expect(trianglesDraws).toHaveLength(3);
+    expect(lineLoopDraws).toHaveLength(2);
+  });
 });

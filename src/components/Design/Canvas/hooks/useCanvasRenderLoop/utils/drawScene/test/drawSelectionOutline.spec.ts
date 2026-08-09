@@ -1,6 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TSceneNode } from 'types/design/types';
 
 // utils
 import { drawSelectionOutline } from '../drawSelectionOutline';
@@ -26,7 +26,7 @@ const createGlMock = (): WebGL2RenderingContext =>
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-const buildNode = (overrides: Partial<TSceneNode>): TSceneNode => ({
+const buildNode = (overrides: Partial<TBoxSceneNode>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',

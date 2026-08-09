@@ -6,7 +6,7 @@ import { RefObject } from 'react';
 import { useHoverHighlight } from './useHoverHighlight';
 
 // store
-import { addNode, setActiveTool } from 'store/design/slice';
+import { addNode, setActiveTool, setSelection } from 'store/design/slice';
 import { store } from 'store';
 
 // types
@@ -43,6 +43,14 @@ const addFrameNode = (x: number, y: number, size = 20): string => {
   return rootOrder[rootOrder.length - 1];
 };
 
+const addLineNode = (x1: number, y1: number, x2: number, y2: number): string => {
+  store.dispatch(addNode({ name: 'Line', parentId: null, stroke: '#ffffff', type: NodeType.line, x1, x2, y1, y2 }));
+
+  const { rootOrder } = store.getState().design;
+
+  return rootOrder[rootOrder.length - 1];
+};
+
 const renderHoverHighlight = (canvasRef: RefObject<HTMLCanvasElement | null>): RefObject<string | null> => {
   const hoverRef: RefObject<string | null> = { current: null };
 
@@ -56,6 +64,7 @@ const renderHoverHighlight = (canvasRef: RefObject<HTMLCanvasElement | null>): R
 describe('useHoverHighlight behaviors', () => {
   beforeEach(() => {
     store.dispatch(setActiveTool(ToolName.default));
+    store.dispatch(setSelection([]));
   });
 
   it('should not react to pointer events when the default tool is not active', () => {
@@ -141,5 +150,82 @@ describe('useHoverHighlight behaviors', () => {
 
     // result
     expect(hoverRef.current).toBeNull();
+  });
+
+  it('should apply the positioning cursor class when hovering a selected line\'s endpoint', () => {
+    // mock
+    const idA = addLineNode(500, 500, 600, 500);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    const hoverRef = renderHoverHighlight(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 500, 500));
+
+    // result
+    expect(canvasRef.current?.className).toContain('positioning');
+    expect(hoverRef.current).toBe(idA);
+  });
+
+  it('should remove the positioning cursor class when the pointer moves off a line endpoint', () => {
+    // mock
+    const idA = addLineNode(700, 500, 800, 500);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderHoverHighlight(canvasRef);
+
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 700, 500));
+    expect(canvasRef.current?.className).toContain('positioning');
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 900, 900));
+
+    // result
+    expect(canvasRef.current?.className).not.toContain('positioning');
+  });
+
+  it('should remove the positioning cursor class when the pointer leaves the canvas', () => {
+    // mock
+    const idA = addLineNode(1000, 500, 1100, 500);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderHoverHighlight(canvasRef);
+
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 1000, 500));
+    expect(canvasRef.current?.className).toContain('positioning');
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerleave', 1000, 500));
+
+    // result
+    expect(canvasRef.current?.className).not.toContain('positioning');
+  });
+
+  it('should not apply the positioning cursor class over a line endpoint that is not selected', () => {
+    // mock
+    addLineNode(1200, 500, 1300, 500);
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderHoverHighlight(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 1200, 500));
+
+    // result
+    expect(canvasRef.current?.className).not.toContain('positioning');
   });
 });

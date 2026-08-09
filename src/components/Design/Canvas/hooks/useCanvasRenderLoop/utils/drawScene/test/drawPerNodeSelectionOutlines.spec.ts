@@ -1,6 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TSceneNode } from 'types/design/types';
 
 // utils
 import { drawPerNodeSelectionOutlines } from '../drawPerNodeSelectionOutlines';
@@ -26,7 +26,7 @@ const createGlMock = (): WebGL2RenderingContext =>
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-const buildNode = (overrides: Partial<TSceneNode>): TSceneNode => ({
+const buildNode = (overrides: Partial<TBoxSceneNode>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -55,5 +55,24 @@ describe('drawPerNodeSelectionOutlines', () => {
     const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
 
     expect(lineLoopDraws).toHaveLength(10);
+  });
+
+  it('should draw a thin segment and 2 endpoint handles for a selected line, not a bounding-box outline', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const line: TSceneNode = { id: 'a', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 };
+
+    // before
+    drawPerNodeSelectionOutlines(gl, program, buffer, [line], 100, 100, IDENTITY_VIEWPORT);
+
+    // result — 1 segment fill + 2 endpoint-handle fills = 3 TRIANGLES draws, 2 endpoint-handle
+    // strokes = 2 LINE_LOOP draws (no rectangular bounding-box outline)
+    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
+
+    expect(trianglesDraws).toHaveLength(3);
+    expect(lineLoopDraws).toHaveLength(2);
   });
 });

@@ -6,7 +6,7 @@ import { DEFAULT_SHAPE_TOOL, DEFAULT_TOOL, DEFAULT_VIEWPORT } from './constants'
 // types
 import { TDesignState } from './types';
 import { ToolName } from 'types/design/enums';
-import { TSceneNode, TViewport } from 'types/design/types';
+import { TNewSceneNode, TSceneNode, TSceneNodeChanges, TViewport } from 'types/design/types';
 
 // utils
 import { handleAddNode } from './utils/handleAddNode';
@@ -27,7 +27,7 @@ const designSlice = createSlice({
   name: 'design',
   reducers: {
     addNode: {
-      prepare: (node: Omit<TSceneNode, 'id'>) => ({ payload: { ...node, id: nanoid() } as TSceneNode }),
+      prepare: (node: TNewSceneNode) => ({ payload: { ...node, id: nanoid() } as TSceneNode }),
       reducer: (state, action: PayloadAction<TSceneNode>) => handleAddNode(state, action.payload),
     },
     setActiveTool: (state, action: PayloadAction<ToolName>) => handleSetActiveTool(state, action.payload),
@@ -37,7 +37,7 @@ const designSlice = createSlice({
     setViewport: (state, action: PayloadAction<TViewport>) => {
       state.viewport = action.payload;
     },
-    updateNode: (state, action: PayloadAction<{ changes: Partial<TSceneNode>; id: string }>) => handleUpdateNode(state, action.payload),
+    updateNode: (state, action: PayloadAction<{ changes: TSceneNodeChanges; id: string }>) => handleUpdateNode(state, action.payload),
   },
 });
 

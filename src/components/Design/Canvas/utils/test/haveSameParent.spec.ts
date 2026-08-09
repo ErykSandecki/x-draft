@@ -1,11 +1,11 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TSceneNode } from 'types/design/types';
 
 // utils
 import { haveSameParent } from '../haveSameParent';
 
-const buildNode = (overrides: Partial<TSceneNode>): TSceneNode => ({
+const buildNode = (overrides: Partial<TBoxSceneNode>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',

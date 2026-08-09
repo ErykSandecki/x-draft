@@ -1,25 +1,42 @@
 // others
-import { DRAFT_FRAME_STROKE } from 'constant/canvas';
+import { DRAFT_FRAME_STROKE, LINE_RENDER_STROKE_WIDTH } from 'constant/canvas';
 
 // types
 import { NodeType } from 'types/design/enums';
-import { TDraftShape, TViewport } from 'types/design/types';
+import { TDraftEntity, TViewport } from 'types/design/types';
 
 // utils
 import { drawCornerHandles } from 'utils/canvas/drawCornerHandles';
 import { drawEllipse } from 'utils/canvas/drawEllipse';
+import { drawLine } from 'utils/canvas/drawLine';
+import { drawLineEndpointHandles } from 'utils/canvas/drawLineEndpointHandles';
 import { drawRect } from 'utils/canvas/drawRect';
 
 export const drawFrame = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
   buffer: WebGLBuffer,
-  draftShape: TDraftShape | null | undefined,
+  draftShape: TDraftEntity | null | undefined,
   canvasWidth: number,
   canvasHeight: number,
   viewport: TViewport,
 ): void => {
-  if (draftShape) {
+  if (draftShape && draftShape.type === NodeType.line) {
+    drawLine(gl, program, buffer, draftShape, draftShape.stroke, LINE_RENDER_STROKE_WIDTH, canvasWidth, canvasHeight, viewport);
+    drawLineEndpointHandles(
+      gl,
+      program,
+      buffer,
+      [
+        { x: draftShape.x1, y: draftShape.y1 },
+        { x: draftShape.x2, y: draftShape.y2 },
+      ],
+      DRAFT_FRAME_STROKE,
+      canvasWidth,
+      canvasHeight,
+      viewport,
+    );
+  } else if (draftShape) {
     const fill = draftShape.type === NodeType.frame ? undefined : draftShape.fill;
 
     if (draftShape.type === NodeType.ellipse) {

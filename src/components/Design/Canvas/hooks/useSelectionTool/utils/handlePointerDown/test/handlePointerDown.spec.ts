@@ -45,6 +45,14 @@ const addFrameNode = (x: number, y: number, size = 20): string => {
   return rootOrder[rootOrder.length - 1];
 };
 
+const addLineNode = (x1: number, y1: number, x2: number, y2: number): string => {
+  store.dispatch(addNode({ name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1, x2, y1, y2 }));
+
+  const { rootOrder } = store.getState().design;
+
+  return rootOrder[rootOrder.length - 1];
+};
+
 describe('handlePointerDown', () => {
   beforeEach(() => {
     store.dispatch(setSelection([]));
@@ -57,7 +65,7 @@ describe('handlePointerDown', () => {
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(10, 10, { button: 1 }), store.dispatch, armDrag, marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(10, 10, { button: 1 }), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
 
     // result
     expect(armDrag).not.toHaveBeenCalled();
@@ -72,7 +80,7 @@ describe('handlePointerDown', () => {
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(105, 105, { shiftKey: true }), store.dispatch, armDrag, marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(105, 105, { shiftKey: true }), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
 
     // result
     expect(store.getState().design.selectedIds).toEqual([idA]);
@@ -87,7 +95,7 @@ describe('handlePointerDown', () => {
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(205, 205), store.dispatch, armDrag, marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(205, 205), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
 
     // result
     expect(store.getState().design.selectedIds).toEqual([idA]);
@@ -106,7 +114,7 @@ describe('handlePointerDown', () => {
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(340, 310), store.dispatch, armDrag, marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(340, 310), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
 
     // result
     expect(armDrag).toHaveBeenCalledWith([idA, idB], { kind: 'deselect' }, expect.anything());
@@ -123,12 +131,50 @@ describe('handlePointerDown', () => {
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(900, 900), store.dispatch, armDrag, marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(900, 900), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
 
     // result
     expect(store.getState().design.selectedIds).toEqual([]);
     expect(armDrag).not.toHaveBeenCalled();
     expect(marqueeStartRef.current).not.toBeNull();
     expect(canvas.setPointerCapture).toHaveBeenCalledWith(1);
+  });
+
+  it('should delegate to armEndpointDrag when a selected line endpoint is hit, instead of moving the whole shape', () => {
+    // mock
+    const idA = addLineNode(500, 500, 600, 500);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvas = createCanvas();
+    const armDrag = vi.fn();
+    const armEndpointDrag = vi.fn();
+    const marqueeStartRef = createMarqueeStartRef();
+
+    // before
+    handlePointerDown(canvas, pointerEvent(500, 500), store.dispatch, armDrag, armEndpointDrag, marqueeStartRef);
+
+    // result
+    expect(armEndpointDrag).toHaveBeenCalledWith(idA, 'a');
+    expect(armDrag).not.toHaveBeenCalled();
+  });
+
+  it('should fall back to a whole-shape move when the line is selected but the hit is not near an endpoint', () => {
+    // mock
+    const idA = addLineNode(700, 700, 800, 700);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvas = createCanvas();
+    const armDrag = vi.fn();
+    const armEndpointDrag = vi.fn();
+    const marqueeStartRef = createMarqueeStartRef();
+
+    // before
+    handlePointerDown(canvas, pointerEvent(750, 700), store.dispatch, armDrag, armEndpointDrag, marqueeStartRef);
+
+    // result
+    expect(armEndpointDrag).not.toHaveBeenCalled();
+    expect(armDrag).toHaveBeenCalledWith([idA], null, expect.anything());
   });
 });

@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 // types
 import { NodeType, ToolName } from 'types/design/enums';
 import { MouseButton } from 'types/enums';
-import { TDraftShape } from 'types/design/types';
+import { TDraftEntity } from 'types/design/types';
 import { TPoint } from 'types/canvas';
 
 // utils
@@ -23,12 +23,12 @@ export type TShapeToolConfig = {
   fill: string;
   name: string;
   tool: ToolName;
-  type: NodeType;
+  type: NodeType.ellipse | NodeType.frame | NodeType.rectangle;
 };
 
 export const useDrawShapeTool = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
-  draftRef: RefObject<TDraftShape | null>,
+  draftRef: RefObject<TDraftEntity | null>,
   { fill, name, tool, type }: TShapeToolConfig,
 ): void => {
   const activeTool = useAppSelector(selectActiveTool);

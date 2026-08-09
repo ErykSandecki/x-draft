@@ -1,11 +1,12 @@
 // others
-import { DRAFT_FRAME_STROKE, HOVER_OUTLINE_WIDTH } from 'constant/canvas';
+import { DRAFT_FRAME_STROKE, HOVER_OUTLINE_WIDTH, LINE_HOVER_STROKE_WIDTH } from 'constant/canvas';
 
 // types
 import { NodeType } from 'types/design/enums';
 import { TSceneNode, TViewport } from 'types/design/types';
 
 // utils
+import { drawLine } from 'utils/canvas/drawLine';
 import { drawThickEllipseOutline } from 'utils/canvas/drawThickEllipseOutline';
 import { drawThickOutline } from 'utils/canvas/drawThickOutline';
 
@@ -27,6 +28,18 @@ export const drawHoverOutline = (
         hoveredNode,
         DRAFT_FRAME_STROKE,
         HOVER_OUTLINE_WIDTH,
+        canvasWidth,
+        canvasHeight,
+        viewport,
+      );
+    } else if (hoveredNode.type === NodeType.line) {
+      drawLine(
+        gl,
+        program,
+        buffer,
+        hoveredNode,
+        DRAFT_FRAME_STROKE,
+        LINE_HOVER_STROKE_WIDTH / viewport.zoom,
         canvasWidth,
         canvasHeight,
         viewport,

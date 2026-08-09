@@ -1,6 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TSceneNode } from 'types/design/types';
 
 // utils
 import { drawSceneNodes } from '../drawSceneNodes';
@@ -27,7 +27,7 @@ const createGlMock = (): WebGL2RenderingContext =>
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-const buildNode = (overrides: Partial<TSceneNode>): TSceneNode => ({
+const buildNode = (overrides: Partial<TBoxSceneNode>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -82,5 +82,20 @@ describe('drawSceneNodes', () => {
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
+  });
+
+  it('should draw a thin segment for a line node instead of a filled rect', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const line: TSceneNode = { id: 'a', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 };
+
+    // before
+    drawSceneNodes(gl, program, buffer, [line], 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
   });
 });

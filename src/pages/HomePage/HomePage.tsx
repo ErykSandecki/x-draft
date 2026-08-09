@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 // components
 import { Icon } from 'shared';
 
+// hooks
+import { useTheme } from 'hooks';
+
 // others
 import { colors } from 'constant/colors';
 
@@ -12,6 +15,7 @@ import styles from './home-page.module.scss';
 
 const HomePage: FC = () => {
   const { t } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <main className={styles.HomePage}>
@@ -19,6 +23,9 @@ const HomePage: FC = () => {
       <h1>x-draft</h1>
       <p style={{ color: colors.neutral2 }}>{t('home.subtitle')}</p>
       <p style={{ color: colors.neutral2 }}>{t('home.description')}</p>
+      <button className={styles['HomePage__theme-toggle']} onClick={toggleTheme} type="button">
+        {t(theme === 'dark' ? 'app.themeToggle.switchToLight' : 'app.themeToggle.switchToDark')}
+      </button>
     </main>
   );
 };

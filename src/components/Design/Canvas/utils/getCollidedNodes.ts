@@ -2,6 +2,9 @@
 import { TDraftRect } from 'types/canvas';
 import { TSceneNode } from 'types/design/types';
 
+// utils
+import { getNodeBounds } from './getNodeBounds';
+
 export const getCollidedNodes = (nodes: TSceneNode[], area: TDraftRect, requireFullyInside: boolean): TSceneNode[] => {
   const x1 = area.x;
   const y1 = area.y;
@@ -9,11 +12,12 @@ export const getCollidedNodes = (nodes: TSceneNode[], area: TDraftRect, requireF
   const y2 = area.y + area.height;
 
   return nodes.filter((node) => {
-    const nodeX2 = node.x + node.width;
-    const nodeY2 = node.y + node.height;
+    const bounds = getNodeBounds(node);
+    const nodeX2 = bounds.x + bounds.width;
+    const nodeY2 = bounds.y + bounds.height;
 
     return requireFullyInside
-      ? x1 <= node.x && x2 >= nodeX2 && y1 <= node.y && y2 >= nodeY2
-      : !(nodeX2 < x1 || node.x > x2 || nodeY2 < y1 || node.y > y2);
+      ? x1 <= bounds.x && x2 >= nodeX2 && y1 <= bounds.y && y2 >= nodeY2
+      : !(nodeX2 < x1 || bounds.x > x2 || nodeY2 < y1 || bounds.y > y2);
   });
 };

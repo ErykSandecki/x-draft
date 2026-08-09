@@ -35,6 +35,50 @@ to unchecked (but keeps showing that icon) once a shape finishes drawing, same a
 | 2   | Pressing "O" activates the Ellipse tool, then dragging draws an ellipse                                                            |  —   | ✅ `create-ellipse.spec.ts` |
 | 3   | While dragging (before release), the ellipse's own fill is already visible, unlike Frame's fill-less draft                        |  ✅  | ✅ `create-ellipse.spec.ts` |
 
+## Line drawing
+
+A line is not box-shaped like Frame/Rectangle/Ellipse — it's defined by two endpoints
+(`TLineNode.x1,y1,x2,y2`), created via a dedicated `useDrawLineTool` hook (not the shared
+`useDrawShapeTool`, since `toDraftRect` would normalize the two drawn points into a min-corner box
+and lose the drawn direction). It shares its toolbar button with Rectangle/Ellipse
+(`TOOL_GROUP_ITEMS[rectangle] = [rectangle, line, ellipse]`), same sharing pattern as Ellipse.
+
+| #   | Scenario                                                                                             | Unit |            E2E            |
+| --- | ----------------------------------------------------------------------------------------------------- | :--: | :------------------------: |
+| 22  | Picking "Line" from the Rectangle dropdown draws a line and reverts the active tool to `default`      |  —   | ✅ `create-line.spec.ts`  |
+| 23  | Pressing "L" activates the Line tool, then dragging draws a line                                       |  —   | ✅ `create-line.spec.ts`  |
+
+Line has no fill, so there's no fill-vs-frame-draft comparison analogous to Rectangle/Ellipse's
+scenario #3 — a line's live draft is just the segment itself plus its two endpoint handles
+(`drawFrame.ts`'s `NodeType.line` branch), nothing to distinguish from a "fill-less" state.
+
+## Line selection & dragging
+
+Per the product spec (a line behaves like Figma's Line tool): selecting a line shows **no**
+bounding-box outline (unlike every other node type) — just a thin highlight along the segment
+itself plus two small endpoint handles (`drawPerNodeSelectionOutlines.ts`'s `NodeType.line`
+branch). Dragging the line's **body** (away from either handle) moves both endpoints together,
+exactly like moving any other node. Dragging an **endpoint handle** instead moves only that one
+point, leaving the other fixed — genuinely new interaction code, since no resize/handle-drag
+existed anywhere in the app before this (`getLineEndpointAtPoint.ts` + `armLineEndpointDrag.ts`,
+checked in `handlePointerDown.ts` *before* the generic whole-node hit-test, since a selected
+line's handles must take priority over a body-drag once the pointer is close enough to one).
+
+| #   | Scenario                                                                                                        | Unit |             E2E              |
+| --- | ------------------------------------------------------------------------------------------------------------------ | :--: | :---------------------------: |
+| 24  | Dragging a selected line's body (away from both endpoints) translates both endpoints by the same delta             |  ✅  | ✅ `line-drag.spec.ts`       |
+| 25  | Dragging endpoint A moves only A; endpoint B stays exactly where it was                                             |  ✅  | ✅ `line-drag.spec.ts`       |
+| 26  | Dragging endpoint B moves only B; endpoint A stays exactly where it was                                             |  ✅  | ✅ `line-drag.spec.ts`       |
+| 27  | Hit-testing a line follows its actual angled path (perpendicular distance to the segment), not its bounding box    |  ✅  |               —                |
+| 28  | A selected line renders no rectangular bounding-box outline — only a thin highlight along its own path             |  ✅  |               —                |
+
+#27/#28 stay unit-only: `isPointNearLine.spec.ts` and `getNodeAtPoint.spec.ts` already assert the
+exact geometry precisely (a point inside the diagonal's bounding box but off the line itself must
+miss), and `drawPerNodeSelectionOutlines.spec.ts` counts the exact WebGL draw calls to prove no
+`drawRect` bounding-box stroke happens for a line — neither claim involves real-browser timing or
+paint behavior a screenshot diff could catch that the unit suite can't; see "Why so few scenarios
+get e2e coverage" below.
+
 ## Selection (Etap 5)
 
 Setup shorthand: **A**, **B**, **C** are frames drawn left-to-right with a gap between each, all

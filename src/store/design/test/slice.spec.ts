@@ -3,9 +3,9 @@ import slice, { addNode, setActiveTool, setSelection, setViewport, updateNode } 
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
-import { TSceneNode } from 'types/design/types';
+import { TFrameNode } from 'types/design/types';
 
-const frameNodePayload: Omit<TSceneNode, 'id'> = {
+const frameNodePayload: Omit<TFrameNode, 'id'> = {
   fill: '#ff0000',
   height: 100,
   name: 'Frame 1',
@@ -76,7 +76,7 @@ describe('design slice', () => {
     const state = slice(withNode, updateNode({ changes: { width: 300 }, id }));
 
     // result
-    expect(state.nodes[id].width).toBe(300);
+    expect((state.nodes[id] as TFrameNode).width).toBe(300);
   });
 
   it('should do nothing when updating a node that does not exist', () => {

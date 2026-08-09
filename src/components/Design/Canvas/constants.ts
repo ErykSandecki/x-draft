@@ -1,12 +1,13 @@
 export const ELLIPSE_FILL = '#D9D9D9';
 export const FRAME_FILL = '#FFFFFF';
+export const LINE_STROKE = '#ffffff';
 export const RECTANGLE_FILL = '#D9D9D9';
 export const RESIZE_DEBOUNCE_MS = 500;
 export const MIN_SHAPE_SIZE = 2;
 export const WEBGL_CONTEXT_ID = 'webgl2';
 export const WEBGL_CONTEXT_ATTRIBUTES: WebGLContextAttributes = { premultipliedAlpha: false };
 export const ZOOM_MIN = 0.1;
-export const ZOOM_MAX = 8;
+export const ZOOM_MAX = 256;
 export const ZOOM_DELTA_THRESHOLD = 20;
 export const ZOOM_STEP_TRACKPAD = 0.032;
 export const ZOOM_STEP_WHEEL = 0.0768;

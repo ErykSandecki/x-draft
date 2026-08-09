@@ -1,11 +1,11 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TSceneNode } from 'types/design/types';
 
 // utils
 import { getNodeAtPoint } from '../getNodeAtPoint';
 
-const buildNode = (overrides: Partial<TSceneNode>): TSceneNode => ({
+const buildNode = (overrides: Partial<TBoxSceneNode>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -19,13 +19,15 @@ const buildNode = (overrides: Partial<TSceneNode>): TSceneNode => ({
   ...overrides,
 });
 
+const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
+
 describe('getNodeAtPoint', () => {
   it('should return the node the point falls inside', () => {
     // mock
     const node = buildNode({ id: 'a' });
 
     // result
-    expect(getNodeAtPoint({ x: 5, y: 5 }, [node])).toEqual(node);
+    expect(getNodeAtPoint({ x: 5, y: 5 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
   });
 
   it('should return null when the point misses every node', () => {
@@ -33,7 +35,7 @@ describe('getNodeAtPoint', () => {
     const node = buildNode({ id: 'a' });
 
     // result
-    expect(getNodeAtPoint({ x: 50, y: 50 }, [node])).toBeNull();
+    expect(getNodeAtPoint({ x: 50, y: 50 }, [node], IDENTITY_VIEWPORT)).toBeNull();
   });
 
   it('should return the topmost (last-drawn) node when nodes overlap', () => {
@@ -42,7 +44,7 @@ describe('getNodeAtPoint', () => {
     const top = buildNode({ id: 'top' });
 
     // result
-    expect(getNodeAtPoint({ x: 5, y: 5 }, [bottom, top])?.id).toBe('top');
+    expect(getNodeAtPoint({ x: 5, y: 5 }, [bottom, top], IDENTITY_VIEWPORT)?.id).toBe('top');
   });
 
   it('should treat the edges of a node as inside', () => {
@@ -50,12 +52,12 @@ describe('getNodeAtPoint', () => {
     const node = buildNode({ height: 10, id: 'a', width: 10, x: 0, y: 0 });
 
     // result
-    expect(getNodeAtPoint({ x: 10, y: 10 }, [node])).toEqual(node);
+    expect(getNodeAtPoint({ x: 10, y: 10 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
   });
 
   it('should return null for an empty scene', () => {
     // result
-    expect(getNodeAtPoint({ x: 0, y: 0 }, [])).toBeNull();
+    expect(getNodeAtPoint({ x: 0, y: 0 }, [], IDENTITY_VIEWPORT)).toBeNull();
   });
 
   it('should use elliptical hit-testing for ellipse nodes, not the bounding box', () => {
@@ -63,7 +65,26 @@ describe('getNodeAtPoint', () => {
     const node = buildNode({ height: 10, type: NodeType.ellipse, width: 20, x: 0, y: 0 });
 
     // result — the bounding box's (0, 0) corner sits outside the inscribed ellipse
-    expect(getNodeAtPoint({ x: 0, y: 0 }, [node])).toBeNull();
-    expect(getNodeAtPoint({ x: 10, y: 5 }, [node])).toEqual(node);
+    expect(getNodeAtPoint({ x: 0, y: 0 }, [node], IDENTITY_VIEWPORT)).toBeNull();
+    expect(getNodeAtPoint({ x: 10, y: 5 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
+  });
+
+  it('should use distance-from-segment hit-testing for line nodes, not the bounding box', () => {
+    // mock
+    const line: TSceneNode = { id: 'a', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 };
+
+    // result — (0, 10) sits inside the diagonal's bounding box but far from the diagonal itself
+    expect(getNodeAtPoint({ x: 0, y: 10 }, [line], IDENTITY_VIEWPORT)).toBeNull();
+    expect(getNodeAtPoint({ x: 5, y: 5 }, [line], IDENTITY_VIEWPORT)).toEqual(line);
+  });
+
+  it('should widen the line hit-test tolerance in world units as the viewport zooms out', () => {
+    // mock
+    const line: TSceneNode = { id: 'a', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 0 };
+
+    // result — 6 world units off the segment misses at zoom 1 (4px tolerance) but hits at zoom
+    // 0.5 (8px tolerance covers more world space)
+    expect(getNodeAtPoint({ x: 5, y: 6 }, [line], IDENTITY_VIEWPORT)).toBeNull();
+    expect(getNodeAtPoint({ x: 5, y: 6 }, [line], { x: 0, y: 0, zoom: 0.5 })).toEqual(line);
   });
 });

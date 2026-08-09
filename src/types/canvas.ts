@@ -9,3 +9,10 @@ export type TPoint = {
   x: number;
   y: number;
 };
+
+export type TLineSegment = {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+};

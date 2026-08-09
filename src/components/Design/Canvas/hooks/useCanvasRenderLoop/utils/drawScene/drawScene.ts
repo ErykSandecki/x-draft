@@ -4,7 +4,7 @@ import { store } from 'store';
 
 // types
 import { TDraftRect } from 'types/canvas';
-import { TDraftShape } from 'types/design/types';
+import { TDraftEntity } from 'types/design/types';
 
 // utils
 import { drawFrame } from './drawFrame';
@@ -19,7 +19,7 @@ export const drawScene = (
   program: WebGLProgram,
   buffer: WebGLBuffer,
   canvas: HTMLCanvasElement,
-  draftShape?: TDraftShape | null,
+  draftShape?: TDraftEntity | null,
   marqueeRect?: TDraftRect | null,
   hoveredNodeId?: string | null,
 ): void => {

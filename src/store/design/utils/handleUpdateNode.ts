@@ -1,8 +1,8 @@
 // types
 import { TDesignState } from '../types';
-import { TSceneNode } from 'types/design/types';
+import { TSceneNodeChanges } from 'types/design/types';
 
-export const handleUpdateNode = (state: TDesignState, payload: { changes: Partial<TSceneNode>; id: string }): void => {
+export const handleUpdateNode = (state: TDesignState, payload: { changes: TSceneNodeChanges; id: string }): void => {
   const node = state.nodes[payload.id];
 
   if (node) {

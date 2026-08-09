@@ -49,6 +49,20 @@ describe('useToolbarShortcuts behaviors', () => {
     expect(store.getState().design.activeTool).toBe(ToolName.rectangle);
   });
 
+  it('should switch to the line tool on "L"', () => {
+    // mock
+    const store = createTestStore();
+
+    // before
+    renderShortcuts(store);
+
+    // action
+    fireEvent.keyDown(window, { code: 'KeyL' });
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.line);
+  });
+
   it('should switch to the ellipse tool on "O"', () => {
     // mock
     const store = createTestStore();

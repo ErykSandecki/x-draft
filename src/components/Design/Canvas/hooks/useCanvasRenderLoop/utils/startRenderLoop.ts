@@ -2,7 +2,7 @@ import { RefObject } from 'react';
 
 // types
 import { TDraftRect } from 'types/canvas';
-import { TDraftShape } from 'types/design/types';
+import { TDraftEntity } from 'types/design/types';
 
 // utils
 import { drawScene } from './drawScene/drawScene';
@@ -15,7 +15,7 @@ const tick = (
   buffer: WebGLBuffer,
   canvas: HTMLCanvasElement,
   frameIdRef: TFrameIdRef,
-  draftRef?: RefObject<TDraftShape | null>,
+  draftRef?: RefObject<TDraftEntity | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
   hoverRef?: RefObject<string | null>,
 ): void => {
@@ -28,7 +28,7 @@ export const startRenderLoop = (
   program: WebGLProgram,
   buffer: WebGLBuffer,
   canvas: HTMLCanvasElement,
-  draftRef?: RefObject<TDraftShape | null>,
+  draftRef?: RefObject<TDraftEntity | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
   hoverRef?: RefObject<string | null>,
 ): (() => void) => {

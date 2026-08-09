@@ -48,6 +48,14 @@ const addFrameNode = (x: number, y: number, size = 20): string => {
   return rootOrder[rootOrder.length - 1];
 };
 
+const addLineNode = (x1: number, y1: number, x2: number, y2: number): string => {
+  store.dispatch(addNode({ name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1, x2, y1, y2 }));
+
+  const { rootOrder } = store.getState().design;
+
+  return rootOrder[rootOrder.length - 1];
+};
+
 const renderSelectionTool = (canvasRef: RefObject<HTMLCanvasElement | null>): RefObject<TDraftRect | null> => {
   const marqueeRef: RefObject<TDraftRect | null> = { current: null };
 
@@ -472,5 +480,62 @@ describe('useSelectionTool behaviors', () => {
 
     // result
     expect(store.getState().design.selectedIds).toEqual([idP]);
+  });
+
+  it('should move both endpoints together when dragging the body of a selected line', () => {
+    // mock
+    const idA = addLineNode(2200, 700, 2300, 700);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action - grab the middle of the segment, well away from either endpoint handle
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 2250, 700));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 2260, 710));
+
+    // result
+    expect(store.getState().design.nodes[idA]).toMatchObject({ x1: 2210, x2: 2310, y1: 710, y2: 710 });
+  });
+
+  it('should move only endpoint A when dragging its handle, leaving endpoint B in place', () => {
+    // mock
+    const idA = addLineNode(2400, 700, 2500, 700);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action - grab endpoint A's handle
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 2400, 700));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 2420, 760));
+
+    // result
+    expect(store.getState().design.nodes[idA]).toMatchObject({ x1: 2420, x2: 2500, y1: 760, y2: 700 });
+  });
+
+  it('should move only endpoint B when dragging its handle, leaving endpoint A in place', () => {
+    // mock
+    const idA = addLineNode(2600, 700, 2700, 700);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action - grab endpoint B's handle
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 2700, 700));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 2720, 760));
+
+    // result
+    expect(store.getState().design.nodes[idA]).toMatchObject({ x1: 2600, x2: 2720, y1: 700, y2: 760 });
   });
 });

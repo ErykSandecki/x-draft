@@ -6,7 +6,7 @@ import ToolDropdown from './ToolDropdown/ToolDropdown';
 import { Icon } from 'shared';
 
 // others
-import { TOOL_GROUP_ITEMS, TOOL_ICON, TOOLBAR_ORDER, TOOLS_WITH_DROPDOWN } from '../constants';
+import { TOOL_GROUP_ITEMS, TOOL_ICON, TOOL_ICON_SIZE, TOOLBAR_ORDER, TOOLS_WITH_DROPDOWN } from '../constants';
 
 // store
 import { selectActiveTool, selectLastShapeTool } from 'store/design/selectors';
@@ -37,7 +37,7 @@ const MouseModes: FC = () => {
         return (
           <div className={styles['MouseModes__tool-group']} key={name}>
             <ToggleGroupPrimitive.Item aria-label={displayedTool} className={styles.MouseModes__button} value={displayedTool}>
-              <Icon name={TOOL_ICON[displayedTool]} />
+              <Icon name={TOOL_ICON[displayedTool]} size={TOOL_ICON_SIZE[displayedTool]} />
             </ToggleGroupPrimitive.Item>
             {TOOLS_WITH_DROPDOWN.includes(name) && <ToolDropdown tool={name} />}
           </div>

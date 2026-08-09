@@ -13,6 +13,7 @@ export const TOOL_ICON: Record<ToolName, keyof typeof Icons> = {
   [ToolName.default]: 'MoveTool',
   [ToolName.ellipse]: 'EllipseTool',
   [ToolName.frame]: 'FrameTool',
+  [ToolName.line]: 'LineTool',
   [ToolName.rectangle]: 'RectangleTool',
   [ToolName.comment]: 'Comment',
 };
@@ -22,11 +23,16 @@ export const TOOL_LABEL: Record<ToolName, string> = {
   [ToolName.default]: `${translationNameSpace}.tool.default`,
   [ToolName.ellipse]: `${translationNameSpace}.tool.ellipse`,
   [ToolName.frame]: `${translationNameSpace}.tool.frame`,
+  [ToolName.line]: `${translationNameSpace}.tool.line`,
   [ToolName.rectangle]: `${translationNameSpace}.tool.rectangle`,
 };
 
 export const TOOL_GROUP_ITEMS: Partial<Record<ToolName, ToolName[]>> = {
-  [ToolName.rectangle]: [ToolName.rectangle, ToolName.ellipse],
+  [ToolName.rectangle]: [ToolName.rectangle, ToolName.line, ToolName.ellipse],
+};
+
+export const TOOL_ICON_SIZE: Partial<Record<ToolName, number>> = {
+  [ToolName.line]: 14,
 };
 
 export const TOOLS_WITH_DROPDOWN: ToolName[] = [ToolName.default, ToolName.frame, ToolName.rectangle];
