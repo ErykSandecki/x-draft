@@ -538,4 +538,30 @@ describe('useSelectionTool behaviors', () => {
     // result
     expect(store.getState().design.nodes[idA]).toMatchObject({ x1: 2600, x2: 2720, y1: 700, y2: 760 });
   });
+
+  it('should release the pointer and stop applying further moves once an endpoint drag is released', () => {
+    // mock
+    const idA = addLineNode(2800, 700, 2900, 700);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvasRef = createCanvasRef();
+
+    // before
+    renderSelectionTool(canvasRef);
+
+    // action
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 2800, 700)); // endpoint A
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 2820, 760));
+    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 2820, 760));
+
+    // result
+    expect(canvasRef.current?.releasePointerCapture).toHaveBeenCalledWith(1);
+
+    // action - further moves after release must not keep dragging the endpoint
+    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 2900, 900));
+
+    // result
+    expect(store.getState().design.nodes[idA]).toMatchObject({ x1: 2820, x2: 2900, y1: 760, y2: 700 });
+  });
 });

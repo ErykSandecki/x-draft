@@ -1,6 +1,6 @@
 import { configureStore, EnhancedStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { RefObject } from 'react';
 
 // hooks
@@ -97,9 +97,11 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     });
 
     // action
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
-    canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 60, 40));
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 60, 40));
+    act(() => {
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 60, 40));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 60, 40));
+    });
 
     // result
     const { design } = store.getState();
@@ -180,8 +182,10 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     });
 
     // action
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 30, 10));
+    act(() => {
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 30, 10));
+    });
 
     // result
     expect(store.getState().design.rootOrder).toHaveLength(0);
@@ -202,8 +206,10 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     });
 
     // action
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 30));
+    act(() => {
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 30));
+    });
 
     // result
     expect(store.getState().design.rootOrder).toHaveLength(0);
@@ -245,8 +251,10 @@ describe.each(CONFIGS)('useDrawShapeTool behaviors ($label)', ({ config }) => {
     });
 
     // action
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
-    canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 10));
+    act(() => {
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 10));
+    });
 
     // result
     const { design } = store.getState();
