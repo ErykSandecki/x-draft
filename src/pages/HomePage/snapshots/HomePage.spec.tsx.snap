@@ -64,6 +64,12 @@ exports[`HomePage snapshots > should render HomePage 1`] = `
     >
       A minimal starter template.
     </p>
+    <button
+      class="_HomePage__theme-toggle_04d875"
+      type="button"
+    >
+      Switch to light theme
+    </button>
   </main>
 </DocumentFragment>
 `;
