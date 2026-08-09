@@ -33,11 +33,12 @@ const MouseModes: FC = () => {
     >
       {TOOLBAR_ORDER.map((name) => {
         const displayedTool = TOOL_GROUP_ITEMS[name] ? lastShapeTool : name;
+        const isActive = displayedTool === activeTool;
 
         return (
           <div className={styles['MouseModes__tool-group']} key={name}>
             <ToggleGroupPrimitive.Item aria-label={displayedTool} className={styles.MouseModes__button} value={displayedTool}>
-              <Icon name={TOOL_ICON[displayedTool]} size={TOOL_ICON_SIZE[displayedTool]} />
+              <Icon color={isActive ? 'onBlue1' : 'neutral1'} name={TOOL_ICON[displayedTool]} size={TOOL_ICON_SIZE[displayedTool]} />
             </ToggleGroupPrimitive.Item>
             {TOOLS_WITH_DROPDOWN.includes(name) && <ToolDropdown tool={name} />}
           </div>

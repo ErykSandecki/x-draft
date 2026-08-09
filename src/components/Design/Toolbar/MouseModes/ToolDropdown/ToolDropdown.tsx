@@ -26,9 +26,9 @@ export type TToolDropdownProps = {
 };
 
 const ToolDropdown: FC<TToolDropdownProps> = ({ tool }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const lastShapeTool = useAppSelector(selectLastShapeTool);
-  const { t } = useTranslation();
   const groupItems = TOOL_GROUP_ITEMS[tool];
   const selectedTool = groupItems ? lastShapeTool : tool;
 
@@ -36,12 +36,14 @@ const ToolDropdown: FC<TToolDropdownProps> = ({ tool }) => {
     <Popover trigger={<Icon name="ChevronDown" size={5} />} triggerAriaLabel={`${tool} options`} triggerClassName={styles.ToolDropdown}>
       {(groupItems ?? [tool]).map((groupTool) => (
         <PopoverItem
+          className={styles.ToolDropdown__item}
           icon={TOOL_ICON[groupTool]}
           key={groupTool}
           label={t(TOOL_LABEL[groupTool])}
           onClick={() => dispatch(setActiveTool(groupTool))}
           selected={groupTool === selectedTool}
           shortcut={KEYBOARD_SHORTCUTS[groupTool].join('')}
+          shortcutClassName={styles.ToolDropdown__shortcut}
         />
       ))}
     </Popover>

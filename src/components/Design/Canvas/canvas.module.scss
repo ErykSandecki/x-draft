@@ -47,15 +47,15 @@
     &--pressing {
       cursor:
         /* stylelint-disable-next-line value-no-vendor-prefix, unit-allowed-list */
-        -webkit-image-set(url('../../../assets/icons/cursors/pressing.png') 8x) 4 4,
-        auto !important;
+        -webkit-image-set(url('../../../assets/icons/cursors/pressing.png') 8x) 16 16,
+        auto;
     }
 
     &--positioning {
       cursor:
         /* stylelint-disable-next-line value-no-vendor-prefix, unit-allowed-list */
-        -webkit-image-set(url('../../../assets/icons/cursors/positioner.png') 8x) 4 4,
-        auto !important;
+        -webkit-image-set(url('../../../assets/icons/cursors/positioner.png') 8x) 16 16,
+        auto;
     }
   }
 }
