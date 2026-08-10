@@ -92,7 +92,17 @@ describe('getNodeAtPoint', () => {
 
   it('should use distance-from-segment hit-testing for line nodes, not the bounding box', () => {
     // mock
-    const line: TSceneNode = { id: 'a', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 };
+    const line: TSceneNode = {
+      id: 'a',
+      name: 'Line',
+      parentId: null,
+      stroke: '#000000',
+      type: NodeType.line,
+      x1: 0,
+      x2: 10,
+      y1: 0,
+      y2: 10,
+    };
 
     // result — (0, 10) sits inside the diagonal's bounding box but far from the diagonal itself
     expect(getNodeAtPoint({ x: 0, y: 10 }, [line], IDENTITY_VIEWPORT)).toBeNull();

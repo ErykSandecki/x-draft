@@ -72,7 +72,7 @@ test('draws an ellipse with the "O" keyboard shortcut', async ({ page }) => {
   expect(after.equals(before)).toBe(false);
 });
 
-test('shows the ellipse\'s fill live while dragging, unlike the fill-less Frame draft', async ({ page }) => {
+test("shows the ellipse's fill live while dragging, unlike the fill-less Frame draft", async ({ page }) => {
   const designPage = new DesignPage(page);
 
   await designPage.goto('e2e-test-project');

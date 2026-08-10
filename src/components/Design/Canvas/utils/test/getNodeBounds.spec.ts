@@ -8,7 +8,18 @@ import { getNodeBounds } from '../getNodeBounds';
 describe('getNodeBounds', () => {
   it('should return the box fields directly for a box-shaped node', () => {
     // mock
-    const rectangle: TRectangleNode = { fill: '#000', height: 20, id: '1', name: 'Rectangle', parentId: null, rotation: 0, type: NodeType.rectangle, width: 10, x: 5, y: 5 };
+    const rectangle: TRectangleNode = {
+      fill: '#000',
+      height: 20,
+      id: '1',
+      name: 'Rectangle',
+      parentId: null,
+      rotation: 0,
+      type: NodeType.rectangle,
+      width: 10,
+      x: 5,
+      y: 5,
+    };
 
     // result
     expect(getNodeBounds(rectangle)).toEqual({ height: 20, width: 10, x: 5, y: 5 });

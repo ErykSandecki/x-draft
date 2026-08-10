@@ -7,7 +7,17 @@ import { getLineEndpointAtPoint } from '../getLineEndpointAtPoint';
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-const line: TLineNode = { id: 'line-1', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 100, y1: 0, y2: 0 };
+const line: TLineNode = {
+  id: 'line-1',
+  name: 'Line',
+  parentId: null,
+  stroke: '#000000',
+  type: NodeType.line,
+  x1: 0,
+  x2: 100,
+  y1: 0,
+  y2: 0,
+};
 
 describe('getLineEndpointAtPoint', () => {
   it('should return endpoint "a" when the point is near the first endpoint', () => {
@@ -37,7 +47,18 @@ describe('getLineEndpointAtPoint', () => {
 
   it('should return null when the selected node is not a line', () => {
     // mock
-    const frame: TFrameNode = { fill: '#fff', height: 10, id: 'frame-1', name: 'Frame', parentId: null, rotation: 0, type: NodeType.frame, width: 10, x: 0, y: 0 };
+    const frame: TFrameNode = {
+      fill: '#fff',
+      height: 10,
+      id: 'frame-1',
+      name: 'Frame',
+      parentId: null,
+      rotation: 0,
+      type: NodeType.frame,
+      width: 10,
+      x: 0,
+      y: 0,
+    };
 
     // result
     expect(getLineEndpointAtPoint({ x: 0, y: 0 }, [frame], IDENTITY_VIEWPORT)).toBeNull();

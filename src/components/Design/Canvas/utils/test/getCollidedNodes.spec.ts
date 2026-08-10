@@ -67,7 +67,17 @@ describe('getCollidedNodes', () => {
 
   it('should collide a line node using the bounding box derived from its endpoints', () => {
     // mock
-    const line: TSceneNode = { id: 'line', name: 'Line', parentId: null, stroke: '#000', type: NodeType.line, x1: 5, x2: 15, y1: 5, y2: 15 };
+    const line: TSceneNode = {
+      id: 'line',
+      name: 'Line',
+      parentId: null,
+      stroke: '#000',
+      type: NodeType.line,
+      x1: 5,
+      x2: 15,
+      y1: 5,
+      y2: 15,
+    };
     const area = { height: 10, width: 10, x: 0, y: 0 };
 
     // result

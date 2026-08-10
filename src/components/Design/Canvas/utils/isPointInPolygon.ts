@@ -15,8 +15,7 @@ export const isPointInPolygon = (point: TPoint, polygon: TDraftRect & { sides: n
       return isInside;
     }
 
-    const intersectionX =
-      ((previousVertex.x - vertex.x) * (point.y - vertex.y)) / (previousVertex.y - vertex.y) + vertex.x;
+    const intersectionX = ((previousVertex.x - vertex.x) * (point.y - vertex.y)) / (previousVertex.y - vertex.y) + vertex.x;
 
     return point.x < intersectionX ? !isInside : isInside;
   }, false);

@@ -57,7 +57,7 @@ test('has no keyboard shortcut, unlike Rectangle/Ellipse/Line/Frame', async ({ p
   await expect(polygonTool).toHaveCount(0);
 });
 
-test('shows the polygon\'s fill live while dragging, unlike the fill-less Frame draft', async ({ page }) => {
+test("shows the polygon's fill live while dragging, unlike the fill-less Frame draft", async ({ page }) => {
   const designPage = new DesignPage(page);
 
   await designPage.goto('e2e-test-project');

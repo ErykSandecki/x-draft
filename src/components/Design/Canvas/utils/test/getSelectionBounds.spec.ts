@@ -51,7 +51,17 @@ describe('getSelectionBounds', () => {
   it('should include a line node by deriving its bounds from its two endpoints', () => {
     // mock
     const box = buildNode({ height: 10, width: 10, x: 0, y: 0 });
-    const line: TSceneNode = { id: 'line', name: 'Line', parentId: null, stroke: '#000', type: NodeType.line, x1: 30, x2: 40, y1: 5, y2: 20 };
+    const line: TSceneNode = {
+      id: 'line',
+      name: 'Line',
+      parentId: null,
+      stroke: '#000',
+      type: NodeType.line,
+      x1: 30,
+      x2: 40,
+      y1: 5,
+      y2: 20,
+    };
 
     // result
     expect(getSelectionBounds([box, line])).toEqual({ height: 20, width: 40, x: 0, y: 0 });

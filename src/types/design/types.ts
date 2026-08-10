@@ -66,18 +66,10 @@ export type TBoxSceneNode = TEllipseNode | TFrameNode | TPolygonNode | TRectangl
 export type TSceneNode = TBoxSceneNode | TLineNode;
 
 export type TNewSceneNode =
-  | Omit<TEllipseNode, 'id'>
-  | Omit<TFrameNode, 'id'>
-  | Omit<TPolygonNode, 'id'>
-  | Omit<TRectangleNode, 'id'>
-  | Omit<TLineNode, 'id'>;
+  Omit<TEllipseNode, 'id'> | Omit<TFrameNode, 'id'> | Omit<TPolygonNode, 'id'> | Omit<TRectangleNode, 'id'> | Omit<TLineNode, 'id'>;
 
 export type TSceneNodeChanges =
-  | Partial<TEllipseNode>
-  | Partial<TFrameNode>
-  | Partial<TPolygonNode>
-  | Partial<TRectangleNode>
-  | Partial<TLineNode>;
+  Partial<TEllipseNode> | Partial<TFrameNode> | Partial<TPolygonNode> | Partial<TRectangleNode> | Partial<TLineNode>;
 
 export type TViewport = {
   x: number;

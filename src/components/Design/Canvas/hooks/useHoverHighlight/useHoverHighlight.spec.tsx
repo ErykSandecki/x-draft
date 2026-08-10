@@ -152,7 +152,7 @@ describe('useHoverHighlight behaviors', () => {
     expect(hoverRef.current).toBeNull();
   });
 
-  it('should apply the positioning cursor class when hovering a selected line\'s endpoint', () => {
+  it("should apply the positioning cursor class when hovering a selected line's endpoint", () => {
     // mock
     const idA = addLineNode(500, 500, 600, 500);
 

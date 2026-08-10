@@ -33,7 +33,19 @@ describe('drawLineEndpointHandles', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawLineEndpointHandles(gl, program, buffer, [{ x: 0, y: 0 }, { x: 10, y: 10 }], '#0d99ff', 100, 100, IDENTITY_VIEWPORT);
+    drawLineEndpointHandles(
+      gl,
+      program,
+      buffer,
+      [
+        { x: 0, y: 0 },
+        { x: 10, y: 10 },
+      ],
+      '#0d99ff',
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(4);
@@ -48,7 +60,19 @@ describe('drawLineEndpointHandles', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawLineEndpointHandles(gl, program, buffer, [{ x: 0, y: 0 }, { x: 10, y: 10 }], '#0d99ff', 100, 100, IDENTITY_VIEWPORT);
+    drawLineEndpointHandles(
+      gl,
+      program,
+      buffer,
+      [
+        { x: 0, y: 0 },
+        { x: 10, y: 10 },
+      ],
+      '#0d99ff',
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
 
     // result
     const bufferDataCalls = (gl.bufferData as ReturnType<typeof vi.fn>).mock.calls;
@@ -66,11 +90,23 @@ describe('drawLineEndpointHandles', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawLineEndpointHandles(gl, program, buffer, [{ x: 0, y: 0 }, { x: 10, y: 10 }], '#0d99ff', 100, 100, {
-      x: 0,
-      y: 0,
-      zoom: 4,
-    });
+    drawLineEndpointHandles(
+      gl,
+      program,
+      buffer,
+      [
+        { x: 0, y: 0 },
+        { x: 10, y: 10 },
+      ],
+      '#0d99ff',
+      100,
+      100,
+      {
+        x: 0,
+        y: 0,
+        zoom: 4,
+      },
+    );
 
     // result
     const [firstFillCall] = (gl.bufferData as ReturnType<typeof vi.fn>).mock.calls;

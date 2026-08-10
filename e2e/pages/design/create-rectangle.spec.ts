@@ -68,7 +68,7 @@ test('draws a rectangle with the "R" keyboard shortcut', async ({ page }) => {
   expect(after.equals(before)).toBe(false);
 });
 
-test('shows the rectangle\'s fill live while dragging, unlike the fill-less Frame draft', async ({ page }) => {
+test("shows the rectangle's fill live while dragging, unlike the fill-less Frame draft", async ({ page }) => {
   const designPage = new DesignPage(page);
 
   await designPage.goto('e2e-test-project');

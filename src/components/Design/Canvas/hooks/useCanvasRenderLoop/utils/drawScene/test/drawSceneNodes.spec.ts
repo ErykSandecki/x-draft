@@ -115,7 +115,17 @@ describe('drawSceneNodes', () => {
     const gl = createGlMock();
     const program = {} as WebGLProgram;
     const buffer = {} as WebGLBuffer;
-    const line: TSceneNode = { id: 'a', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 };
+    const line: TSceneNode = {
+      id: 'a',
+      name: 'Line',
+      parentId: null,
+      stroke: '#000000',
+      type: NodeType.line,
+      x1: 0,
+      x2: 10,
+      y1: 0,
+      y2: 10,
+    };
 
     // before
     drawSceneNodes(gl, program, buffer, [line], 100, 100, IDENTITY_VIEWPORT);
