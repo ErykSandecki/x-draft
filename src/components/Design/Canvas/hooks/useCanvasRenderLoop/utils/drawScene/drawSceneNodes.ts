@@ -21,14 +21,18 @@ export const drawSceneNodes = (
   viewport: TViewport,
 ): void => {
   nodes.forEach((node) => {
-    if (node.type === NodeType.ellipse) {
-      drawEllipse(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
-    } else if (node.type === NodeType.polygon) {
-      drawPolygon(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
-    } else if (node.type === NodeType.line) {
-      drawLine(gl, program, buffer, node, node.stroke, LINE_RENDER_STROKE_WIDTH, canvasWidth, canvasHeight, viewport);
-    } else {
-      drawRect(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+    switch (node.type) {
+      case NodeType.ellipse:
+        drawEllipse(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+        break;
+      case NodeType.polygon:
+        drawPolygon(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+        break;
+      case NodeType.line:
+        drawLine(gl, program, buffer, node, node.stroke, LINE_RENDER_STROKE_WIDTH, canvasWidth, canvasHeight, viewport);
+        break;
+      default:
+        drawRect(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
     }
   });
 };

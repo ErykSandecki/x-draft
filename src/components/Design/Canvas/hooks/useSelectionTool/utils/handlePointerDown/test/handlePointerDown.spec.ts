@@ -6,6 +6,7 @@ import { store } from 'store';
 
 // types
 import { NodeType } from 'types/design/enums';
+import { TDragState, TEndpointDragState } from '../../../types';
 import { TPoint } from 'types/canvas';
 
 // utils
@@ -23,6 +24,8 @@ const createCanvas = (): HTMLCanvasElement => {
 const pointerEvent = (x: number, y: number, options: Partial<PointerEventInit> = {}): PointerEvent =>
   new PointerEvent('pointerdown', { button: 0, clientX: x, clientY: y, pointerId: 1, ...options });
 
+const createDragStateRef = (): RefObject<TDragState | null> => ({ current: null });
+const createEndpointDragRef = (): RefObject<TEndpointDragState | null> => ({ current: null });
 const createMarqueeStartRef = (): RefObject<TPoint | null> => ({ current: null });
 
 const addFrameNode = (x: number, y: number, size = 20): string => {
@@ -61,14 +64,14 @@ describe('handlePointerDown', () => {
   it('should ignore a non-primary button press', () => {
     // mock
     const canvas = createCanvas();
-    const armDrag = vi.fn();
+    const dragStateRef = createDragStateRef();
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(10, 10, { button: 1 }), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(10, 10, { button: 1 }), store.dispatch, dragStateRef, createEndpointDragRef(), marqueeStartRef);
 
     // result
-    expect(armDrag).not.toHaveBeenCalled();
+    expect(dragStateRef.current).toBeNull();
     expect(store.getState().design.selectedIds).toEqual([]);
   });
 
@@ -76,30 +79,37 @@ describe('handlePointerDown', () => {
     // mock
     const idA = addFrameNode(100, 100);
     const canvas = createCanvas();
-    const armDrag = vi.fn();
+    const dragStateRef = createDragStateRef();
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(105, 105, { shiftKey: true }), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
+    handlePointerDown(
+      canvas,
+      pointerEvent(105, 105, { shiftKey: true }),
+      store.dispatch,
+      dragStateRef,
+      createEndpointDragRef(),
+      marqueeStartRef,
+    );
 
     // result
     expect(store.getState().design.selectedIds).toEqual([idA]);
-    expect(armDrag).not.toHaveBeenCalled();
+    expect(dragStateRef.current).toBeNull();
   });
 
   it('should delegate to armHitDrag when the pointer hits a node', () => {
     // mock
     const idA = addFrameNode(200, 200);
     const canvas = createCanvas();
-    const armDrag = vi.fn();
+    const dragStateRef = createDragStateRef();
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(205, 205), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(205, 205), store.dispatch, dragStateRef, createEndpointDragRef(), marqueeStartRef);
 
     // result
     expect(store.getState().design.selectedIds).toEqual([idA]);
-    expect(armDrag).toHaveBeenCalledWith([idA], null, expect.anything());
+    expect(dragStateRef.current).toMatchObject({ pendingClickAction: null });
   });
 
   it('should delegate to armGroupBoundsDrag when clicking the gap inside a shared multi-selection', () => {
@@ -110,14 +120,14 @@ describe('handlePointerDown', () => {
     store.dispatch(setSelection([idA, idB]));
 
     const canvas = createCanvas();
-    const armDrag = vi.fn();
+    const dragStateRef = createDragStateRef();
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(340, 310), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(340, 310), store.dispatch, dragStateRef, createEndpointDragRef(), marqueeStartRef);
 
     // result
-    expect(armDrag).toHaveBeenCalledWith([idA, idB], { kind: 'deselect' }, expect.anything());
+    expect(dragStateRef.current).toMatchObject({ pendingClickAction: { kind: 'deselect' } });
   });
 
   it('should clear the selection and arm the marquee when clicking empty canvas', () => {
@@ -127,15 +137,15 @@ describe('handlePointerDown', () => {
     store.dispatch(setSelection([idA]));
 
     const canvas = createCanvas();
-    const armDrag = vi.fn();
+    const dragStateRef = createDragStateRef();
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(900, 900), store.dispatch, armDrag, vi.fn(), marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(900, 900), store.dispatch, dragStateRef, createEndpointDragRef(), marqueeStartRef);
 
     // result
     expect(store.getState().design.selectedIds).toEqual([]);
-    expect(armDrag).not.toHaveBeenCalled();
+    expect(dragStateRef.current).toBeNull();
     expect(marqueeStartRef.current).not.toBeNull();
     expect(canvas.setPointerCapture).toHaveBeenCalledWith(1);
   });
@@ -147,16 +157,16 @@ describe('handlePointerDown', () => {
     store.dispatch(setSelection([idA]));
 
     const canvas = createCanvas();
-    const armDrag = vi.fn();
-    const armEndpointDrag = vi.fn();
+    const dragStateRef = createDragStateRef();
+    const endpointDragRef = createEndpointDragRef();
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(500, 500), store.dispatch, armDrag, armEndpointDrag, marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(500, 500), store.dispatch, dragStateRef, endpointDragRef, marqueeStartRef);
 
     // result
-    expect(armEndpointDrag).toHaveBeenCalledWith(idA, 'a');
-    expect(armDrag).not.toHaveBeenCalled();
+    expect(endpointDragRef.current).toEqual({ endpoint: 'a', nodeId: idA });
+    expect(dragStateRef.current).toBeNull();
   });
 
   it('should fall back to a whole-shape move when the line is selected but the hit is not near an endpoint', () => {
@@ -166,15 +176,15 @@ describe('handlePointerDown', () => {
     store.dispatch(setSelection([idA]));
 
     const canvas = createCanvas();
-    const armDrag = vi.fn();
-    const armEndpointDrag = vi.fn();
+    const dragStateRef = createDragStateRef();
+    const endpointDragRef = createEndpointDragRef();
     const marqueeStartRef = createMarqueeStartRef();
 
     // before
-    handlePointerDown(canvas, pointerEvent(750, 700), store.dispatch, armDrag, armEndpointDrag, marqueeStartRef);
+    handlePointerDown(canvas, pointerEvent(750, 700), store.dispatch, dragStateRef, endpointDragRef, marqueeStartRef);
 
     // result
-    expect(armEndpointDrag).not.toHaveBeenCalled();
-    expect(armDrag).toHaveBeenCalledWith([idA], null, expect.anything());
+    expect(endpointDragRef.current).toBeNull();
+    expect(dragStateRef.current).toMatchObject({ pendingClickAction: null });
   });
 });

@@ -21,44 +21,48 @@ export const drawHoverOutline = (
   viewport: TViewport,
 ): void => {
   if (hoveredNode) {
-    if (hoveredNode.type === NodeType.ellipse) {
-      drawThickEllipseOutline(
-        gl,
-        program,
-        buffer,
-        hoveredNode,
-        DRAFT_FRAME_STROKE,
-        HOVER_OUTLINE_WIDTH,
-        canvasWidth,
-        canvasHeight,
-        viewport,
-      );
-    } else if (hoveredNode.type === NodeType.polygon) {
-      drawThickPolygonOutline(
-        gl,
-        program,
-        buffer,
-        hoveredNode,
-        DRAFT_FRAME_STROKE,
-        HOVER_OUTLINE_WIDTH,
-        canvasWidth,
-        canvasHeight,
-        viewport,
-      );
-    } else if (hoveredNode.type === NodeType.line) {
-      drawLine(
-        gl,
-        program,
-        buffer,
-        hoveredNode,
-        DRAFT_FRAME_STROKE,
-        LINE_HOVER_STROKE_WIDTH / viewport.zoom,
-        canvasWidth,
-        canvasHeight,
-        viewport,
-      );
-    } else {
-      drawThickOutline(gl, program, buffer, hoveredNode, DRAFT_FRAME_STROKE, HOVER_OUTLINE_WIDTH, canvasWidth, canvasHeight, viewport);
+    switch (hoveredNode.type) {
+      case NodeType.ellipse:
+        drawThickEllipseOutline(
+          gl,
+          program,
+          buffer,
+          hoveredNode,
+          DRAFT_FRAME_STROKE,
+          HOVER_OUTLINE_WIDTH,
+          canvasWidth,
+          canvasHeight,
+          viewport,
+        );
+        break;
+      case NodeType.polygon:
+        drawThickPolygonOutline(
+          gl,
+          program,
+          buffer,
+          hoveredNode,
+          DRAFT_FRAME_STROKE,
+          HOVER_OUTLINE_WIDTH,
+          canvasWidth,
+          canvasHeight,
+          viewport,
+        );
+        break;
+      case NodeType.line:
+        drawLine(
+          gl,
+          program,
+          buffer,
+          hoveredNode,
+          DRAFT_FRAME_STROKE,
+          LINE_HOVER_STROKE_WIDTH / viewport.zoom,
+          canvasWidth,
+          canvasHeight,
+          viewport,
+        );
+        break;
+      default:
+        drawThickOutline(gl, program, buffer, hoveredNode, DRAFT_FRAME_STROKE, HOVER_OUTLINE_WIDTH, canvasWidth, canvasHeight, viewport);
     }
   }
 };

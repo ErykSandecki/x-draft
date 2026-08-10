@@ -16,19 +16,16 @@ export const getNodeAtPoint = (point: TPoint, nodes: TSceneNode[], viewport: TVi
   const lineTolerance = LINE_HIT_TOLERANCE_PX / viewport.zoom;
 
   const hit = [...nodes].reverse().find((node) => {
-    if (node.type === NodeType.ellipse) {
-      return isPointInEllipse(point, node);
+    switch (node.type) {
+      case NodeType.ellipse:
+        return isPointInEllipse(point, node);
+      case NodeType.polygon:
+        return isPointInPolygon(point, node);
+      case NodeType.line:
+        return isPointNearLine(point, node, lineTolerance);
+      default:
+        return isPointInRect(point, node);
     }
-
-    if (node.type === NodeType.polygon) {
-      return isPointInPolygon(point, node);
-    }
-
-    if (node.type === NodeType.line) {
-      return isPointNearLine(point, node, lineTolerance);
-    }
-
-    return isPointInRect(point, node);
   });
 
   return hit ?? null;

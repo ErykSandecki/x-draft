@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 import { RefObject } from 'react';
 
 // hooks
-import { useDrawLineTool } from './useDrawLineTool';
+import { useDrawLineTool, TLineToolConfig } from './useDrawLineTool';
 
 // store
 import designReducer, { setActiveTool, setSelection } from 'store/design/slice';
@@ -13,7 +13,6 @@ import { TDesignState } from 'store/design/types';
 // types
 import { NodeType, ToolName } from 'types/design/enums';
 import { TDraftEntity } from 'types/design/types';
-import { TLineToolConfig } from './useDrawLineTool';
 
 const createTestStore = (): EnhancedStore<{ design: TDesignState }> => configureStore({ reducer: { design: designReducer } });
 

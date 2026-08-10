@@ -6,7 +6,7 @@ import { selectOrderedNodes, selectSelectedIds, selectSelectedNodes, selectViewp
 import { AppDispatch, store } from 'store';
 
 // types
-import { TArmDrag, TArmEndpointDrag } from '../../types';
+import { TDragState, TEndpointDragState } from '../../types';
 import { MouseButton } from 'types/enums';
 import { TPoint } from 'types/canvas';
 
@@ -26,8 +26,8 @@ export const handlePointerDown = (
   canvas: HTMLCanvasElement,
   event: PointerEvent,
   dispatch: AppDispatch,
-  armDrag: TArmDrag,
-  armEndpointDrag: TArmEndpointDrag,
+  dragStateRef: RefObject<TDragState | null>,
+  endpointDragRef: RefObject<TEndpointDragState | null>,
   marqueeStartRef: RefObject<TPoint | null>,
 ): void => {
   if (event.button === MouseButton.primary) {
@@ -39,16 +39,24 @@ export const handlePointerDown = (
     const selectedNodes = selectSelectedNodes(state);
     const lineEndpointHit = getLineEndpointAtPoint(point, selectedNodes, viewport);
 
-    if (lineEndpointHit && !event.shiftKey) {
-      armLineEndpointDrag(canvas, event, armEndpointDrag, lineEndpointHit.nodeId, lineEndpointHit.endpoint);
-    } else if (hit && event.shiftKey) {
-      dispatch(setSelection(toggleSelection(currentSelection, hit.id)));
-    } else if (hit) {
-      armHitDrag(canvas, event, dispatch, armDrag, hit, currentSelection, selectedNodes, point);
-    } else if (!event.shiftKey && isPointInGroupBounds(point, selectedNodes)) {
-      armGroupBoundsDrag(canvas, event, armDrag, currentSelection, point);
-    } else if (!event.shiftKey) {
-      armMarqueeDrag(canvas, event, dispatch, marqueeStartRef, point);
+    switch (true) {
+      case Boolean(lineEndpointHit) && !event.shiftKey:
+        armLineEndpointDrag(canvas, event, endpointDragRef, lineEndpointHit!.nodeId, lineEndpointHit!.endpoint);
+        break;
+      case Boolean(hit) && event.shiftKey:
+        dispatch(setSelection(toggleSelection(currentSelection, hit!.id)));
+        break;
+      case Boolean(hit):
+        armHitDrag(canvas, event, dispatch, dragStateRef, hit!, currentSelection, selectedNodes, point);
+        break;
+      case !event.shiftKey && isPointInGroupBounds(point, selectedNodes):
+        armGroupBoundsDrag(canvas, event, dragStateRef, currentSelection, point);
+        break;
+      case !event.shiftKey:
+        armMarqueeDrag(canvas, event, dispatch, marqueeStartRef, point);
+        break;
+      default:
+        break;
     }
   }
 };

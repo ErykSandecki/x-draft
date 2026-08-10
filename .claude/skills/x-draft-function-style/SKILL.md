@@ -31,6 +31,49 @@ if (canvas) {
 This applies even though it costs an extra indentation level — "this block only runs when the value
 is present" being visible at the `if` wins over saving an indent.
 
+### Variant: guard returns a value (not just `void`)
+
+The same rule applies when the negative branch returns a fallback value instead of bare `return;` —
+e.g. inside a `reduce`/`map`/`find` callback, or any function whose "nothing changed" case is a
+value like an accumulator. Don't early-return the fallback behind a negative guard and leave the
+real logic unindented below it; move the real logic into the positive `if` block (including its own
+`return`) and put the fallback as a single trailing `return` after the `if`.
+
+Avoid:
+
+```ts
+vertices.reduce((isInside, vertex, index) => {
+  const crossesRay = /* ... */;
+
+  if (!crossesRay) {
+    return isInside;
+  }
+
+  const intersectionX = /* ...uses vertex/point */;
+
+  return point.x < intersectionX ? !isInside : isInside;
+}, false);
+```
+
+Prefer:
+
+```ts
+vertices.reduce((isInside, vertex, index) => {
+  const crossesRay = /* ... */;
+
+  if (crossesRay) {
+    const intersectionX = /* ...uses vertex/point */;
+    return point.x < intersectionX ? !isInside : isInside;
+  }
+
+  return isInside;
+}, false);
+```
+
+See `components/Design/Canvas/utils/isPointInPolygon.ts` for this applied — the `crossesRay` guard
+wraps the whole ray-intersection computation, with the unchanged-accumulator case as the trailing
+`return isInside;`.
+
 ## Named functions instead of inline closures in effects/callbacks
 
 Don't define non-trivial logic as an inline arrow function directly inside `useEffect` (or another

@@ -7,7 +7,6 @@ export const createShader = (gl: WebGL2RenderingContext, type: GLenum, source: s
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       gl.deleteShader(shader);
-
       return null;
     }
   }

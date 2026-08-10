@@ -40,174 +40,7 @@ describe('drawFrame', () => {
     expect(gl.drawArrays).not.toHaveBeenCalled();
   });
 
-  it('should draw the draft outline and its 4 corner handles when given', () => {
-    // mock
-    const gl = createGlMock();
-    const program = {} as WebGLProgram;
-    const buffer = {} as WebGLBuffer;
-
-    // before
-    drawFrame(
-      gl,
-      program,
-      buffer,
-      { fill: '#D9D9D9', height: 20, type: NodeType.rectangle, width: 10, x: 0, y: 0 },
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
-
-    // result
-    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
-
-    expect(lineLoopDraws).toHaveLength(5);
-  });
-
-  it('should show the shape filling in live for a rectangle draft, not just its outline', () => {
-    // mock
-    const gl = createGlMock();
-    const program = {} as WebGLProgram;
-    const buffer = {} as WebGLBuffer;
-
-    // before
-    drawFrame(
-      gl,
-      program,
-      buffer,
-      { fill: '#D9D9D9', height: 20, type: NodeType.rectangle, width: 10, x: 0, y: 0 },
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
-
-    // result — 4 corner handles + 1 for the rectangle's own fill
-    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
-
-    expect(trianglesDraws).toHaveLength(5);
-  });
-
-  it('should show an elliptical fill live for an ellipse draft, without also filling its bounding box', () => {
-    // mock
-    const gl = createGlMock();
-    const program = {} as WebGLProgram;
-    const buffer = {} as WebGLBuffer;
-
-    // before
-    drawFrame(
-      gl,
-      program,
-      buffer,
-      { fill: '#D9D9D9', height: 20, type: NodeType.ellipse, width: 10, x: 0, y: 0 },
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
-
-    // result
-    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
-
-    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
-
-    expect(trianglesDraws).toHaveLength(4);
-  });
-
-  it('should still draw a rectangular bounding-box outline for an ellipse draft, connecting its corner handles', () => {
-    // mock
-    const gl = createGlMock();
-    const program = {} as WebGLProgram;
-    const buffer = {} as WebGLBuffer;
-
-    // before
-    drawFrame(
-      gl,
-      program,
-      buffer,
-      { fill: '#D9D9D9', height: 20, type: NodeType.ellipse, width: 10, x: 0, y: 0 },
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
-
-    // result — same as rectangle/frame: 1 box outline + 4 corner handles = 5 LINE_LOOP draws,
-    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
-
-    expect(lineLoopDraws).toHaveLength(5);
-    expect(lineLoopDraws.every(([, , count]) => count === 4)).toBe(true);
-  });
-
-  it('should show a polygonal fill live for a polygon draft, without also filling its bounding box', () => {
-    // mock
-    const gl = createGlMock();
-    const program = {} as WebGLProgram;
-    const buffer = {} as WebGLBuffer;
-
-    // before
-    drawFrame(
-      gl,
-      program,
-      buffer,
-      { fill: '#D9D9D9', height: 20, sides: 5, type: NodeType.polygon, width: 10, x: 0, y: 0 },
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
-
-    // result
-    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
-
-    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
-
-    expect(trianglesDraws).toHaveLength(4);
-  });
-
-  it('should still draw a rectangular bounding-box outline for a polygon draft, connecting its corner handles', () => {
-    // mock
-    const gl = createGlMock();
-    const program = {} as WebGLProgram;
-    const buffer = {} as WebGLBuffer;
-
-    // before
-    drawFrame(
-      gl,
-      program,
-      buffer,
-      { fill: '#D9D9D9', height: 20, sides: 5, type: NodeType.polygon, width: 10, x: 0, y: 0 },
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
-
-    // result — same as rectangle/frame: 1 box outline + 4 corner handles = 5 LINE_LOOP draws
-    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
-
-    expect(lineLoopDraws).toHaveLength(5);
-    expect(lineLoopDraws.every(([, , count]) => count === 4)).toBe(true);
-  });
-
-  it('should keep a frame draft fill-less, showing only its outline', () => {
-    // mock
-    const gl = createGlMock();
-    const program = {} as WebGLProgram;
-    const buffer = {} as WebGLBuffer;
-
-    // before
-    drawFrame(
-      gl,
-      program,
-      buffer,
-      { fill: '#FFFFFF', height: 20, type: NodeType.frame, width: 10, x: 0, y: 0 },
-      100,
-      100,
-      IDENTITY_VIEWPORT,
-    );
-
-    // result — only the 4 corner handles, no fill for the frame shape itself
-    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
-
-    expect(trianglesDraws).toHaveLength(4);
-  });
-
-  it('should draw a live segment and 2 endpoint handles for a line draft, not a box outline', () => {
+  it('should delegate to drawDraftLine for a line draft', () => {
     // mock
     const gl = createGlMock();
     const program = {} as WebGLProgram;
@@ -223,5 +56,28 @@ describe('drawFrame', () => {
 
     expect(trianglesDraws).toHaveLength(3);
     expect(lineLoopDraws).toHaveLength(2);
+  });
+
+  it('should delegate to drawDraftShape for a non-line draft', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+
+    // before
+    drawFrame(
+      gl,
+      program,
+      buffer,
+      { fill: '#D9D9D9', height: 20, type: NodeType.rectangle, width: 10, x: 0, y: 0 },
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
+
+    // result — its outline + 4 corner handles
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
+
+    expect(lineLoopDraws).toHaveLength(5);
   });
 });

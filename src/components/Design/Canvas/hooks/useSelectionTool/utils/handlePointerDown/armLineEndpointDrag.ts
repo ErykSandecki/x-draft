@@ -1,13 +1,18 @@
+import { RefObject } from 'react';
+
 // types
-import { TArmEndpointDrag, TLineEndpoint } from '../../types';
+import { TEndpointDragState, TLineEndpoint } from '../../types';
+
+// utils
+import { armEndpointDrag } from './armEndpointDrag';
 
 export const armLineEndpointDrag = (
   canvas: HTMLCanvasElement,
   event: PointerEvent,
-  armEndpointDrag: TArmEndpointDrag,
+  endpointDragRef: RefObject<TEndpointDragState | null>,
   nodeId: string,
   endpoint: TLineEndpoint,
 ): void => {
-  armEndpointDrag(nodeId, endpoint);
+  armEndpointDrag(nodeId, endpoint, endpointDragRef);
   canvas.setPointerCapture(event.pointerId);
 };
