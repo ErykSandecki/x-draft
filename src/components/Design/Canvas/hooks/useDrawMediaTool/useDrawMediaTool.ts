@@ -51,7 +51,7 @@ export const useDrawMediaTool = (
     if (nextFile) {
       loadArmedMedia(nextFile, (armed) => {
         armedRef.current = armed;
-        createArmedCursor(armed.src, (cursorValue) => {
+        createArmedCursor(armed.src, rest.length + 1, (cursorValue) => {
           if (canvasRef.current) {
             canvasRef.current.style.cursor = cursorValue;
           }
