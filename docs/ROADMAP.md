@@ -269,6 +269,25 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       kolce, `ratio=100%` → wielokąt/prawie koło). Reużyty ten sam wzorzec co Polygon: własny hook
       (`useDrawStarTool.ts`), `drawStar`/`drawThickStarOutline`/`isPointInStar`, bbox-owy outline
       zaznaczenia bez zmian, hover realnie śledzi kształt. Bez skrótu klawiszowego (jak Polygon)
+- [x] **Media (obraz/wideo)** — pierwsze narzędzie z realną zawartością pikselową, więc pierwszy raz
+      dotyka WebGL poza płaskim kolorem: osobny, izolowany program tekstur (`TImageRenderContext`)
+      obok istniejącego `u_color`-owego shadera, żeby Rectangle/Ellipse/Polygon/Star nie musiały
+      dostawać nieużywanego atrybutu UV. Cache tekstur (`getOrLoadTexture.ts`) — 1×1 przezroczysty
+      placeholder od razu, realny obraz podmieniany w miejscu po `Image.onload`. Wybór pliku przez
+      natywny `<input type="file" accept="image/*" multiple>`: klik na canvasie umieszcza plik w
+      naturalnym rozmiarze pikseli, przeciągnięcie umieszcza z zablokowanym aspect ratio
+      (`getAspectRatioLockedRect.ts`) — inaczej niż Rectangle/Polygon/Star, które skalują się
+      swobodnie. **Wiele plików naraz**: `useDrawMediaTool.ts` trzyma kolejkę (`queueRef`), narzędzie
+      zostaje aktywne między kolejnymi plikami — każdy można umieścić klikiem albo przeciągnięciem
+      niezależnie, aż kolejka się wyczerpie. Kursor podczas uzbrojenia to **jeden złożony obraz**
+      (`createArmedCursor.ts`, canvas-composited PNG data URL) łączący krzyżyk (`pointer.png`) z
+      miniaturką wybranego pliku, zamiast dwóch osobnych elementów (starsze podejście z osobną,
+      podążającą za kursorem miniaturką na canvasie — zostało usunięte jako zdublowane). Gdy w
+      kolejce jest więcej niż 1 plik, kursor dostaje **czerwony badge z licznikiem** (kolor
+      dobrany z referencyjnego zrzutu Figmy, bez motywu jasny/ciemny), wyśrodkowany dokładnie na
+      rogu miniaturki; odstęp między krzyżykiem a miniaturką/badge'em rośnie tylko wtedy, gdy badge
+      faktycznie się rysuje (o połowę jego promienia), żeby nie zachodził na glif "+" — przy
+      pojedynczym pliku układ zostaje ciasny jak wcześniej
 - [ ] Text (tworzenie node'a — sama edycja treści to Etap 7)
 - [ ] Pen / vector (najbardziej złożony, na później)
 
