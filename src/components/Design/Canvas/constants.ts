@@ -1,3 +1,14 @@
+// types
+import { ToolName } from 'types/design/enums';
+
+export const DRAWING_TOOLS: ToolName[] = [
+  ToolName.frame,
+  ToolName.rectangle,
+  ToolName.line,
+  ToolName.ellipse,
+  ToolName.polygon,
+  ToolName.star,
+];
 export const ELLIPSE_FILL = '#D9D9D9';
 export const FRAME_FILL = '#FFFFFF';
 export const LINE_STROKE = '#ffffff';

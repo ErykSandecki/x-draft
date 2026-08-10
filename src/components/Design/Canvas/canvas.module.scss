@@ -57,5 +57,12 @@
         -webkit-image-set(url('../../../assets/icons/cursors/positioner.png') 8x) 16 16,
         auto;
     }
+
+    &--drawing {
+      cursor:
+        /* stylelint-disable-next-line value-no-vendor-prefix, unit-allowed-list */
+        -webkit-image-set(url('../../../assets/icons/cursors/pointer.png') 8x) 16 16,
+        auto;
+    }
   }
 }
