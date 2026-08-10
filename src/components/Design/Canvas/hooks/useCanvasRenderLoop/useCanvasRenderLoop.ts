@@ -10,7 +10,7 @@ import { WEBGL_CONTEXT_ATTRIBUTES, WEBGL_CONTEXT_ID } from '../../constants';
 // types
 import { TDraftRect } from 'types/canvas';
 import { TDraftEntity } from 'types/design/types';
-import { TImageRenderContext, TMediaPreview } from './types';
+import { TImageRenderContext } from './types';
 
 // utils
 import { createProgram } from './utils/createProgram';
@@ -21,7 +21,6 @@ export const useCanvasRenderLoop = (
   draftRef?: RefObject<TDraftEntity | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
   hoverRef?: RefObject<string | null>,
-  mediaPreviewRef?: RefObject<TMediaPreview | null>,
 ): void => {
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -36,7 +35,7 @@ export const useCanvasRenderLoop = (
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
       const imageContext: TImageRenderContext = { buffer: imageBuffer, cache: new Map(), program: imageProgram };
-      const stopRenderLoop = startRenderLoop(gl, program, buffer, imageContext, canvas, draftRef, marqueeRef, hoverRef, mediaPreviewRef);
+      const stopRenderLoop = startRenderLoop(gl, program, buffer, imageContext, canvas, draftRef, marqueeRef, hoverRef);
 
       return (): void => {
         stopRenderLoop();
@@ -44,5 +43,5 @@ export const useCanvasRenderLoop = (
         gl.deleteBuffer(imageBuffer);
       };
     }
-  }, [canvasRef, draftRef, marqueeRef, hoverRef, mediaPreviewRef]);
+  }, [canvasRef, draftRef, marqueeRef, hoverRef]);
 };

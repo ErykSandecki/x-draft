@@ -5,13 +5,12 @@ import { store } from 'store';
 // types
 import { TDraftRect } from 'types/canvas';
 import { TDraftEntity } from 'types/design/types';
-import { TImageRenderContext, TMediaPreview } from '../../types';
+import { TImageRenderContext } from '../../types';
 
 // utils
 import { drawFrame } from './drawFrame';
 import { drawHoverOutline } from './drawHoverOutline';
 import { drawMarquee } from 'utils/canvas/drawMarquee';
-import { drawMediaPreview } from './drawMediaPreview';
 import { drawSceneBackground } from 'utils/canvas/drawSceneBackground';
 import { drawSceneNodes } from './drawSceneNodes';
 import { drawSelectionOutline } from './drawSelectionOutline';
@@ -25,7 +24,6 @@ export const drawScene = (
   draftShape?: TDraftEntity | null,
   marqueeRect?: TDraftRect | null,
   hoveredNodeId?: string | null,
-  mediaPreview?: TMediaPreview | null,
 ): void => {
   const state = store.getState();
   const viewport = selectViewport(state);
@@ -37,5 +35,4 @@ export const drawScene = (
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
   drawFrame(gl, program, buffer, imageContext, draftShape, clientWidth, clientHeight, viewport);
   drawMarquee(gl, program, buffer, marqueeRect, clientWidth, clientHeight, viewport);
-  drawMediaPreview(gl, imageContext, mediaPreview, clientWidth, clientHeight, viewport);
 };

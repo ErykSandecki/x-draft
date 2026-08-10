@@ -3,7 +3,7 @@ import { RefObject } from 'react';
 // types
 import { TDraftRect } from 'types/canvas';
 import { TDraftEntity } from 'types/design/types';
-import { TImageRenderContext, TMediaPreview } from '../types';
+import { TImageRenderContext } from '../types';
 
 // utils
 import { drawScene } from './drawScene/drawScene';
@@ -20,11 +20,10 @@ const tick = (
   draftRef?: RefObject<TDraftEntity | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
   hoverRef?: RefObject<string | null>,
-  mediaPreviewRef?: RefObject<TMediaPreview | null>,
 ): void => {
-  drawScene(gl, program, buffer, imageContext, canvas, draftRef?.current, marqueeRef?.current, hoverRef?.current, mediaPreviewRef?.current);
+  drawScene(gl, program, buffer, imageContext, canvas, draftRef?.current, marqueeRef?.current, hoverRef?.current);
   frameIdRef.current = requestAnimationFrame(() =>
-    tick(gl, program, buffer, imageContext, canvas, frameIdRef, draftRef, marqueeRef, hoverRef, mediaPreviewRef),
+    tick(gl, program, buffer, imageContext, canvas, frameIdRef, draftRef, marqueeRef, hoverRef),
   );
 };
 
@@ -37,12 +36,11 @@ export const startRenderLoop = (
   draftRef?: RefObject<TDraftEntity | null>,
   marqueeRef?: RefObject<TDraftRect | null>,
   hoverRef?: RefObject<string | null>,
-  mediaPreviewRef?: RefObject<TMediaPreview | null>,
 ): (() => void) => {
   const frameIdRef: TFrameIdRef = { current: 0 };
 
   frameIdRef.current = requestAnimationFrame(() =>
-    tick(gl, program, buffer, imageContext, canvas, frameIdRef, draftRef, marqueeRef, hoverRef, mediaPreviewRef),
+    tick(gl, program, buffer, imageContext, canvas, frameIdRef, draftRef, marqueeRef, hoverRef),
   );
 
   return (): void => cancelAnimationFrame(frameIdRef.current);

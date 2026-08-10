@@ -73,7 +73,7 @@ export class DesignPage {
   async pickMediaFile(filePaths: string | string[]): Promise<void> {
     const fileChooserPromise = this.page.waitForEvent('filechooser');
 
-    await this.selectToolFromDropdown('rectangle', 'Image/video');
+    await this.selectToolFromDropdown('rectangle', 'Image/video...');
 
     const fileChooser = await fileChooserPromise;
 

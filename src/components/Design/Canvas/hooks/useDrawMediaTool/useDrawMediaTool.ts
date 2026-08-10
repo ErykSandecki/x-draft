@@ -11,15 +11,14 @@ import { useAppDispatch, useAppSelector } from 'store';
 // types
 import { NodeType, ToolName } from 'types/design/enums';
 import { MouseButton } from 'types/enums';
-import { TArmedMedia } from './utils/loadArmedMedia';
 import { TDraftEntity } from 'types/design/types';
-import { TMediaPreview } from '../useCanvasRenderLoop/types';
 import { TPoint } from 'types/canvas';
 
 // utils
+import { createArmedCursor } from './utils/createArmedCursor';
 import { getAspectRatioLockedRect } from 'utils/math/getAspectRatioLockedRect';
 import { getPointerPosition } from '../../utils/getPointerPosition';
-import { loadArmedMedia } from './utils/loadArmedMedia';
+import { loadArmedMedia, TArmedMedia } from './utils/loadArmedMedia';
 import { screenToWorld } from '../../utils/screenToWorld';
 
 export type TMediaToolConfig = {
@@ -30,7 +29,6 @@ export type TMediaToolConfig = {
 export const useDrawMediaTool = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   draftRef: RefObject<TDraftEntity | null>,
-  mediaPreviewRef: RefObject<TMediaPreview | null>,
   { name, tool }: TMediaToolConfig,
 ): void => {
   const activeTool = useAppSelector(selectActiveTool);
@@ -46,9 +44,18 @@ export const useDrawMediaTool = (
     queueRef.current = rest;
     armedRef.current = null;
 
+    if (canvasRef.current) {
+      canvasRef.current.style.cursor = '';
+    }
+
     if (nextFile) {
       loadArmedMedia(nextFile, (armed) => {
         armedRef.current = armed;
+        createArmedCursor(armed.src, (cursorValue) => {
+          if (canvasRef.current) {
+            canvasRef.current.style.cursor = cursorValue;
+          }
+        });
       });
     }
   };
@@ -57,7 +64,6 @@ export const useDrawMediaTool = (
     if (event.button === MouseButton.primary && armedRef.current) {
       dispatch(setSelection([]));
       startRef.current = screenToWorld(getPointerPosition(canvas, event), viewport);
-      mediaPreviewRef.current = null;
       canvas.setPointerCapture(event.pointerId);
     }
   };
@@ -65,17 +71,11 @@ export const useDrawMediaTool = (
   const handlePointerMove = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     const armed = armedRef.current;
 
-    if (armed) {
-      const point = getPointerPosition(canvas, event);
+    if (armed && startRef.current) {
+      const current = screenToWorld(getPointerPosition(canvas, event), viewport);
+      const rect = getAspectRatioLockedRect(startRef.current, current, armed.naturalWidth / armed.naturalHeight);
 
-      if (startRef.current) {
-        const current = screenToWorld(point, viewport);
-        const rect = getAspectRatioLockedRect(startRef.current, current, armed.naturalWidth / armed.naturalHeight);
-
-        draftRef.current = { ...rect, src: armed.src, type: NodeType.media };
-      } else {
-        mediaPreviewRef.current = { aspectRatio: armed.naturalWidth / armed.naturalHeight, point, src: armed.src };
-      }
+      draftRef.current = { ...rect, src: armed.src, type: NodeType.media };
     }
   };
 
@@ -94,7 +94,6 @@ export const useDrawMediaTool = (
 
       startRef.current = null;
       draftRef.current = null;
-      mediaPreviewRef.current = null;
       canvas.releasePointerCapture(event.pointerId);
 
       if (queueRef.current.length > 0) {
@@ -144,8 +143,8 @@ export const useDrawMediaTool = (
         armedRef.current = null;
         queueRef.current = [];
         draftRef.current = null;
-        mediaPreviewRef.current = null;
+        canvas.style.cursor = '';
       };
     }
-  }, [activeTool, canvasRef, dispatch, draftRef, mediaPreviewRef, name, tool, viewport]);
+  }, [activeTool, canvasRef, dispatch, draftRef, name, tool, viewport]);
 };

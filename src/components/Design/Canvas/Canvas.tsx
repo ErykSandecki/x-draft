@@ -31,14 +31,12 @@ import styles from './canvas.module.scss';
 // types
 import { TDraftRect } from 'types/canvas';
 import { TDraftEntity } from 'types/design/types';
-import { TMediaPreview } from './hooks/useCanvasRenderLoop/types';
 
 const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const draftRef = useRef<TDraftEntity | null>(null);
   const marqueeRef = useRef<TDraftRect | null>(null);
   const hoverRef = useRef<string | null>(null);
-  const mediaPreviewRef = useRef<TMediaPreview | null>(null);
 
   useCanvasResize(canvasRef);
   useCanvasPanZoom(canvasRef);
@@ -49,11 +47,11 @@ const Canvas: FC = () => {
   useDrawPolygonTool(canvasRef, draftRef, POLYGON_TOOL_SETTINGS);
   useDrawStarTool(canvasRef, draftRef, STAR_TOOL_SETTINGS);
   useDrawLineTool(canvasRef, draftRef, LINE_TOOL_SETTINGS);
-  useDrawMediaTool(canvasRef, draftRef, mediaPreviewRef, MEDIA_TOOL_SETTINGS);
+  useDrawMediaTool(canvasRef, draftRef, MEDIA_TOOL_SETTINGS);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);
   useDrawingCursor(canvasRef);
-  useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef, mediaPreviewRef);
+  useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef);
 
   return (
     <div className={styles.Canvas}>
