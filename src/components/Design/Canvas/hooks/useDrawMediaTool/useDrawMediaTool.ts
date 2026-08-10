@@ -38,6 +38,20 @@ export const useDrawMediaTool = (
   const dispatch = useAppDispatch();
   const startRef = useRef<TPoint | null>(null);
   const armedRef = useRef<TArmedMedia | null>(null);
+  const queueRef = useRef<File[]>([]);
+
+  const armNextFile = (): void => {
+    const [nextFile, ...rest] = queueRef.current;
+
+    queueRef.current = rest;
+    armedRef.current = null;
+
+    if (nextFile) {
+      loadArmedMedia(nextFile, (armed) => {
+        armedRef.current = armed;
+      });
+    }
+  };
 
   const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     if (event.button === MouseButton.primary && armedRef.current) {
@@ -79,22 +93,22 @@ export const useDrawMediaTool = (
       dispatch(addNode({ ...rect, name, parentId: null, rotation: 0, src: armed.src, type: NodeType.media }));
 
       startRef.current = null;
-      armedRef.current = null;
       draftRef.current = null;
       mediaPreviewRef.current = null;
       canvas.releasePointerCapture(event.pointerId);
-      dispatch(setActiveTool(ToolName.default));
+
+      if (queueRef.current.length > 0) {
+        armNextFile();
+      } else {
+        armedRef.current = null;
+        dispatch(setActiveTool(ToolName.default));
+      }
     }
   };
 
   const handleFileChange = (event: Event): void => {
-    const [file] = (event.target as HTMLInputElement).files ?? [];
-
-    if (file) {
-      loadArmedMedia(file, (armed) => {
-        armedRef.current = armed;
-      });
-    }
+    queueRef.current = Array.from((event.target as HTMLInputElement).files ?? []);
+    armNextFile();
   };
 
   const handleFileCancel = (): void => {
@@ -112,6 +126,7 @@ export const useDrawMediaTool = (
 
       input.type = 'file';
       input.accept = 'image/*';
+      input.multiple = true;
       input.addEventListener('change', handleFileChange);
       input.addEventListener('cancel', handleFileCancel);
       canvas.addEventListener('pointerdown', onPointerDown);
@@ -127,6 +142,7 @@ export const useDrawMediaTool = (
         canvas.removeEventListener('pointerup', onPointerUp);
         startRef.current = null;
         armedRef.current = null;
+        queueRef.current = [];
         draftRef.current = null;
         mediaPreviewRef.current = null;
       };

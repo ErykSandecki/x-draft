@@ -336,6 +336,61 @@ describe('useDrawMediaTool behaviors', () => {
     expect(design.nodes[design.rootOrder[0]]).toMatchObject({ height: 50, width: 100, x: 0, y: 0 });
   });
 
+  it('should place a click natural-size image, then an aspect-locked dragged image, from a multi-file selection', () => {
+    // mock
+    const store = createTestStore();
+    const canvasRef = createCanvasRef();
+    const draftRef: RefObject<TDraftEntity | null> = { current: null };
+    const mediaPreviewRef: RefObject<TMediaPreview | null> = { current: null };
+    const { getLastImage } = stubImageConstructor();
+    const { getInput } = captureInput();
+
+    store.dispatch(setActiveTool(CONFIG.tool));
+    renderMediaTool(canvasRef, draftRef, mediaPreviewRef, store);
+
+    // before — pick two files at once
+    selectFile(getInput(), [new File(['a'], 'first.png', { type: 'image/png' }), new File(['b'], 'second.png', { type: 'image/png' })]);
+
+    const firstImage = getLastImage();
+
+    firstImage.naturalWidth = 200;
+    firstImage.naturalHeight = 100;
+    firstImage.onload?.();
+
+    // action — place the first file with a plain click
+    act(() => {
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 10));
+    });
+
+    // result — one node placed, tool stays on media with the second file now armed
+    expect(store.getState().design.rootOrder).toHaveLength(1);
+    expect(store.getState().design.activeTool).toBe(ToolName.media);
+
+    const secondImage = getLastImage();
+
+    secondImage.naturalWidth = 50;
+    secondImage.naturalHeight = 100;
+    secondImage.onload?.();
+
+    // action — place the second file with a drag
+    act(() => {
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 40, 40));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointermove', 90, 65));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 90, 65));
+    });
+
+    // result — both files placed, tool reverts to default once the queue is empty
+    const { design } = store.getState();
+
+    expect(design.rootOrder).toHaveLength(2);
+    expect(design.nodes[design.rootOrder[0]]).toMatchObject({ height: 100, width: 200, x: 10, y: 10 });
+    // raw 50x25 drag locked to the second file's 1:2 ratio (twice as tall as wide) — the raw
+    // height (25) is far too short for that ratio, so it gets forced up to 100
+    expect(design.nodes[design.rootOrder[1]]).toMatchObject({ height: 100, width: 50, x: 40, y: 40 });
+    expect(design.activeTool).toBe(ToolName.default);
+  });
+
   it('should not place a stale armed file after the tool is deactivated and reactivated without picking a new one', () => {
     // mock
     const store = createTestStore();

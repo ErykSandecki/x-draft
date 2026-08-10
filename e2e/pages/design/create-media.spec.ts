@@ -4,10 +4,11 @@ import { test, expect } from '@playwright/test';
 // pages
 import { DesignPage } from './DesignPage';
 
-// the fixture is an existing repo asset (16x19px, non-square) rather than a new binary test file
+// the fixtures are existing repo assets rather than new binary test files
 const FIXTURE_PATH = path.join(import.meta.dirname, '../../../src/assets/icons/cursors/default.png');
 const FIXTURE_NATURAL_WIDTH = 16;
 const FIXTURE_NATURAL_HEIGHT = 19;
+const SECOND_FIXTURE_PATH = path.join(import.meta.dirname, '../../../src/assets/icons/cursors/move.png');
 
 // native file-chooser interception is flaky when several browser instances trigger it at once,
 // so this file's tests must not run concurrently with each other
@@ -67,6 +68,38 @@ test('locks the placed size to the source image aspect ratio, regardless of the 
   // both drags share the same raw width but wildly different raw heights — if the ratio is
   // correctly locked, both must resolve to the exact same final rect
   expect(shortWideDragPlacement.equals(preLockedSizeDragPlacement)).toBe(true);
+});
+
+test('places multiple picked files one after another, staying on the tool until the last one is placed', async ({ page }) => {
+  const designPage = new DesignPage(page);
+
+  await designPage.goto('e2e-test-project');
+  await expect(designPage.canvas).toBeVisible();
+
+  await designPage.pickMediaFile([FIXTURE_PATH, SECOND_FIXTURE_PATH]);
+
+  const mediaTool = designPage.toolRadio('media');
+  await expect(mediaTool).toHaveAttribute('aria-checked', 'true');
+
+  const beforeFirst = await designPage.canvas.screenshot();
+
+  // place the first file with a plain click
+  await designPage.placeMediaAtNaturalSize(100, 100);
+
+  // still armed for the second file — the tool must stay active, not revert to default
+  await expect(mediaTool).toHaveAttribute('aria-checked', 'true');
+
+  const afterFirst = await designPage.canvas.screenshot();
+  expect(afterFirst.equals(beforeFirst)).toBe(false);
+
+  // place the second file with a drag
+  await designPage.dragMedia(300, 100, 360, 160);
+
+  const defaultTool = designPage.toolRadio('default');
+  await expect(defaultTool).toHaveAttribute('aria-checked', 'true');
+
+  const afterSecond = await designPage.canvas.screenshot();
+  expect(afterSecond.equals(afterFirst)).toBe(false);
 });
 
 test('opens the file picker via the Ctrl/Cmd+Shift+K shortcut', async ({ page }) => {

@@ -70,14 +70,14 @@ export class DesignPage {
     await this.pointerUp();
   }
 
-  async pickMediaFile(filePath: string): Promise<void> {
+  async pickMediaFile(filePaths: string | string[]): Promise<void> {
     const fileChooserPromise = this.page.waitForEvent('filechooser');
 
     await this.selectToolFromDropdown('rectangle', 'Image/video');
 
     const fileChooser = await fileChooserPromise;
 
-    await fileChooser.setFiles(filePath);
+    await fileChooser.setFiles(filePaths);
 
     // the picked file's object URL still has to round-trip through an Image() decode
     // (naturalWidth/naturalHeight) before the tool is actually armed for placement
