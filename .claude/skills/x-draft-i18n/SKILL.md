@@ -74,3 +74,12 @@ and text-content assertions drifting based on who/where the tests run. `initI18n
 1. Add the key to **both** `resources/en.json` and `resources/pl.json`.
 2. Use `t('namespace.key')` in the component — never hardcode the English string inline once i18n
    is wired into that component.
+3. **The `pl.json` value must be actual Polish, not a copy of the English string.** `design.toolbar.tool.ellipse`/`.polygon`/`.star`
+   shipped as `"Ellipse"`/`"Polygon"`/`"Star"` in `pl.json` — an untranslated placeholder that had
+   already spread to a second key by copy-paste (`polygon` copying `ellipse`'s shortcut) before a
+   third addition (`star`) repeated it again and the user caught it. Corrected to `"Elipsa"`/`"Wielokąt"`/`"Gwiazda"`.
+   Existing untranslated-looking entries are not precedent to follow — check with the user (or a
+   dictionary) instead of assuming an English word is acceptable Polish just because a neighboring
+   key already does it, especially when adding a key by copying a sibling's shape (mirroring
+   `[ToolName.polygon]` for a new `[ToolName.star]` entry, say) — copy the *structure*, not the
+   *value*.

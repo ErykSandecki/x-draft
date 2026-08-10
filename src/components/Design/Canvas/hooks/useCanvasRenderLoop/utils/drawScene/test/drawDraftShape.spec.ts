@@ -171,6 +171,55 @@ describe('drawDraftShape', () => {
     expect(lineLoopDraws.every(([, , count]) => count === 4)).toBe(true);
   });
 
+  it('should show a star fill live for a star draft, without also filling its bounding box', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+
+    // before
+    drawDraftShape(
+      gl,
+      program,
+      buffer,
+      { fill: '#D9D9D9', height: 20, points: 5, ratio: 0.382, type: NodeType.star, width: 10, x: 0, y: 0 },
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
+
+    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
+
+    expect(trianglesDraws).toHaveLength(4);
+  });
+
+  it('should still draw a rectangular bounding-box outline for a star draft, connecting its corner handles', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+
+    // before
+    drawDraftShape(
+      gl,
+      program,
+      buffer,
+      { fill: '#D9D9D9', height: 20, points: 5, ratio: 0.382, type: NodeType.star, width: 10, x: 0, y: 0 },
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
+
+    // result — same as rectangle/frame: 1 box outline + 4 corner handles = 5 LINE_LOOP draws
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
+
+    expect(lineLoopDraws).toHaveLength(5);
+    expect(lineLoopDraws.every(([, , count]) => count === 4)).toBe(true);
+  });
+
   it('should keep a frame draft fill-less, showing only its outline', () => {
     // mock
     const gl = createGlMock();

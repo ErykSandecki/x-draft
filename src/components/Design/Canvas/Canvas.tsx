@@ -8,6 +8,7 @@ import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
 import { useDrawLineTool } from './hooks/useDrawLineTool/useDrawLineTool';
 import { useDrawPolygonTool } from './hooks/useDrawPolygonTool/useDrawPolygonTool';
 import { useDrawShapeTool } from './hooks/useDrawShapeTool/useDrawShapeTool';
+import { useDrawStarTool } from './hooks/useDrawStarTool/useDrawStarTool';
 import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
@@ -18,6 +19,7 @@ import {
   LINE_TOOL_SETTINGS,
   POLYGON_TOOL_SETTINGS,
   RECTANGLE_TOOL_SETTINGS,
+  STAR_TOOL_SETTINGS,
 } from './toolSettings';
 
 // styles
@@ -40,6 +42,7 @@ const Canvas: FC = () => {
   useDrawShapeTool(canvasRef, draftRef, RECTANGLE_TOOL_SETTINGS);
   useDrawShapeTool(canvasRef, draftRef, ELLIPSE_TOOL_SETTINGS);
   useDrawPolygonTool(canvasRef, draftRef, POLYGON_TOOL_SETTINGS);
+  useDrawStarTool(canvasRef, draftRef, STAR_TOOL_SETTINGS);
   useDrawLineTool(canvasRef, draftRef, LINE_TOOL_SETTINGS);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);

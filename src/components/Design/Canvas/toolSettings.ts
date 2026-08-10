@@ -2,9 +2,18 @@
 import { TLineToolConfig } from './hooks/useDrawLineTool/useDrawLineTool';
 import { TPolygonToolConfig } from './hooks/useDrawPolygonTool/useDrawPolygonTool';
 import { TShapeToolConfig } from './hooks/useDrawShapeTool/useDrawShapeTool';
+import { TStarToolConfig } from './hooks/useDrawStarTool/useDrawStarTool';
 
 // others
-import { ELLIPSE_FILL, FRAME_FILL, LINE_STROKE, POLYGON_DEFAULT_SIDES, RECTANGLE_FILL } from './constants';
+import {
+  ELLIPSE_FILL,
+  FRAME_FILL,
+  LINE_STROKE,
+  POLYGON_DEFAULT_SIDES,
+  RECTANGLE_FILL,
+  STAR_DEFAULT_POINTS,
+  STAR_DEFAULT_RATIO,
+} from './constants';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -28,4 +37,11 @@ export const RECTANGLE_TOOL_SETTINGS: TShapeToolConfig = {
   name: 'Rectangle',
   tool: ToolName.rectangle,
   type: NodeType.rectangle,
+};
+export const STAR_TOOL_SETTINGS: TStarToolConfig = {
+  fill: ELLIPSE_FILL,
+  name: 'Star',
+  points: STAR_DEFAULT_POINTS,
+  ratio: STAR_DEFAULT_RATIO,
+  tool: ToolName.star,
 };

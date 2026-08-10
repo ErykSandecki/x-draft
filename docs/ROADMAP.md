@@ -48,7 +48,7 @@ Zaznaczamy checkboxy w miarę postępu. Każdy etap = osobna, malutka porcja pra
       temu jak `BACKGROUND_ALPHA` spadnie poniżej 1, teksturka będzie
       prześwitywać spod wypełnienia, tak jak w oryginale
 
-## Etap 1 — Dolny toolbar (bieżący krok)
+## Etap 1 — Dolny toolbar
 
 Referencja: zrzut z toolbarem Figmy (select / frame / rectangle / pen / text /
 comment / shapes, potem osobno: draw / scale / actions / dev mode).
@@ -66,7 +66,11 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       Select i Frame — `MouseModes/ToolDropdown` (Radix `DropdownMenu`), na
       razie pokazuje jedną, aktualnie aktywną opcję (checkmark + ikona + label + skrót klawiszowy); realne warianty (Hand tool, Scale, Slice...) dojdą
       later jako osobny krok
-- [ ] rectangle / pen / text (z dropdownami wariantów) — kolejny krok
+- [x] dropdown wariantów pod przyciskiem Rectangle — `MouseModes/ToolDropdown` renderuje
+      `TOOL_GROUP_ITEMS[ToolName.rectangle]` (Rectangle, Line, Ellipse, Polygon, Star), przycisk
+      grupy pokazuje ikonę ostatnio wybranego wariantu (`lastShapeTool` w `store/design`) —
+      szczegóły narzędzi w Etapie 6 niżej
+- [ ] pen / text (z własnymi dropdownami wariantów, jeśli dojdą warianty) — kolejny krok
 - [ ] shapes (assets), prawa grupa (draw / scale / actions / dev mode)
 
 ## Etap 2 — Model danych sceny
@@ -229,10 +233,42 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
     (`pendingClickAction.kind === 'deselect'`); z ruchem → przeciąga całą grupę, zaznaczenie
     nietknięte
 
-## Etap 6 — Kolejne narzędzia rysujące
+## Etap 6 — Kolejne narzędzia rysujące (bieżący krok)
 
-- [ ] Rectangle
-- [ ] Ellipse
+- [x] **Rectangle** — pierwsze narzędzie po Frame, więc przy okazji Frame/Rectangle/Ellipse
+      zostały zunifikowane pod jeden generyczny hook `useDrawShapeTool.ts`
+      (`TShapeToolConfig { fill, name, tool, type }` — identyczna logika drag/commit dla trzech
+      typów node'ów, różni je tylko `type`/`fill`); dotychczasowy `useFrameTool.ts` przestał być
+      osobnym plikiem. Losowy kolor wypełnienia z Etapu 3 (`getRandomColor.ts`) usunięty na rzecz
+      stałego `RECTANGLE_FILL`/`ELLIPSE_FILL` (`Canvas/constants.ts`) — realny system fill/stylingu
+      to wciąż temat na później (Etap 8), na razie każdy typ kształtu ma jeden stały kolor
+- [x] **Ellipse** — rendering (`drawEllipse`) + hit-testing (`isPointInEllipse.ts`, punkt w elipsie
+      przez znormalizowane równanie, nie AABB) + hover outline (`drawThickEllipseOutline`, ten sam
+      "gruby stroke przez trójkąty" trick z Etapu 5, bo `gl.lineWidth()` dalej zablokowany na 1px).
+      Podpięty pod ten sam `useDrawShapeTool` co Rectangle
+- [x] **Line** — jedyne narzędzie z inną geometrią niż `{x, y, width, height}` (`x1/y1/x2/y2`), więc
+      dostało własny hook (`useDrawLineTool.ts`) zamiast `useDrawShapeTool`. Hit-test to odległość
+      punktu od odcinka z tolerancją w px przeliczaną na world space przez `viewport.zoom`
+      (`isPointNearLine.ts`), nie AABB. Przy okazji: uchwyty na końcach linii da się przeciągać
+      osobno (`line-drag.spec.ts` w e2e) — pierwszy node z edytowalną geometrią po utworzeniu, nie
+      tylko przesuwaniem/resize całości
+- [x] **Polygon** — pierwsze narzędzie z parametrem poza `{x, y, width, height, fill}`: liczba boków
+      (`sides`, na razie stała `POLYGON_DEFAULT_SIDES`, bez panelu właściwości — Etap 8). Własny hook
+      (`useDrawPolygonTool.ts`) bo trzeba przenieść `sides` przez draft → `addNode`. Geometria
+      (`getPolygonPoints.ts`) generuje wierzchołki równomiernie po elipsie wpisanej w bbox, wierzchołek
+      apex zawsze u góry. **Rozdzielone dwa różne obrysy**: zaznaczenie (resize handles) to nadal
+      zwykły prostokątny bbox (`drawPerNodeSelectionOutlines` — bez zmian, generyczne dla każdego
+      node'a), ale hover-outline realnie **śledzi kształt** (`drawThickPolygonOutline.ts`, ten sam
+      inner/outer-ring trick co elipsa/Etap 5, tylko po wierzchołkach wielokąta zamiast krzywej)
+- [x] **Star** — jak Polygon, ale dwa parametry: liczba ramion (`points`, domyślnie 5) i `ratio`
+      (promień wewnętrzny/zewnętrzny, domyślnie 38.2%, złoty-podział-jak gwiazda). Geometria
+      (`getStarPoints.ts`) to `getPolygonPoints` z wierzchołkami na przemian zewnętrznymi/wewnętrznymi
+      (`points * 2` wierzchołków) — przy `ratio = 1` kolapsuje do zwykłego `2n`-kąta (sprawdzone: dla
+      `points=5, ratio=100%` wychodzi dziesięciokąt, nie gwiazda), co pokrywa cały zakres, łącznie z
+      degenerackimi przypadkami z referencyjnych zrzutów z Figmy (bardzo mały `ratio` → cienkie
+      kolce, `ratio=100%` → wielokąt/prawie koło). Reużyty ten sam wzorzec co Polygon: własny hook
+      (`useDrawStarTool.ts`), `drawStar`/`drawThickStarOutline`/`isPointInStar`, bbox-owy outline
+      zaznaczenia bez zmian, hover realnie śledzi kształt. Bez skrótu klawiszowego (jak Polygon)
 - [ ] Text (tworzenie node'a — sama edycja treści to Etap 7)
 - [ ] Pen / vector (najbardziej złożony, na później)
 

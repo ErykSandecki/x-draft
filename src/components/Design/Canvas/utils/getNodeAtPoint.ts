@@ -10,6 +10,7 @@ import { TSceneNode, TViewport } from 'types/design/types';
 import { isPointInEllipse } from './isPointInEllipse';
 import { isPointInPolygon } from './isPointInPolygon';
 import { isPointInRect } from './isPointInRect';
+import { isPointInStar } from './isPointInStar';
 import { isPointNearLine } from './isPointNearLine';
 
 export const getNodeAtPoint = (point: TPoint, nodes: TSceneNode[], viewport: TViewport): TSceneNode | null => {
@@ -21,6 +22,8 @@ export const getNodeAtPoint = (point: TPoint, nodes: TSceneNode[], viewport: TVi
         return isPointInEllipse(point, node);
       case NodeType.polygon:
         return isPointInPolygon(point, node);
+      case NodeType.star:
+        return isPointInStar(point, node);
       case NodeType.line:
         return isPointNearLine(point, node, lineTolerance);
       default:

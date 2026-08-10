@@ -1,6 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TPolygonNode, TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
 
 // utils
 import { drawSceneNodes } from '../drawSceneNodes';
@@ -27,7 +27,7 @@ const createGlMock = (): WebGL2RenderingContext =>
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -105,6 +105,33 @@ describe('drawSceneNodes', () => {
 
     // before
     drawSceneNodes(gl, program, buffer, [polygon], 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
+  });
+
+  it('should draw a filled star for a star node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const star: TSceneNode = {
+      fill: '#ff0000',
+      height: 10,
+      id: 'a',
+      name: 'Star',
+      parentId: null,
+      points: 5,
+      ratio: 0.382,
+      rotation: 0,
+      type: NodeType.star,
+      width: 10,
+      x: 0,
+      y: 0,
+    };
+
+    // before
+    drawSceneNodes(gl, program, buffer, [star], 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));

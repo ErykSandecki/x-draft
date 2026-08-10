@@ -80,6 +80,7 @@ import Protractor from './svg/protractor.svg?react';
 import RectangleTool from './svg/rectangle-tool.svg?react';
 import Rows from './svg/rows.svg?react';
 import Sample from './svg/sample.svg?react';
+import StarTool from './svg/star-tool.svg?react';
 import StepBackwardOutlined from './svg/step-backward-outlined.svg?react';
 import ToggleRotate from './svg/toggle-rotate.svg?react';
 import Variant from './svg/variant.svg?react';
@@ -169,6 +170,7 @@ export const Icons = {
   RectangleTool,
   Rows,
   Sample,
+  StarTool,
   StepBackwardOutlined,
   ToggleRotate,
   Variant,

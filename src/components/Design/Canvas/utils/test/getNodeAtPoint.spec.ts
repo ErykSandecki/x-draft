@@ -1,11 +1,11 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TPolygonNode, TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
 
 // utils
 import { getNodeAtPoint } from '../getNodeAtPoint';
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -88,6 +88,28 @@ describe('getNodeAtPoint', () => {
     // result — the bounding box's (0, 0) corner sits outside the diamond inscribed in it
     expect(getNodeAtPoint({ x: 0, y: 0 }, [node], IDENTITY_VIEWPORT)).toBeNull();
     expect(getNodeAtPoint({ x: 5, y: 5 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
+  });
+
+  it('should use star-shaped hit-testing for star nodes, not the bounding box', () => {
+    // mock
+    const node: TSceneNode = {
+      fill: '#ff0000',
+      height: 100,
+      id: 'a',
+      name: 'Star',
+      parentId: null,
+      points: 5,
+      ratio: 0.382,
+      rotation: 0,
+      type: NodeType.star,
+      width: 100,
+      x: 0,
+      y: 0,
+    };
+
+    // result — this point sits in a concave notch, beyond the inner radius reached there
+    expect(getNodeAtPoint({ x: 73.51, y: 17.64 }, [node], IDENTITY_VIEWPORT)).toBeNull();
+    expect(getNodeAtPoint({ x: 50, y: 50 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
   });
 
   it('should use distance-from-segment hit-testing for line nodes, not the bounding box', () => {

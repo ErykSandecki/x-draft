@@ -1,11 +1,11 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TPolygonNode, TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
 
 // utils
 import { getSelectionBounds } from '../getSelectionBounds';
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',

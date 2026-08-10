@@ -10,6 +10,7 @@ import { drawLine } from 'utils/canvas/drawLine';
 import { drawThickEllipseOutline } from 'utils/canvas/drawThickEllipseOutline';
 import { drawThickOutline } from 'utils/canvas/drawThickOutline';
 import { drawThickPolygonOutline } from 'utils/canvas/drawThickPolygonOutline';
+import { drawThickStarOutline } from 'utils/canvas/drawThickStarOutline';
 
 export const drawHoverOutline = (
   gl: WebGL2RenderingContext,
@@ -37,6 +38,19 @@ export const drawHoverOutline = (
         break;
       case NodeType.polygon:
         drawThickPolygonOutline(
+          gl,
+          program,
+          buffer,
+          hoveredNode,
+          DRAFT_FRAME_STROKE,
+          HOVER_OUTLINE_WIDTH,
+          canvasWidth,
+          canvasHeight,
+          viewport,
+        );
+        break;
+      case NodeType.star:
+        drawThickStarOutline(
           gl,
           program,
           buffer,

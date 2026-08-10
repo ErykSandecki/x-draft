@@ -16,6 +16,7 @@ export const TOOL_ICON: Record<ToolName, keyof typeof Icons> = {
   [ToolName.line]: 'LineTool',
   [ToolName.polygon]: 'PolygonTool',
   [ToolName.rectangle]: 'RectangleTool',
+  [ToolName.star]: 'StarTool',
   [ToolName.comment]: 'Comment',
 };
 
@@ -27,10 +28,11 @@ export const TOOL_LABEL: Record<ToolName, string> = {
   [ToolName.line]: `${translationNameSpace}.tool.line`,
   [ToolName.polygon]: `${translationNameSpace}.tool.polygon`,
   [ToolName.rectangle]: `${translationNameSpace}.tool.rectangle`,
+  [ToolName.star]: `${translationNameSpace}.tool.star`,
 };
 
 export const TOOL_GROUP_ITEMS: Partial<Record<ToolName, ToolName[]>> = {
-  [ToolName.rectangle]: [ToolName.rectangle, ToolName.line, ToolName.ellipse, ToolName.polygon],
+  [ToolName.rectangle]: [ToolName.rectangle, ToolName.line, ToolName.ellipse, ToolName.polygon, ToolName.star],
 };
 
 export const TOOL_ICON_SIZE: Partial<Record<ToolName, number>> = {

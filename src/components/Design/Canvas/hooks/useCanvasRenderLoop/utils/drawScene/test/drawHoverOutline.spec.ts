@@ -1,6 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TPolygonNode, TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
 
 // utils
 import { drawHoverOutline } from '../drawHoverOutline';
@@ -26,7 +26,7 @@ const createGlMock = (): WebGL2RenderingContext =>
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -109,6 +109,34 @@ describe('drawHoverOutline', () => {
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(1);
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6 * 6);
+  });
+
+  it('should draw a star-shaped thick outline for a hovered star node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const star: TSceneNode = {
+      fill: '#ff0000',
+      height: 20,
+      id: 'a',
+      name: 'Star',
+      parentId: null,
+      points: 5,
+      ratio: 0.382,
+      rotation: 0,
+      type: NodeType.star,
+      width: 10,
+      x: 0,
+      y: 0,
+    };
+
+    // before
+    drawHoverOutline(gl, program, buffer, star, 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 10 * 6);
   });
 
   it('should draw a thin highlight along the segment for a hovered line node, not a bounding-box ring', () => {

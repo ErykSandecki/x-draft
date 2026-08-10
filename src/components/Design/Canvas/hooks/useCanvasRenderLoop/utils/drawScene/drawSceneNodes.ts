@@ -10,6 +10,7 @@ import { drawEllipse } from 'utils/canvas/drawEllipse';
 import { drawLine } from 'utils/canvas/drawLine';
 import { drawPolygon } from 'utils/canvas/drawPolygon';
 import { drawRect } from 'utils/canvas/drawRect';
+import { drawStar } from 'utils/canvas/drawStar';
 
 export const drawSceneNodes = (
   gl: WebGL2RenderingContext,
@@ -27,6 +28,9 @@ export const drawSceneNodes = (
         break;
       case NodeType.polygon:
         drawPolygon(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+        break;
+      case NodeType.star:
+        drawStar(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
         break;
       case NodeType.line:
         drawLine(gl, program, buffer, node, node.stroke, LINE_RENDER_STROKE_WIDTH, canvasWidth, canvasHeight, viewport);
