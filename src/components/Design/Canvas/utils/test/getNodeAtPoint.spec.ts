@@ -1,11 +1,11 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
+import { TBoxSceneNode, TMediaNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
 
 // utils
 import { getNodeAtPoint } from '../getNodeAtPoint';
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',

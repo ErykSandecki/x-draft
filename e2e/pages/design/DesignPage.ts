@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export type TToolName = 'comment' | 'default' | 'ellipse' | 'frame' | 'line' | 'polygon' | 'rectangle' | 'star';
+export type TToolName = 'comment' | 'default' | 'ellipse' | 'frame' | 'line' | 'media' | 'polygon' | 'rectangle' | 'star';
 
 export class DesignPage {
   readonly page: Page;
@@ -65,6 +65,30 @@ export class DesignPage {
 
   async drawLine(x1: number, y1: number, x2: number, y2: number): Promise<void> {
     await this.page.keyboard.press('l');
+    await this.pointerDown(x1, y1);
+    await this.page.mouse.move(x2, y2, { steps: 5 });
+    await this.pointerUp();
+  }
+
+  async pickMediaFile(filePath: string): Promise<void> {
+    const fileChooserPromise = this.page.waitForEvent('filechooser');
+
+    await this.selectToolFromDropdown('rectangle', 'Image/video');
+
+    const fileChooser = await fileChooserPromise;
+
+    await fileChooser.setFiles(filePath);
+
+    // the picked file's object URL still has to round-trip through an Image() decode
+    // (naturalWidth/naturalHeight) before the tool is actually armed for placement
+    await this.page.waitForTimeout(200);
+  }
+
+  async placeMediaAtNaturalSize(x: number, y: number): Promise<void> {
+    await this.click(x, y);
+  }
+
+  async dragMedia(x1: number, y1: number, x2: number, y2: number): Promise<void> {
     await this.pointerDown(x1, y1);
     await this.page.mouse.move(x2, y2, { steps: 5 });
     await this.pointerUp();

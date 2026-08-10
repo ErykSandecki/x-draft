@@ -1,5 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
+import { TImageRenderContext } from '../../../types';
 
 // utils
 import { drawFrame } from '../drawFrame';
@@ -25,6 +26,7 @@ const createGlMock = (): WebGL2RenderingContext =>
   }) as unknown as WebGL2RenderingContext;
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
+const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
 
 describe('drawFrame', () => {
   it('should draw nothing when no draft shape is given', () => {
@@ -34,7 +36,7 @@ describe('drawFrame', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawFrame(gl, program, buffer, null, 100, 100, IDENTITY_VIEWPORT);
+    drawFrame(gl, program, buffer, IMAGE_CONTEXT, null, 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).not.toHaveBeenCalled();
@@ -47,7 +49,16 @@ describe('drawFrame', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawFrame(gl, program, buffer, { stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 }, 100, 100, IDENTITY_VIEWPORT);
+    drawFrame(
+      gl,
+      program,
+      buffer,
+      IMAGE_CONTEXT,
+      { stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 10 },
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
 
     // result — 1 segment fill + 2 endpoint-handle fills = 3 TRIANGLES draws, 2 endpoint-handle
     // strokes = 2 LINE_LOOP draws
@@ -69,6 +80,7 @@ describe('drawFrame', () => {
       gl,
       program,
       buffer,
+      IMAGE_CONTEXT,
       { fill: '#D9D9D9', height: 20, type: NodeType.rectangle, width: 10, x: 0, y: 0 },
       100,
       100,

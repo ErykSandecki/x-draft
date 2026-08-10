@@ -1,6 +1,7 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
+import { TImageRenderContext } from '../../../types';
+import { TBoxSceneNode, TMediaNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
 
 // utils
 import { drawSceneNodes } from '../drawSceneNodes';
@@ -8,17 +9,27 @@ import { drawSceneNodes } from '../drawSceneNodes';
 const createGlMock = (): WebGL2RenderingContext =>
   ({
     LINE_LOOP: 2,
+    RGBA: 6408,
     STATIC_DRAW: 35044,
+    TEXTURE0: 33984,
+    TEXTURE_2D: 3553,
     TRIANGLES: 4,
     TRIANGLE_FAN: 6,
+    UNSIGNED_BYTE: 5121,
+    activeTexture: vi.fn(),
     bindBuffer: vi.fn(),
+    bindTexture: vi.fn(),
     bufferData: vi.fn(),
     createBuffer: vi.fn(() => ({})),
+    createTexture: vi.fn(() => ({})),
     drawArrays: vi.fn(),
     enableVertexAttribArray: vi.fn(),
     getAttribLocation: vi.fn(() => 0),
     getUniformLocation: vi.fn(() => ({})),
+    texImage2D: vi.fn(),
+    texParameteri: vi.fn(),
     uniform1f: vi.fn(),
+    uniform1i: vi.fn(),
     uniform2f: vi.fn(),
     uniform4fv: vi.fn(),
     useProgram: vi.fn(),
@@ -26,8 +37,9 @@ const createGlMock = (): WebGL2RenderingContext =>
   }) as unknown as WebGL2RenderingContext;
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
+const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -49,7 +61,7 @@ describe('drawSceneNodes', () => {
     const buffer = {} as WebGLBuffer;
 
     // before
-    drawSceneNodes(gl, program, buffer, [], 100, 100, IDENTITY_VIEWPORT);
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [], 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).not.toHaveBeenCalled();
@@ -63,7 +75,7 @@ describe('drawSceneNodes', () => {
     const nodes = [buildNode({ id: 'a' }), buildNode({ id: 'b' })];
 
     // before
-    drawSceneNodes(gl, program, buffer, nodes, 100, 100, IDENTITY_VIEWPORT);
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, nodes, 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(2);
@@ -78,7 +90,7 @@ describe('drawSceneNodes', () => {
     const nodes = [buildNode({ id: 'a', type: NodeType.ellipse })];
 
     // before
-    drawSceneNodes(gl, program, buffer, nodes, 100, 100, IDENTITY_VIEWPORT);
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, nodes, 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
@@ -104,7 +116,7 @@ describe('drawSceneNodes', () => {
     };
 
     // before
-    drawSceneNodes(gl, program, buffer, [polygon], 100, 100, IDENTITY_VIEWPORT);
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [polygon], 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
@@ -131,10 +143,35 @@ describe('drawSceneNodes', () => {
     };
 
     // before
-    drawSceneNodes(gl, program, buffer, [star], 100, 100, IDENTITY_VIEWPORT);
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [star], 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLE_FAN, 0, expect.any(Number));
+  });
+
+  it('should draw a textured quad for a media node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const media: TSceneNode = {
+      height: 10,
+      id: 'a',
+      name: 'Image',
+      parentId: null,
+      rotation: 0,
+      src: 'image.png',
+      type: NodeType.media,
+      width: 10,
+      x: 0,
+      y: 0,
+    };
+
+    // before
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [media], 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
   });
 
   it('should draw a thin segment for a line node instead of a filled rect', () => {
@@ -155,7 +192,7 @@ describe('drawSceneNodes', () => {
     };
 
     // before
-    drawSceneNodes(gl, program, buffer, [line], 100, 100, IDENTITY_VIEWPORT);
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [line], 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledTimes(1);

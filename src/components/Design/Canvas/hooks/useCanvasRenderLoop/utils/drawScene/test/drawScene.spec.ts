@@ -4,6 +4,7 @@ import { store } from 'store';
 
 // types
 import { NodeType } from 'types/design/enums';
+import { TImageRenderContext } from '../../../types';
 
 // utils
 import { drawScene } from '../drawScene';
@@ -31,6 +32,8 @@ const createGlMock = (): WebGL2RenderingContext =>
     vertexAttribPointer: vi.fn(),
   }) as unknown as WebGL2RenderingContext;
 
+const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
+
 describe('drawScene', () => {
   it('should re-enable alpha writes for the background clear, then lock them for foreground drawing', () => {
     // mock
@@ -40,7 +43,7 @@ describe('drawScene', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    drawScene(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // result
     expect((gl.colorMask as ReturnType<typeof vi.fn>).mock.calls).toEqual([
@@ -58,7 +61,7 @@ describe('drawScene', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    drawScene(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // result
     expect(gl.drawArrays).not.toHaveBeenCalled();
@@ -72,7 +75,7 @@ describe('drawScene', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    drawScene(gl, program, buffer, canvas, { fill: '#FFFFFF', height: 20, type: NodeType.frame, width: 10, x: 0, y: 0 });
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas, { fill: '#FFFFFF', height: 20, type: NodeType.frame, width: 10, x: 0, y: 0 });
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
@@ -101,7 +104,7 @@ describe('drawScene', () => {
     );
 
     // before
-    drawScene(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
@@ -132,7 +135,7 @@ describe('drawScene', () => {
     const hoveredId = rootOrder[rootOrder.length - 1];
 
     // before
-    drawScene(gl, program, buffer, canvas, null, null, hoveredId);
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas, null, null, hoveredId);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 24);
@@ -166,7 +169,7 @@ describe('drawScene', () => {
     store.dispatch(setSelection([selectedId]));
 
     // before
-    drawScene(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
@@ -213,7 +216,7 @@ describe('drawScene', () => {
     store.dispatch(setSelection([idA, idB]));
 
     // before
-    drawScene(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // result
     const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
@@ -263,7 +266,7 @@ describe('drawScene', () => {
     store.dispatch(setSelection([idA, idB]));
 
     // before
-    drawScene(gl, program, buffer, canvas);
+    drawScene(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // result
     const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);

@@ -91,6 +91,34 @@ describe('useToolbarShortcuts behaviors', () => {
     expect(store.getState().design.activeTool).toBe(ToolName.comment);
   });
 
+  it('should switch to the media tool on "Cmd+Shift+K" (the CONTROL_PRIMARY_KEY resolves to meta on macOS, mocked for this suite)', () => {
+    // mock
+    const store = createTestStore();
+
+    // before
+    renderShortcuts(store);
+
+    // action
+    fireEvent.keyDown(window, { code: 'KeyK', metaKey: true, shiftKey: true });
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.media);
+  });
+
+  it('should not switch to the media tool on a plain "K" without the modifiers', () => {
+    // mock
+    const store = createTestStore();
+
+    // before
+    renderShortcuts(store);
+
+    // action
+    fireEvent.keyDown(window, { code: 'KeyK' });
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.default);
+  });
+
   it('should switch back to the default tool on "V"', () => {
     // mock
     const store = createTestStore();

@@ -49,6 +49,17 @@ describe('handleSetActiveTool', () => {
     expect(state.lastShapeTool).toBe(ToolName.star);
   });
 
+  it('should remember the last shape tool when switching to the media tool', () => {
+    // mock
+    const state = buildState();
+
+    // before
+    handleSetActiveTool(state, ToolName.media);
+
+    // result
+    expect(state.lastShapeTool).toBe(ToolName.media);
+  });
+
   it('should keep the last shape tool when switching to a non-shape tool', () => {
     // mock
     const state = buildState({ lastShapeTool: ToolName.ellipse });

@@ -7,6 +7,7 @@ import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRender
 import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
 import { useDrawingCursor } from './hooks/useDrawingCursor/useDrawingCursor';
 import { useDrawLineTool } from './hooks/useDrawLineTool/useDrawLineTool';
+import { useDrawMediaTool } from './hooks/useDrawMediaTool/useDrawMediaTool';
 import { useDrawPolygonTool } from './hooks/useDrawPolygonTool/useDrawPolygonTool';
 import { useDrawShapeTool } from './hooks/useDrawShapeTool/useDrawShapeTool';
 import { useDrawStarTool } from './hooks/useDrawStarTool/useDrawStarTool';
@@ -18,6 +19,7 @@ import {
   ELLIPSE_TOOL_SETTINGS,
   FRAME_TOOL_SETTINGS,
   LINE_TOOL_SETTINGS,
+  MEDIA_TOOL_SETTINGS,
   POLYGON_TOOL_SETTINGS,
   RECTANGLE_TOOL_SETTINGS,
   STAR_TOOL_SETTINGS,
@@ -29,12 +31,14 @@ import styles from './canvas.module.scss';
 // types
 import { TDraftRect } from 'types/canvas';
 import { TDraftEntity } from 'types/design/types';
+import { TMediaPreview } from './hooks/useCanvasRenderLoop/types';
 
 const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const draftRef = useRef<TDraftEntity | null>(null);
   const marqueeRef = useRef<TDraftRect | null>(null);
   const hoverRef = useRef<string | null>(null);
+  const mediaPreviewRef = useRef<TMediaPreview | null>(null);
 
   useCanvasResize(canvasRef);
   useCanvasPanZoom(canvasRef);
@@ -45,10 +49,11 @@ const Canvas: FC = () => {
   useDrawPolygonTool(canvasRef, draftRef, POLYGON_TOOL_SETTINGS);
   useDrawStarTool(canvasRef, draftRef, STAR_TOOL_SETTINGS);
   useDrawLineTool(canvasRef, draftRef, LINE_TOOL_SETTINGS);
+  useDrawMediaTool(canvasRef, draftRef, mediaPreviewRef, MEDIA_TOOL_SETTINGS);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);
   useDrawingCursor(canvasRef);
-  useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef);
+  useCanvasRenderLoop(canvasRef, draftRef, marqueeRef, hoverRef, mediaPreviewRef);
 
   return (
     <div className={styles.Canvas}>

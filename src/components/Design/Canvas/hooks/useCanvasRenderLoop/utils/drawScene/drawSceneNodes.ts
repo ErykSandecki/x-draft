@@ -3,19 +3,23 @@ import { LINE_RENDER_STROKE_WIDTH } from 'constant/canvas';
 
 // types
 import { NodeType } from 'types/design/enums';
+import { TImageRenderContext } from '../../types';
 import { TSceneNode, TViewport } from 'types/design/types';
 
 // utils
 import { drawEllipse } from 'utils/canvas/drawEllipse';
+import { drawImage } from 'utils/canvas/drawImage';
 import { drawLine } from 'utils/canvas/drawLine';
 import { drawPolygon } from 'utils/canvas/drawPolygon';
 import { drawRect } from 'utils/canvas/drawRect';
 import { drawStar } from 'utils/canvas/drawStar';
+import { getOrLoadTexture } from 'utils/canvas/getOrLoadTexture';
 
 export const drawSceneNodes = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
   buffer: WebGLBuffer,
+  imageContext: TImageRenderContext,
   nodes: TSceneNode[],
   canvasWidth: number,
   canvasHeight: number,
@@ -31,6 +35,18 @@ export const drawSceneNodes = (
         break;
       case NodeType.star:
         drawStar(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);
+        break;
+      case NodeType.media:
+        drawImage(
+          gl,
+          imageContext.program,
+          imageContext.buffer,
+          getOrLoadTexture(gl, imageContext.cache, node.src),
+          node,
+          canvasWidth,
+          canvasHeight,
+          viewport,
+        );
         break;
       case NodeType.line:
         drawLine(gl, program, buffer, node, node.stroke, LINE_RENDER_STROKE_WIDTH, canvasWidth, canvasHeight, viewport);

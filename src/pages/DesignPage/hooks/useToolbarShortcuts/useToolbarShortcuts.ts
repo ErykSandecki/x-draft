@@ -3,6 +3,9 @@ import { useMemo } from 'react';
 // hooks
 import { TKeysMap, useKeyboardHandler } from 'hooks';
 
+// others
+import { CONTROL_PRIMARY_KEY } from 'constant/mainKeys';
+
 // store
 import { setActiveTool } from 'store/design/slice';
 import { useAppDispatch } from 'store';
@@ -22,6 +25,11 @@ export const useToolbarShortcuts = (): void => {
       { action: (): any => dispatch(setActiveTool(ToolName.line)), secondaryKey: KeyboardKeys.l },
       { action: (): any => dispatch(setActiveTool(ToolName.ellipse)), secondaryKey: KeyboardKeys.o },
       { action: (): any => dispatch(setActiveTool(ToolName.comment)), secondaryKey: KeyboardKeys.c },
+      {
+        action: (): any => dispatch(setActiveTool(ToolName.media)),
+        primaryKeys: [CONTROL_PRIMARY_KEY, 'shift'],
+        secondaryKey: KeyboardKeys.k,
+      },
       { action: (): any => dispatch(setActiveTool(ToolName.default)), secondaryKey: KeyboardKeys.escape },
     ],
     [dispatch],

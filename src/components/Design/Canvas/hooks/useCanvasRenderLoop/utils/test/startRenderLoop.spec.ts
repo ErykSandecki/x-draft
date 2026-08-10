@@ -1,3 +1,6 @@
+// types
+import { TImageRenderContext } from '../../types';
+
 // utils
 import { startRenderLoop } from '../startRenderLoop';
 
@@ -9,6 +12,7 @@ const requestAnimationFrameMock = vi.fn((callback: FrameRequestCallback) => {
   return 1;
 });
 const cancelAnimationFrameMock = vi.fn();
+const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
 
 const createGlMock = (): WebGL2RenderingContext =>
   ({
@@ -39,7 +43,7 @@ describe('startRenderLoop', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    startRenderLoop(gl, program, buffer, canvas);
+    startRenderLoop(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // action
     rafCallback?.(0);
@@ -56,7 +60,7 @@ describe('startRenderLoop', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    startRenderLoop(gl, program, buffer, canvas);
+    startRenderLoop(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // action
     rafCallback?.(0);
@@ -73,7 +77,7 @@ describe('startRenderLoop', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    startRenderLoop(gl, program, buffer, canvas);
+    startRenderLoop(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // action
     rafCallback?.(0);
@@ -91,7 +95,7 @@ describe('startRenderLoop', () => {
     const canvas = document.createElement('canvas');
 
     // before
-    const stopRenderLoop = startRenderLoop(gl, program, buffer, canvas);
+    const stopRenderLoop = startRenderLoop(gl, program, buffer, IMAGE_CONTEXT, canvas);
 
     // action
     stopRenderLoop();

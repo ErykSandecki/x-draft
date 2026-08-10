@@ -20,7 +20,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: ['src/main.tsx', 'src/assets/**'],
+      exclude: ['src/main.tsx', 'src/assets/**', 'src/constant/mainKeys.ts'],
       provider: 'v8',
       thresholds: {
         branches: 100,

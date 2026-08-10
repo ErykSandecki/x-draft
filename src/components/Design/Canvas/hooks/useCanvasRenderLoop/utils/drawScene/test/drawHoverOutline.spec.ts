@@ -1,6 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
+import { TBoxSceneNode, TMediaNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
 
 // utils
 import { drawHoverOutline } from '../drawHoverOutline';
@@ -26,7 +26,7 @@ const createGlMock = (): WebGL2RenderingContext =>
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',

@@ -1,5 +1,6 @@
 // types
 import { NodeType } from 'types/design/enums';
+import { TImageRenderContext } from '../../types';
 import { TDraftEntity, TViewport } from 'types/design/types';
 
 // utils
@@ -10,6 +11,7 @@ export const drawFrame = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
   buffer: WebGLBuffer,
+  imageContext: TImageRenderContext,
   draftShape: TDraftEntity | null | undefined,
   canvasWidth: number,
   canvasHeight: number,
@@ -19,7 +21,7 @@ export const drawFrame = (
     if (draftShape.type === NodeType.line) {
       drawDraftLine(gl, program, buffer, draftShape, canvasWidth, canvasHeight, viewport);
     } else {
-      drawDraftShape(gl, program, buffer, draftShape, canvasWidth, canvasHeight, viewport);
+      drawDraftShape(gl, program, buffer, imageContext, draftShape, canvasWidth, canvasHeight, viewport);
     }
   }
 };

@@ -32,6 +32,7 @@ import EllipseTool from './svg/ellipse-tool.svg?react';
 import EyesClosed from './svg/eyes-closed.svg?react';
 import EyesDropper from './svg/eyes-dropper.svg?react';
 import EyesOpened from './svg/eyes-opened.svg?react';
+import FileTool from './svg/file-tool.svg?react';
 import FitLayout from './svg/fit-layout.svg?react';
 import FixedHeight from './svg/fixed-height.svg?react';
 import FixedWidth from './svg/fixed-width.svg?react';
@@ -122,6 +123,7 @@ export const Icons = {
   EyesClosed,
   EyesDropper,
   EyesOpened,
+  FileTool,
   FitLayout,
   FixedHeight,
   FixedWidth,

@@ -1,3 +1,6 @@
+// others
+import { CONTROL, SHIFT } from 'constant/mainKeys';
+
 // types
 import { TKeyboardShortcuts } from './types';
 import { ToolName } from 'types/design/enums';
@@ -8,6 +11,7 @@ export const KEYBOARD_SHORTCUTS: TKeyboardShortcuts = {
   [ToolName.ellipse]: ['O'],
   [ToolName.frame]: ['F'],
   [ToolName.line]: ['L'],
+  [ToolName.media]: [CONTROL, SHIFT, 'K'],
   [ToolName.polygon]: [],
   [ToolName.rectangle]: ['R'],
   [ToolName.star]: [],

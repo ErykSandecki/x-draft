@@ -1,4 +1,5 @@
 // types
+import { TPoint } from 'types/canvas';
 import { ToolName } from 'types/design/enums';
 
 export const DRAWING_TOOLS: ToolName[] = [
@@ -8,9 +9,12 @@ export const DRAWING_TOOLS: ToolName[] = [
   ToolName.ellipse,
   ToolName.polygon,
   ToolName.star,
+  ToolName.media,
 ];
 export const ELLIPSE_FILL = '#D9D9D9';
 export const FRAME_FILL = '#FFFFFF';
+export const IMAGE_PREVIEW_MAX_SIZE_PX = 120;
+export const IMAGE_PREVIEW_OFFSET_PX: TPoint = { x: 16, y: 16 };
 export const LINE_STROKE = '#ffffff';
 export const RECTANGLE_FILL = '#D9D9D9';
 export const RESIZE_DEBOUNCE_MS = 500;
