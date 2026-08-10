@@ -8,6 +8,7 @@ import { TSceneNode, TViewport } from 'types/design/types';
 
 // utils
 import { isPointInEllipse } from './isPointInEllipse';
+import { isPointInPolygon } from './isPointInPolygon';
 import { isPointInRect } from './isPointInRect';
 import { isPointNearLine } from './isPointNearLine';
 
@@ -17,6 +18,10 @@ export const getNodeAtPoint = (point: TPoint, nodes: TSceneNode[], viewport: TVi
   const hit = [...nodes].reverse().find((node) => {
     if (node.type === NodeType.ellipse) {
       return isPointInEllipse(point, node);
+    }
+
+    if (node.type === NodeType.polygon) {
+      return isPointInPolygon(point, node);
     }
 
     if (node.type === NodeType.line) {

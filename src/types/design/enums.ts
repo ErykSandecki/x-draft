@@ -2,6 +2,7 @@ export enum NodeType {
   ellipse = 'ellipse',
   frame = 'frame',
   line = 'line',
+  polygon = 'polygon',
   rectangle = 'rectangle',
 }
 
@@ -11,5 +12,6 @@ export enum ToolName {
   ellipse = 'ellipse',
   frame = 'frame',
   line = 'line',
+  polygon = 'polygon',
   rectangle = 'rectangle',
 }

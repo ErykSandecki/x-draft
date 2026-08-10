@@ -73,6 +73,7 @@ import PaddingT from './svg/padding-t.svg?react';
 import PaddingTB from './svg/padding-tb.svg?react';
 import Percentage from './svg/percentage.svg?react';
 import Plus from './svg/plus.svg?react';
+import PolygonTool from './svg/polygon-tool.svg?react';
 import PositionSwitcher from './svg/position-switcher.svg?react';
 import Properties from './svg/properties.svg?react';
 import Protractor from './svg/protractor.svg?react';
@@ -161,6 +162,7 @@ export const Icons = {
   PaddingTB,
   Percentage,
   Plus,
+  PolygonTool,
   PositionSwitcher,
   Properties,
   Protractor,

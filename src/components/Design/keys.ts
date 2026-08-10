@@ -8,5 +8,6 @@ export const KEYBOARD_SHORTCUTS: TKeyboardShortcuts = {
   [ToolName.ellipse]: ['O'],
   [ToolName.frame]: ['F'],
   [ToolName.line]: ['L'],
+  [ToolName.polygon]: [],
   [ToolName.rectangle]: ['R'],
 };

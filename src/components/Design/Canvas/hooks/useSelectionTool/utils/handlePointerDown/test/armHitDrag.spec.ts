@@ -4,12 +4,12 @@ import { store } from 'store';
 
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TPolygonNode, TSceneNode } from 'types/design/types';
 
 // utils
 import { armHitDrag } from '../armHitDrag';
 
-const buildNode = (overrides: Partial<TBoxSceneNode>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',

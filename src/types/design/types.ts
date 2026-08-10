@@ -7,6 +7,12 @@ export type TDraftShape = TDraftRect & {
   type: NodeType.ellipse | NodeType.frame | NodeType.rectangle;
 };
 
+export type TDraftPolygon = TDraftRect & {
+  fill: string;
+  sides: number;
+  type: NodeType.polygon;
+};
+
 export type TBaseNode = {
   height: number;
   id: string;
@@ -28,6 +34,12 @@ export type TFrameNode = TBaseNode & {
   type: NodeType.frame;
 };
 
+export type TPolygonNode = TBaseNode & {
+  fill: string;
+  sides: number;
+  type: NodeType.polygon;
+};
+
 export type TRectangleNode = TBaseNode & {
   fill: string;
   type: NodeType.rectangle;
@@ -47,19 +59,25 @@ export type TLineNode = {
 
 export type TDraftLine = Omit<TLineNode, 'id' | 'name' | 'parentId'>;
 
-export type TDraftEntity = TDraftShape | TDraftLine;
+export type TDraftEntity = TDraftShape | TDraftLine | TDraftPolygon;
 
-export type TBoxSceneNode = TEllipseNode | TFrameNode | TRectangleNode;
+export type TBoxSceneNode = TEllipseNode | TFrameNode | TPolygonNode | TRectangleNode;
 
 export type TSceneNode = TBoxSceneNode | TLineNode;
 
 export type TNewSceneNode =
   | Omit<TEllipseNode, 'id'>
   | Omit<TFrameNode, 'id'>
+  | Omit<TPolygonNode, 'id'>
   | Omit<TRectangleNode, 'id'>
   | Omit<TLineNode, 'id'>;
 
-export type TSceneNodeChanges = Partial<TEllipseNode> | Partial<TFrameNode> | Partial<TRectangleNode> | Partial<TLineNode>;
+export type TSceneNodeChanges =
+  | Partial<TEllipseNode>
+  | Partial<TFrameNode>
+  | Partial<TPolygonNode>
+  | Partial<TRectangleNode>
+  | Partial<TLineNode>;
 
 export type TViewport = {
   x: number;

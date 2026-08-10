@@ -6,12 +6,19 @@ import { useCanvasPanZoom } from './hooks/useCanvasPanZoom/useCanvasPanZoom';
 import { useCanvasRenderLoop } from './hooks/useCanvasRenderLoop/useCanvasRenderLoop';
 import { useCanvasResize } from './hooks/useCanvasResize/useCanvasResize';
 import { useDrawLineTool } from './hooks/useDrawLineTool/useDrawLineTool';
+import { useDrawPolygonTool } from './hooks/useDrawPolygonTool/useDrawPolygonTool';
 import { useDrawShapeTool } from './hooks/useDrawShapeTool/useDrawShapeTool';
 import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
 // others
-import { ELLIPSE_TOOL_SETTINGS, FRAME_TOOL_SETTINGS, LINE_TOOL_SETTINGS, RECTANGLE_TOOL_SETTINGS } from './toolSettings';
+import {
+  ELLIPSE_TOOL_SETTINGS,
+  FRAME_TOOL_SETTINGS,
+  LINE_TOOL_SETTINGS,
+  POLYGON_TOOL_SETTINGS,
+  RECTANGLE_TOOL_SETTINGS,
+} from './toolSettings';
 
 // styles
 import styles from './canvas.module.scss';
@@ -32,6 +39,7 @@ const Canvas: FC = () => {
   useDrawShapeTool(canvasRef, draftRef, FRAME_TOOL_SETTINGS);
   useDrawShapeTool(canvasRef, draftRef, RECTANGLE_TOOL_SETTINGS);
   useDrawShapeTool(canvasRef, draftRef, ELLIPSE_TOOL_SETTINGS);
+  useDrawPolygonTool(canvasRef, draftRef, POLYGON_TOOL_SETTINGS);
   useDrawLineTool(canvasRef, draftRef, LINE_TOOL_SETTINGS);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);

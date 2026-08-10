@@ -3,9 +3,6 @@ import { ToolName } from 'types/design/enums';
 import { TViewport } from 'types/design/types';
 
 export const DEFAULT_TOOL = ToolName.default;
-
 export const DEFAULT_SHAPE_TOOL = ToolName.rectangle;
-
-export const SHAPE_TOOLS: ToolName[] = [ToolName.ellipse, ToolName.line, ToolName.rectangle];
-
+export const SHAPE_TOOLS: ToolName[] = [ToolName.ellipse, ToolName.line, ToolName.polygon, ToolName.rectangle];
 export const DEFAULT_VIEWPORT: TViewport = { x: 0, y: 0, zoom: 1 };

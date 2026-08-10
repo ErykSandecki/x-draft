@@ -10,6 +10,7 @@ import { drawCornerHandles } from 'utils/canvas/drawCornerHandles';
 import { drawEllipse } from 'utils/canvas/drawEllipse';
 import { drawLine } from 'utils/canvas/drawLine';
 import { drawLineEndpointHandles } from 'utils/canvas/drawLineEndpointHandles';
+import { drawPolygon } from 'utils/canvas/drawPolygon';
 import { drawRect } from 'utils/canvas/drawRect';
 
 export const drawFrame = (
@@ -41,6 +42,9 @@ export const drawFrame = (
 
     if (draftShape.type === NodeType.ellipse) {
       drawEllipse(gl, program, buffer, { ...draftShape, fill }, canvasWidth, canvasHeight, viewport);
+      drawRect(gl, program, buffer, { ...draftShape, fill: undefined, stroke: DRAFT_FRAME_STROKE }, canvasWidth, canvasHeight, viewport);
+    } else if (draftShape.type === NodeType.polygon) {
+      drawPolygon(gl, program, buffer, { ...draftShape, fill }, canvasWidth, canvasHeight, viewport);
       drawRect(gl, program, buffer, { ...draftShape, fill: undefined, stroke: DRAFT_FRAME_STROKE }, canvasWidth, canvasHeight, viewport);
     } else {
       drawRect(gl, program, buffer, { ...draftShape, fill, stroke: DRAFT_FRAME_STROKE }, canvasWidth, canvasHeight, viewport);

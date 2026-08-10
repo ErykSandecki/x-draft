@@ -9,6 +9,7 @@ import { TSceneNode, TViewport } from 'types/design/types';
 import { drawLine } from 'utils/canvas/drawLine';
 import { drawThickEllipseOutline } from 'utils/canvas/drawThickEllipseOutline';
 import { drawThickOutline } from 'utils/canvas/drawThickOutline';
+import { drawThickPolygonOutline } from 'utils/canvas/drawThickPolygonOutline';
 
 export const drawHoverOutline = (
   gl: WebGL2RenderingContext,
@@ -22,6 +23,18 @@ export const drawHoverOutline = (
   if (hoveredNode) {
     if (hoveredNode.type === NodeType.ellipse) {
       drawThickEllipseOutline(
+        gl,
+        program,
+        buffer,
+        hoveredNode,
+        DRAFT_FRAME_STROKE,
+        HOVER_OUTLINE_WIDTH,
+        canvasWidth,
+        canvasHeight,
+        viewport,
+      );
+    } else if (hoveredNode.type === NodeType.polygon) {
+      drawThickPolygonOutline(
         gl,
         program,
         buffer,

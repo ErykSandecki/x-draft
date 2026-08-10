@@ -35,6 +35,23 @@ to unchecked (but keeps showing that icon) once a shape finishes drawing, same a
 | 2   | Pressing "O" activates the Ellipse tool, then dragging draws an ellipse                                                            |  —   | ✅ `create-ellipse.spec.ts` |
 | 3   | While dragging (before release), the ellipse's own fill is already visible, unlike Frame's fill-less draft                        |  ✅  | ✅ `create-ellipse.spec.ts` |
 
+## Polygon drawing
+
+Polygon shares its toolbar button with Rectangle/Ellipse/Line (`TOOL_GROUP_ITEMS[rectangle] =
+[rectangle, line, ellipse, polygon]`), same sharing pattern as Ellipse/Line, but unlike every other
+shape tool it has **no keyboard shortcut** (`KEYBOARD_SHORTCUTS[polygon] = []`) — it's reachable
+only from the dropdown. Its geometry is an N-gon inscribed in the bounding box (`getPolygonPoints`,
+apex pointing up), with `sides` defaulting to 3 (triangle) until a properties panel exists to change
+it (planned: min 3, max 60). Hit-testing/hover/rendering follow the same non-bbox pattern as Ellipse
+(`isPointInPolygon`, `drawThickPolygonOutline`, `drawPolygon`).
+
+| #   | Scenario                                                                                                                            | Unit |             E2E              |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------ | :--: | :---------------------------: |
+| 29  | Picking "Polygon" from the Rectangle dropdown draws a polygon, and the shared button stays showing Polygon (unchecked) afterwards |  —   | ✅ `create-polygon.spec.ts` |
+| 30  | Polygon has no keyboard shortcut — pressing an unbound key leaves the default tool active and no polygon button rendered           |  —   | ✅ `create-polygon.spec.ts` |
+| 31  | While dragging (before release), the polygon's own fill is already visible, unlike Frame's fill-less draft                         |  ✅  | ✅ `create-polygon.spec.ts` |
+| 32  | Hit-testing/hovering a polygon follows its actual N-gon shape, not its bounding box                                                |  ✅  | ✅ `create-polygon.spec.ts` |
+
 ## Line drawing
 
 A line is not box-shaped like Frame/Rectangle/Ellipse — it's defined by two endpoints

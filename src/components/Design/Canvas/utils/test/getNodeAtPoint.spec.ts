@@ -1,11 +1,11 @@
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TSceneNode } from 'types/design/types';
+import { TBoxSceneNode, TPolygonNode, TSceneNode } from 'types/design/types';
 
 // utils
 import { getNodeAtPoint } from '../getNodeAtPoint';
 
-const buildNode = (overrides: Partial<TBoxSceneNode>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -67,6 +67,27 @@ describe('getNodeAtPoint', () => {
     // result — the bounding box's (0, 0) corner sits outside the inscribed ellipse
     expect(getNodeAtPoint({ x: 0, y: 0 }, [node], IDENTITY_VIEWPORT)).toBeNull();
     expect(getNodeAtPoint({ x: 10, y: 5 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
+  });
+
+  it('should use polygonal hit-testing for polygon nodes, not the bounding box', () => {
+    // mock
+    const node: TSceneNode = {
+      fill: '#ff0000',
+      height: 10,
+      id: 'a',
+      name: 'Polygon',
+      parentId: null,
+      rotation: 0,
+      sides: 4,
+      type: NodeType.polygon,
+      width: 10,
+      x: 0,
+      y: 0,
+    };
+
+    // result — the bounding box's (0, 0) corner sits outside the diamond inscribed in it
+    expect(getNodeAtPoint({ x: 0, y: 0 }, [node], IDENTITY_VIEWPORT)).toBeNull();
+    expect(getNodeAtPoint({ x: 5, y: 5 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
   });
 
   it('should use distance-from-segment hit-testing for line nodes, not the bounding box', () => {
