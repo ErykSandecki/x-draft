@@ -82,3 +82,4 @@ handleUpdateNode(state, action.payload),
 export const { addNode, setActiveTool, setSelection, setViewport, updateNode } = designSlice.actions;
 
 export default designSlice.reducer;
+claude --dangerously-skip-permissions

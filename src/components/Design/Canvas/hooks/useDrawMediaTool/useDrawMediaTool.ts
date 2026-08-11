@@ -124,7 +124,7 @@ export const useDrawMediaTool = (
       const onPointerUp = (event: PointerEvent): void => handlePointerUp(canvas, event);
 
       input.type = 'file';
-      input.accept = 'image/*';
+      input.accept = 'image/*,video/*';
       input.multiple = true;
       input.addEventListener('change', handleFileChange);
       input.addEventListener('cancel', handleFileCancel);

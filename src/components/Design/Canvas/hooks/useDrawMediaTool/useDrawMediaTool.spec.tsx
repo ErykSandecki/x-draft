@@ -127,7 +127,7 @@ describe('useDrawMediaTool behaviors', () => {
     expect(() => getInput()).toThrow();
   });
 
-  it('should open an image file picker as soon as the tool activates', () => {
+  it('should open an image and video file picker as soon as the tool activates', () => {
     // mock
     const store = createTestStore();
     const canvasRef = createCanvasRef();
@@ -142,7 +142,7 @@ describe('useDrawMediaTool behaviors', () => {
     // result
     const input = getInput();
 
-    expect(input.accept).toBe('image/*');
+    expect(input.accept).toBe('image/*,video/*');
     expect(input.click).toHaveBeenCalledTimes(1);
   });
 
