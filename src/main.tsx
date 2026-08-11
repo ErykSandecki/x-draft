@@ -13,6 +13,10 @@ import { initI18n } from 'translations';
 import { store } from 'store';
 
 // styles
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
 import 'styles/index.scss';
 
 const container = document.getElementById('root')!;
