@@ -1,6 +1,7 @@
 // selectors
 import {
   selectActiveTool,
+  selectEditingTextBox,
   selectLastMouseTool,
   selectLastShapeTool,
   selectNodes,
@@ -30,6 +31,7 @@ const node: TSceneNode = {
 const state = {
   design: {
     activeTool: ToolName.frame,
+    editingTextBox: { height: 20, width: 100, x: 10, y: 10 },
     lastMouseTool: ToolName.hand,
     lastShapeTool: ToolName.ellipse,
     nodes: { [node.id]: node },
@@ -43,6 +45,11 @@ describe('design selectors', () => {
   it('should select the active tool', () => {
     // result
     expect(selectActiveTool(state)).toBe(ToolName.frame);
+  });
+
+  it('should select the editing text box', () => {
+    // result
+    expect(selectEditingTextBox(state)).toEqual({ height: 20, width: 100, x: 10, y: 10 });
   });
 
   it('should select the last shape tool', () => {

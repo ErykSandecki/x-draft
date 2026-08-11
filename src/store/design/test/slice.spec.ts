@@ -1,5 +1,5 @@
 // store
-import slice, { addNode, setActiveTool, setSelection, setViewport, updateNode } from '../slice';
+import slice, { addNode, setActiveTool, setSelection, setViewport, startTextEdit, stopTextEdit, updateNode } from '../slice';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -22,6 +22,7 @@ describe('design slice', () => {
     // result
     expect(slice(undefined, { type: 'unknown' })).toEqual({
       activeTool: ToolName.default,
+      editingTextBox: null,
       lastMouseTool: ToolName.default,
       lastShapeTool: ToolName.rectangle,
       nodes: {},
@@ -121,5 +122,24 @@ describe('design slice', () => {
 
     // result
     expect(state.selectedIds).toEqual(['a', 'b']);
+  });
+
+  it('should start editing a text box', () => {
+    // before
+    const state = slice(undefined, startTextEdit({ height: 20, width: 100, x: 10, y: 10 }));
+
+    // result
+    expect(state.editingTextBox).toEqual({ height: 20, width: 100, x: 10, y: 10 });
+  });
+
+  it('should stop editing a text box', () => {
+    // before
+    const editing = slice(undefined, startTextEdit({ height: 20, width: 100, x: 10, y: 10 }));
+
+    // action
+    const state = slice(editing, stopTextEdit());
+
+    // result
+    expect(state.editingTextBox).toBeNull();
   });
 });

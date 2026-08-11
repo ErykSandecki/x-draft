@@ -26,7 +26,12 @@ const createGlMock = (): WebGL2RenderingContext =>
   }) as unknown as WebGL2RenderingContext;
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
-const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
+const IMAGE_CONTEXT: TImageRenderContext = {
+  buffer: {} as WebGLBuffer,
+  cache: new Map(),
+  program: {} as WebGLProgram,
+  textCache: new Map(),
+};
 
 describe('drawFrame', () => {
   it('should draw nothing when no draft shape is given', () => {

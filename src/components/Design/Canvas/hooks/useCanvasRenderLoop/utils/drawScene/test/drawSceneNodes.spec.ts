@@ -1,7 +1,7 @@
 // types
 import { NodeType } from 'types/design/enums';
 import { TImageRenderContext } from '../../../types';
-import { TBoxSceneNode, TMediaNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
+import { TBoxSceneNode, TMediaNode, TPolygonNode, TSceneNode, TStarNode, TTextNode } from 'types/design/types';
 
 // utils
 import { drawSceneNodes } from '../drawSceneNodes';
@@ -37,9 +37,14 @@ const createGlMock = (): WebGL2RenderingContext =>
   }) as unknown as WebGL2RenderingContext;
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
-const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
+const IMAGE_CONTEXT: TImageRenderContext = {
+  buffer: {} as WebGLBuffer,
+  cache: new Map(),
+  program: {} as WebGLProgram,
+  textCache: new Map(),
+};
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode | TTextNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
@@ -169,6 +174,34 @@ describe('drawSceneNodes', () => {
 
     // before
     drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [media], 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
+  });
+
+  it('should draw a textured quad for a text node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const text: TSceneNode = {
+      content: 'hello',
+      fill: '#ffffff',
+      fontFamily: 'Inter',
+      fontSize: 14,
+      height: 10,
+      id: 'a',
+      name: 'Text',
+      parentId: null,
+      rotation: 0,
+      type: NodeType.text,
+      width: 10,
+      x: 0,
+      y: 0,
+    };
+
+    // before
+    drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [text], 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);

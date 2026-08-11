@@ -233,6 +233,26 @@ already asserts the `setViewport` dispatch and cursor-class toggling precisely i
 real browser proves a `pointerdown` on top of an actual rendered frame doesn't leak into the
 selection tool.
 
+## Text tool (Etap 6 + the create/edit slice of Etap 7)
+
+Unlike every other draw tool, Text never commits to Redux on `pointerup` — dragging out a box
+dispatches `startTextEdit` instead of `addNode` (`useDrawTextTool.ts`), which mounts a
+`contentEditable` overlay (`TextEditOverlay.tsx`) positioned over the dragged box. The node is only
+actually created on blur, and only if the typed content is non-empty (`useCommitTextEdit.ts`) — an
+empty text box is discarded entirely, never added and never needing deletion.
+
+| #   | Scenario                                                                                        | Unit |           E2E            |
+| --- | ----------------------------------------------------------------------------------------------- | :--: | :----------------------: |
+| 35  | Drawing a text box, typing content, then clicking away commits a rendered text node             |  —   | ✅ `create-text.spec.ts` |
+| 36  | Drawing a text box and clicking away with no content typed discards it — nothing is created     |  —   | ✅ `create-text.spec.ts` |
+| 37  | A single whitespace character (e.g. a space) counts as valid content and is kept, not discarded |  ✅  |            —             |
+
+#37 stays unit-only: `useCommitTextEdit.spec.tsx` asserts `store.getState()` directly (the node was
+added, `content: ' '`), which is exact. A screenshot diff can't reliably stand in for this claim —
+`fillText(' ', ...)` renders no visible glyph, so the "kept" and "discarded" outcomes can look
+pixel-identical on canvas, making this exactly the kind of branch the e2e layer is the wrong tool
+for (see "Why so few scenarios get e2e coverage" below).
+
 ## Why so few scenarios get e2e coverage
 
 Most of the branches above are two-line Redux-state assertions in the unit suite — an e2e

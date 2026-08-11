@@ -84,6 +84,7 @@ import Rows from './svg/rows.svg?react';
 import Sample from './svg/sample.svg?react';
 import StarTool from './svg/star-tool.svg?react';
 import StepBackwardOutlined from './svg/step-backward-outlined.svg?react';
+import TextTool from './svg/text-tool.svg?react';
 import ToggleRotate from './svg/toggle-rotate.svg?react';
 import Variant from './svg/variant.svg?react';
 import WidthRestricted from './svg/width-restricted.svg?react';
@@ -176,6 +177,7 @@ export const Icons = {
   Sample,
   StarTool,
   StepBackwardOutlined,
+  TextTool,
   ToggleRotate,
   Variant,
   WidthRestricted,

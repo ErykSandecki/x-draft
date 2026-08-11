@@ -1,5 +1,8 @@
 import { FC, useRef } from 'react';
 
+// components
+import TextEditOverlay from './components/TextEditOverlay/TextEditOverlay';
+
 // hooks
 import { useCanvasDragPan } from './hooks/useCanvasDragPan/useCanvasDragPan';
 import { useCanvasPanZoom } from './hooks/useCanvasPanZoom/useCanvasPanZoom';
@@ -11,6 +14,7 @@ import { useDrawMediaTool } from './hooks/useDrawMediaTool/useDrawMediaTool';
 import { useDrawPolygonTool } from './hooks/useDrawPolygonTool/useDrawPolygonTool';
 import { useDrawShapeTool } from './hooks/useDrawShapeTool/useDrawShapeTool';
 import { useDrawStarTool } from './hooks/useDrawStarTool/useDrawStarTool';
+import { useDrawTextTool } from './hooks/useDrawTextTool/useDrawTextTool';
 import { useHandTool } from './hooks/useHandTool/useHandTool';
 import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
@@ -50,6 +54,7 @@ const Canvas: FC = () => {
   useDrawStarTool(canvasRef, draftRef, STAR_TOOL_SETTINGS);
   useDrawLineTool(canvasRef, draftRef, LINE_TOOL_SETTINGS);
   useDrawMediaTool(canvasRef, draftRef, MEDIA_TOOL_SETTINGS);
+  useDrawTextTool(canvasRef, draftRef);
   useSelectionTool(canvasRef, marqueeRef);
   useHoverHighlight(canvasRef, hoverRef);
   useDrawingCursor(canvasRef);
@@ -59,6 +64,7 @@ const Canvas: FC = () => {
     <div className={styles.Canvas}>
       <div className={styles.Canvas__texture} />
       <canvas className={styles['Canvas__canvas-element']} ref={canvasRef} />
+      <TextEditOverlay />
     </div>
   );
 };

@@ -12,7 +12,12 @@ const requestAnimationFrameMock = vi.fn((callback: FrameRequestCallback) => {
   return 1;
 });
 const cancelAnimationFrameMock = vi.fn();
-const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
+const IMAGE_CONTEXT: TImageRenderContext = {
+  buffer: {} as WebGLBuffer,
+  cache: new Map(),
+  program: {} as WebGLProgram,
+  textCache: new Map(),
+};
 
 const createGlMock = (): WebGL2RenderingContext =>
   ({

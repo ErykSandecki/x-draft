@@ -11,6 +11,7 @@
   "design.toolbar.tool.polygon": "Wielokąt",
   "design.toolbar.tool.rectangle": "Prostokąt",
   "design.toolbar.tool.star": "Gwiazda",
+  "design.toolbar.tool.text": "Tekst",
   "home.description": "Minimalny szablon startowy.",
   "home.subtitle": "Vite + React + TypeScript",
   "notFound.description": "Nie znaleziono strony.",

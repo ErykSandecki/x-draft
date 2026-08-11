@@ -8,7 +8,7 @@ import { DesignPage } from './DesignPage';
 const FIXTURE_PATH = path.join(import.meta.dirname, '../../../src/assets/icons/cursors/default.png');
 const FIXTURE_NATURAL_WIDTH = 16;
 const FIXTURE_NATURAL_HEIGHT = 19;
-const SECOND_FIXTURE_PATH = path.join(import.meta.dirname, '../../../src/assets/icons/cursors/move.png');
+const SECOND_FIXTURE_PATH = path.join(import.meta.dirname, '../../../src/assets/icons/cursors/pointer.png');
 
 // native file-chooser interception is flaky when several browser instances trigger it at once,
 // so this file's tests must not run concurrently with each other

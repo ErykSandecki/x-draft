@@ -25,6 +25,10 @@ export type TDraftMedia = TDraftRect & {
   type: NodeType.media;
 };
 
+export type TDraftText = TDraftRect & {
+  type: NodeType.text;
+};
+
 export type TBaseNode = {
   height: number;
   id: string;
@@ -69,6 +73,14 @@ export type TStarNode = TBaseNode & {
   type: NodeType.star;
 };
 
+export type TTextNode = TBaseNode & {
+  content: string;
+  fill: string;
+  fontFamily: string;
+  fontSize: number;
+  type: NodeType.text;
+};
+
 export type TLineNode = {
   id: string;
   name: string;
@@ -83,9 +95,9 @@ export type TLineNode = {
 
 export type TDraftLine = Omit<TLineNode, 'id' | 'name' | 'parentId'>;
 
-export type TDraftEntity = TDraftShape | TDraftLine | TDraftPolygon | TDraftStar | TDraftMedia;
+export type TDraftEntity = TDraftShape | TDraftLine | TDraftPolygon | TDraftStar | TDraftMedia | TDraftText;
 
-export type TBoxSceneNode = TEllipseNode | TFrameNode | TMediaNode | TPolygonNode | TRectangleNode | TStarNode;
+export type TBoxSceneNode = TEllipseNode | TFrameNode | TMediaNode | TPolygonNode | TRectangleNode | TStarNode | TTextNode;
 
 export type TSceneNode = TBoxSceneNode | TLineNode;
 
@@ -96,6 +108,7 @@ export type TNewSceneNode =
   | Omit<TPolygonNode, 'id'>
   | Omit<TRectangleNode, 'id'>
   | Omit<TStarNode, 'id'>
+  | Omit<TTextNode, 'id'>
   | Omit<TLineNode, 'id'>;
 
 export type TSceneNodeChanges =
@@ -105,6 +118,7 @@ export type TSceneNodeChanges =
   | Partial<TPolygonNode>
   | Partial<TRectangleNode>
   | Partial<TStarNode>
+  | Partial<TTextNode>
   | Partial<TLineNode>;
 
 export type TViewport = {

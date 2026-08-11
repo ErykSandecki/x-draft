@@ -16,4 +16,5 @@ export const KEYBOARD_SHORTCUTS: TKeyboardShortcuts = {
   [ToolName.polygon]: [],
   [ToolName.rectangle]: ['R'],
   [ToolName.star]: [],
+  [ToolName.text]: ['T'],
 };

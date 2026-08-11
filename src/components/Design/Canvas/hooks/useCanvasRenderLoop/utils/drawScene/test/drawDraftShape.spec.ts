@@ -36,7 +36,12 @@ const createGlMock = (): WebGL2RenderingContext =>
   }) as unknown as WebGL2RenderingContext;
 
 const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
-const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
+const IMAGE_CONTEXT: TImageRenderContext = {
+  buffer: {} as WebGLBuffer,
+  cache: new Map(),
+  program: {} as WebGLProgram,
+  textCache: new Map(),
+};
 
 describe('drawDraftShape', () => {
   it('should draw the draft outline and its 4 corner handles when given', () => {
@@ -314,5 +319,34 @@ describe('drawDraftShape', () => {
     const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
 
     expect(trianglesDraws).toHaveLength(4);
+  });
+
+  it('should keep a text draft fill-less, showing only its outline', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+
+    // before
+    drawDraftShape(
+      gl,
+      program,
+      buffer,
+      IMAGE_CONTEXT,
+      { height: 20, type: NodeType.text, width: 10, x: 0, y: 0 },
+      100,
+      100,
+      IDENTITY_VIEWPORT,
+    );
+
+    // result — only the 4 corner handles, no fill for the text box itself
+    const trianglesDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.TRIANGLES);
+
+    expect(trianglesDraws).toHaveLength(4);
+
+    // result — box outline + 4 corner handles = 5 LINE_LOOP draws
+    const lineLoopDraws = (gl.drawArrays as ReturnType<typeof vi.fn>).mock.calls.filter(([mode]) => mode === gl.LINE_LOOP);
+
+    expect(lineLoopDraws).toHaveLength(5);
   });
 });

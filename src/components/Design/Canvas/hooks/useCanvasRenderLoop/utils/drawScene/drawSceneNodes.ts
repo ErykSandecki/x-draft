@@ -13,6 +13,7 @@ import { drawLine } from 'utils/canvas/drawLine';
 import { drawPolygon } from 'utils/canvas/drawPolygon';
 import { drawRect } from 'utils/canvas/drawRect';
 import { drawStar } from 'utils/canvas/drawStar';
+import { getOrCreateTextTexture } from 'utils/canvas/getOrCreateTextTexture';
 import { getOrLoadTexture } from 'utils/canvas/getOrLoadTexture';
 
 export const drawSceneNodes = (
@@ -50,6 +51,18 @@ export const drawSceneNodes = (
         break;
       case NodeType.line:
         drawLine(gl, program, buffer, node, node.stroke, LINE_RENDER_STROKE_WIDTH, canvasWidth, canvasHeight, viewport);
+        break;
+      case NodeType.text:
+        drawImage(
+          gl,
+          imageContext.program,
+          imageContext.buffer,
+          getOrCreateTextTexture(gl, imageContext.textCache, node),
+          node,
+          canvasWidth,
+          canvasHeight,
+          viewport,
+        );
         break;
       default:
         drawRect(gl, program, buffer, node, canvasWidth, canvasHeight, viewport);

@@ -5,6 +5,8 @@ export type TDraftRect = {
   y: number;
 };
 
+export type TEditingTextBox = TDraftRect;
+
 export type TPoint = {
   x: number;
   y: number;

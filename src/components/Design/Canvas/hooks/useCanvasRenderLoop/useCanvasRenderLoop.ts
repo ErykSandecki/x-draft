@@ -34,7 +34,7 @@ export const useCanvasRenderLoop = (
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-      const imageContext: TImageRenderContext = { buffer: imageBuffer, cache: new Map(), program: imageProgram };
+      const imageContext: TImageRenderContext = { buffer: imageBuffer, cache: new Map(), program: imageProgram, textCache: new Map() };
       const stopRenderLoop = startRenderLoop(gl, program, buffer, imageContext, canvas, draftRef, marqueeRef, hoverRef);
 
       return (): void => {

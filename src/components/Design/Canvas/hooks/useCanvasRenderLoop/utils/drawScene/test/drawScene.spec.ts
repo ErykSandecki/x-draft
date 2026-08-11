@@ -32,7 +32,12 @@ const createGlMock = (): WebGL2RenderingContext =>
     vertexAttribPointer: vi.fn(),
   }) as unknown as WebGL2RenderingContext;
 
-const IMAGE_CONTEXT: TImageRenderContext = { buffer: {} as WebGLBuffer, cache: new Map(), program: {} as WebGLProgram };
+const IMAGE_CONTEXT: TImageRenderContext = {
+  buffer: {} as WebGLBuffer,
+  cache: new Map(),
+  program: {} as WebGLProgram,
+  textCache: new Map(),
+};
 
 describe('drawScene', () => {
   it('should re-enable alpha writes for the background clear, then lock them for foreground drawing', () => {

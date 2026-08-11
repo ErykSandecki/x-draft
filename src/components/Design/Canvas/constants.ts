@@ -9,6 +9,7 @@ export const DRAWING_TOOLS: ToolName[] = [
   ToolName.polygon,
   ToolName.star,
   ToolName.media,
+  ToolName.text,
 ];
 export const ELLIPSE_FILL = '#D9D9D9';
 export const FRAME_FILL = '#FFFFFF';
@@ -23,6 +24,10 @@ export const STAR_MIN_POINTS = 3;
 export const STAR_MAX_POINTS = 60;
 export const STAR_MIN_RATIO = 0.001;
 export const STAR_MAX_RATIO = 1;
+export const TEXT_FILL = '#FFFFFF';
+export const TEXT_FONT_FAMILY = 'Inter';
+export const TEXT_FONT_SIZE = 14;
+export const TEXT_NAME = 'Text';
 export const WEBGL_CONTEXT_ID = 'webgl2';
 export const WEBGL_CONTEXT_ATTRIBUTES: WebGLContextAttributes = { premultipliedAlpha: false };
 export const ZOOM_MIN = 0.1;

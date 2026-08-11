@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export type TToolName = 'comment' | 'default' | 'ellipse' | 'frame' | 'hand' | 'line' | 'media' | 'polygon' | 'rectangle' | 'star';
+export type TToolName = 'comment' | 'default' | 'ellipse' | 'frame' | 'hand' | 'line' | 'media' | 'polygon' | 'rectangle' | 'star' | 'text';
 
 export class DesignPage {
   readonly page: Page;
@@ -68,6 +68,17 @@ export class DesignPage {
     await this.pointerDown(x1, y1);
     await this.page.mouse.move(x2, y2, { steps: 5 });
     await this.pointerUp();
+  }
+
+  async drawTextBox(x1: number, y1: number, x2: number, y2: number): Promise<void> {
+    await this.selectTool('text');
+    await this.pointerDown(x1, y1);
+    await this.page.mouse.move(x2, y2, { steps: 5 });
+    await this.pointerUp();
+  }
+
+  async typeText(content: string): Promise<void> {
+    await this.page.keyboard.type(content);
   }
 
   async pickMediaFile(filePaths: string | string[]): Promise<void> {

@@ -6,6 +6,7 @@ export enum NodeType {
   polygon = 'polygon',
   rectangle = 'rectangle',
   star = 'star',
+  text = 'text',
 }
 
 export enum ToolName {
@@ -19,4 +20,5 @@ export enum ToolName {
   polygon = 'polygon',
   rectangle = 'rectangle',
   star = 'star',
+  text = 'text',
 }

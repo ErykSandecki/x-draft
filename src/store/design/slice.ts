@@ -5,6 +5,7 @@ import { DEFAULT_MOUSE_TOOL, DEFAULT_SHAPE_TOOL, DEFAULT_TOOL, DEFAULT_VIEWPORT 
 
 // types
 import { TDesignState } from './types';
+import { TEditingTextBox } from 'types/canvas';
 import { ToolName } from 'types/design/enums';
 import { TNewSceneNode, TSceneNode, TSceneNodeChanges, TViewport } from 'types/design/types';
 
@@ -15,6 +16,7 @@ import { handleUpdateNode } from './utils/handleUpdateNode';
 
 const initialState: TDesignState = {
   activeTool: DEFAULT_TOOL,
+  editingTextBox: null,
   lastMouseTool: DEFAULT_MOUSE_TOOL,
   lastShapeTool: DEFAULT_SHAPE_TOOL,
   nodes: {},
@@ -38,10 +40,16 @@ const designSlice = createSlice({
     setViewport: (state, action: PayloadAction<TViewport>) => {
       state.viewport = action.payload;
     },
+    startTextEdit: (state, action: PayloadAction<TEditingTextBox>) => {
+      state.editingTextBox = action.payload;
+    },
+    stopTextEdit: (state) => {
+      state.editingTextBox = null;
+    },
     updateNode: (state, action: PayloadAction<{ changes: TSceneNodeChanges; id: string }>) => handleUpdateNode(state, action.payload),
   },
 });
 
-export const { addNode, setActiveTool, setSelection, setViewport, updateNode } = designSlice.actions;
+export const { addNode, setActiveTool, setSelection, setViewport, startTextEdit, stopTextEdit, updateNode } = designSlice.actions;
 
 export default designSlice.reducer;

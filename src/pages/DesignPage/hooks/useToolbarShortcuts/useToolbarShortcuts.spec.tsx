@@ -91,6 +91,20 @@ describe('useToolbarShortcuts behaviors', () => {
     expect(store.getState().design.activeTool).toBe(ToolName.ellipse);
   });
 
+  it('should switch to the text tool on "T"', () => {
+    // mock
+    const store = createTestStore();
+
+    // before
+    renderShortcuts(store);
+
+    // action
+    fireEvent.keyDown(window, { code: 'KeyT' });
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.text);
+  });
+
   it('should switch to the comment tool on "C"', () => {
     // mock
     const store = createTestStore();

@@ -6,13 +6,13 @@ import { store } from 'store';
 
 // types
 import { NodeType } from 'types/design/enums';
-import { TBoxSceneNode, TMediaNode, TPolygonNode, TSceneNode, TStarNode } from 'types/design/types';
+import { TBoxSceneNode, TMediaNode, TPolygonNode, TSceneNode, TStarNode, TTextNode } from 'types/design/types';
 import { TDragState } from '../../../types';
 
 // utils
 import { armHitDrag } from '../armHitDrag';
 
-const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode>>): TSceneNode => ({
+const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode | TTextNode>>): TSceneNode => ({
   fill: '#ff0000',
   height: 10,
   id: 'node',
