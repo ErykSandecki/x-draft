@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 
@@ -85,5 +86,30 @@ describe('MouseModes behaviors', () => {
 
     // result
     expect(screen.getByRole('radio', { name: ToolName.hand })).toBeChecked();
+  });
+
+  it('should close the previously open dropdown when a different one is opened', async () => {
+    // mock
+    const user = userEvent.setup();
+
+    // before
+    render(
+      <Provider store={store}>
+        <MouseModes />
+      </Provider>,
+    );
+
+    // action
+    await user.click(screen.getByRole('button', { name: 'default options' }));
+
+    // result
+    expect(screen.getByText('Hand tool')).toBeInTheDocument();
+
+    // action
+    await user.click(screen.getByRole('button', { name: 'frame options' }));
+
+    // result — opening the frame dropdown must close the still-open default dropdown, not stack
+    expect(screen.queryByText('Hand tool')).not.toBeInTheDocument();
+    expect(screen.getByText('Frame')).toBeInTheDocument();
   });
 });

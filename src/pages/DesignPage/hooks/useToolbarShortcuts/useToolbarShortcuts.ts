@@ -4,14 +4,13 @@ import { useMemo } from 'react';
 import { TKeysMap, useKeyboardHandler } from 'hooks';
 
 // others
-import { CONTROL_PRIMARY_KEY } from 'constant/mainKeys';
+import { shortcuts } from './shortcuts';
 
 // store
 import { setActiveTool } from 'store/design/slice';
 import { useAppDispatch } from 'store';
 
 // types
-import { KeyboardKeys } from 'types/enums';
 import { ToolName } from 'types/design/enums';
 
 export const useToolbarShortcuts = (): void => {
@@ -19,19 +18,15 @@ export const useToolbarShortcuts = (): void => {
 
   const keysMap: TKeysMap = useMemo(
     () => [
-      { action: (): any => dispatch(setActiveTool(ToolName.default)), secondaryKey: KeyboardKeys.v },
-      { action: (): any => dispatch(setActiveTool(ToolName.frame)), secondaryKey: KeyboardKeys.f },
-      { action: (): any => dispatch(setActiveTool(ToolName.hand)), secondaryKey: KeyboardKeys.h },
-      { action: (): any => dispatch(setActiveTool(ToolName.rectangle)), secondaryKey: KeyboardKeys.r },
-      { action: (): any => dispatch(setActiveTool(ToolName.line)), secondaryKey: KeyboardKeys.l },
-      { action: (): any => dispatch(setActiveTool(ToolName.ellipse)), secondaryKey: KeyboardKeys.o },
-      { action: (): any => dispatch(setActiveTool(ToolName.comment)), secondaryKey: KeyboardKeys.c },
-      {
-        action: (): any => dispatch(setActiveTool(ToolName.media)),
-        primaryKeys: [CONTROL_PRIMARY_KEY, 'shift'],
-        secondaryKey: KeyboardKeys.k,
-      },
-      { action: (): any => dispatch(setActiveTool(ToolName.default)), secondaryKey: KeyboardKeys.escape },
+      { action: (): any => dispatch(setActiveTool(ToolName.default)), ...shortcuts[ToolName.default] },
+      { action: (): any => dispatch(setActiveTool(ToolName.frame)), ...shortcuts[ToolName.frame] },
+      { action: (): any => dispatch(setActiveTool(ToolName.hand)), ...shortcuts[ToolName.hand] },
+      { action: (): any => dispatch(setActiveTool(ToolName.rectangle)), ...shortcuts[ToolName.rectangle] },
+      { action: (): any => dispatch(setActiveTool(ToolName.line)), ...shortcuts[ToolName.line] },
+      { action: (): any => dispatch(setActiveTool(ToolName.ellipse)), ...shortcuts[ToolName.ellipse] },
+      { action: (): any => dispatch(setActiveTool(ToolName.comment)), ...shortcuts[ToolName.comment] },
+      { action: (): any => dispatch(setActiveTool(ToolName.media)), ...shortcuts[ToolName.media] },
+      { action: (): any => dispatch(setActiveTool(ToolName.default)), ...shortcuts.escape },
     ],
     [dispatch],
   );

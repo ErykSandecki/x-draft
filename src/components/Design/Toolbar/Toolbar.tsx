@@ -7,7 +7,7 @@ import MouseModes from './MouseModes/MouseModes';
 import styles from './toolbar.module.scss';
 
 const Toolbar: FC = () => (
-  <div className={styles.Toolbar} onMouseDown={(event) => event.stopPropagation()}>
+  <div className={styles.Toolbar}>
     <MouseModes />
   </div>
 );
