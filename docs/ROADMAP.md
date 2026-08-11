@@ -64,8 +64,24 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       realna logika (dispatch `setActiveTool`), nie tylko UI
 - [x] dropdown-chevron (16×32, hover taki sam jak reszta przycisków) przy
       Select i Frame — `MouseModes/ToolDropdown` (Radix `DropdownMenu`), na
-      razie pokazuje jedną, aktualnie aktywną opcję (checkmark + ikona + label + skrót klawiszowy); realne warianty (Hand tool, Scale, Slice...) dojdą
+      razie pokazuje jedną, aktualnie aktywną opcję (checkmark + ikona + label + skrót klawiszowy); pozostałe warianty (Scale, Slice...) dojdą
       later jako osobny krok
+- [x] **Hand tool** — pierwszy realny wariant w dropdownzie Select
+      (`TOOL_GROUP_ITEMS[ToolName.default] = [ToolName.default, ToolName.hand]`), ten sam
+      mechanizm "zapamiętaj ostatnio wybrany wariant" co Rectangle/Ellipse/Line/Polygon/Star
+      z Etapu 6, tylko rozszerzony o drugie, równoległe pole w `store/design`
+      (`lastMouseTool`, mirror `lastShapeTool`) — jedno pole `lastShapeTool` nie dało się
+      użyć dla dwóch niezależnych grup naraz, więc `MouseModes.tsx`/`ToolDropdown.tsx` dostały
+      wspólny `Toolbar/utils/getGroupDisplayedTool.ts` zamiast dotychczasowego
+      pojedynczego warunku. Skrót klawiszowy `H`. Aktywny Hand tool blokuje interakcję z
+      node'ami "za darmo" — każdy inny hook narzędzia i tak sam gate'uje się na
+      `activeTool === <swoje własne ToolName>`, więc żaden nie podpina listenerów, gdy aktywny
+      jest hand. Samo przeciąganie (LMB) reużywa bez zmian matematykę z istniejącego
+      środkowoprzyciskowego pan (`useCanvasDragPan/utils/applyDragPan.ts`) — nowy hook
+      `useHandTool.ts` różni się tylko gate'em na `ToolName.hand` i `MouseButton.primary`
+      zamiast `middle`. Kursor: `hand.png` w spoczynku, przełącza się na już istniejący
+      `pressing.png` (ta sama klasa `--pressing`, którą do tej pory ustawiał tylko
+      środkowoprzyciskowy pan) w trakcie przeciągania
 - [x] dropdown wariantów pod przyciskiem Rectangle — `MouseModes/ToolDropdown` renderuje
       `TOOL_GROUP_ITEMS[ToolName.rectangle]` (Rectangle, Line, Ellipse, Polygon, Star), przycisk
       grupy pokazuje ikonę ostatnio wybranego wariantu (`lastShapeTool` w `store/design`) —
@@ -288,6 +304,16 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       rogu miniaturki; odstęp między krzyżykiem a miniaturką/badge'em rośnie tylko wtedy, gdy badge
       faktycznie się rysuje (o połowę jego promienia), żeby nie zachodził na glif "+" — przy
       pojedynczym pliku układ zostaje ciasny jak wcześniej
+- [x] **Media — wsparcie dla wideo** — `accept` inputu rozszerzony na `image/*,video/*`
+      (`useDrawMediaTool.ts`); węzeł na scenie (`TMediaNode`) nadal trzyma tylko `src` jako
+      string do statycznego obrazu, więc wideo jest **zamieniane na 1 klatkę** zanim trafi na
+      canvas — `extractVideoFrame.ts` tworzy ukryty, ale realnie wstawiony do DOM-u element
+      `<video>` (poza drzewem dokumentu część przeglądarek nie dekoduje/renderuje klatki), po
+      `loadeddata` jawnie seekuje na mały offset (~0.1s) i czeka na `seeked` — samo
+      `loadeddata` bywa zbyt wczesne, złapana klatka potrafi wyjść pusta/biała — po czym rysuje
+      bieżącą klatkę na offscreen `<canvas>` i konwertuje do PNG blob URL przez
+      `canvas.toBlob`. Cała reszta pipeline'u (cache tekstur WebGL, `TMediaNode`, drag&drop na
+      canvasie) działa bez zmian — z punktu widzenia renderera wideo to zwykły obrazek
 - [ ] Text (tworzenie node'a — sama edycja treści to Etap 7)
 - [ ] Pen / vector (najbardziej złożony, na później)
 
