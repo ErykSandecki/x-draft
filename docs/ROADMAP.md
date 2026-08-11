@@ -314,19 +314,80 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       bieżącą klatkę na offscreen `<canvas>` i konwertuje do PNG blob URL przez
       `canvas.toBlob`. Cała reszta pipeline'u (cache tekstur WebGL, `TMediaNode`, drag&drop na
       canvasie) działa bez zmian — z punktu widzenia renderera wideo to zwykły obrazek
-- [ ] Text (tworzenie node'a — sama edycja treści to Etap 7)
+- [x] **Text** — tworzenie node'a łączone od razu z edycją treści (jedyne narzędzie, które **nie**
+      dispatchuje `addNode` od razu po puszczeniu myszy jak reszta) — pełny opis flow i renderingu
+      w Etapie 7 niżej
 - [ ] Pen / vector (najbardziej złożony, na później)
 
-## Etap 7 — Edycja tekstu (DOM overlay)
+## Etap 7 — Edycja tekstu (DOM overlay) + rendering tekstu w WebGL
 
-- [ ] `TextEditOverlay` — montowany warunkowo tylko dla aktualnie edytowanego
-      node'a, pozycjonowany na podstawie world → screen transform
-- [ ] synchronizacja treści z powrotem do `SceneNode` po zakończeniu edycji
+- [x] **Text tool** — jedyne narzędzie łączące tworzenie node'a z natychmiastową edycją treści
+      (`useDrawTextTool.ts`): przeciągnięcie obszaru dispatchuje `startTextEdit({x,y,width,height})`,
+      nie `addNode` — node trafia do Reduxu dopiero po zakończeniu edycji, i tylko jeśli wpisano
+      niepustą treść. Dzięki temu „nie chcemy pustych tekstów" wychodzi za darmo: nic nigdy nie
+      powstaje, więc nie ma czego kasować
+- [x] `TextEditOverlay` — montowany warunkowo tylko dla aktualnie edytowanego node'a (`editingTextBox`
+      w `store/design`), pozycjonowany przez `worldToScreen.ts` (odwrotność `screenToWorld.ts`).
+      Prawdziwy `contentEditable` div (nie `<textarea>`), szerokość na sztywno z przeciągniętego
+      obszaru, wysokość auto-grow — świadomie **bez** `minHeight` z przeciągniętego obszaru, bo to
+      psuło rozmiar renderowanego tekstu po commicie (patrz niżej)
+- [x] synchronizacja treści z powrotem do `SceneNode` — `useCommitTextEdit.ts`, `onBlur`: `.innerText`
+      (nie `.textContent`, żeby zachować złamania linii), **białe znaki liczą się jako treść** (brak
+      `.trim()` przed sprawdzeniem długości), pusta treść → tylko `stopTextEdit()`, node nigdy nie
+      powstaje
+- [x] **rendering tekstu w WebGL — MSDF (Multi-channel Signed Distance Field)**, nie bitmapa.
+      Pierwsze podejście (v1, świadomy skrót z Etapu 3) renderowało tekst raz do offscreen Canvas 2D
+      i wgrywało jako zwykłą teksturę (`getOrCreateTextTexture.ts`, ten sam pipeline co Media) — ale
+      bitmapa o stałej rozdzielczości nieuchronnie rozmywa się przy przybliżeniu, a mipmapy
+      (`gl.generateMipmap`, dodane po drodze) naprawiły tylko falowanie przy oddaleniu, nie
+      rozmazywanie przy zbliżeniu — bitmapy nie da się "doostrzyć". Docelowe rozwiązanie: prawdziwy
+      atlas glifów MSDF, ta sama technika co w oryginalnej Figmie — tekstura koduje **odległość od
+      krawędzi litery** (kanały RGB), a fragment shader (`msdfFragmentShaderSource.ts`) odtwarza
+      ostrą krawędź proceduralnie przy dowolnym zoomie
+      (`u_screenPxRange = distanceRange * fontSize * zoom / atlas.size`) — sprawdzone live na 500%,
+      ~2000% i blisko `ZOOM_MAX` (25600%), krawędzie zostają idealnie ostre na każdym poziomie.
+      Atlas generowany raz, offline, narzędziem `msdf-bmfont-xml`
+      (`npm run generate:font-atlas`, `src/assets/fonts/inter/`) z prawdziwego statycznego TTF-a —
+      Inter to font zmienny (variable font), więc `fonttools varLib.instancer` najpierw "zamraża" go
+      na wadze Regular/400 przed generacją. Layout (zawijanie wierszy) przeniesiony z
+      `canvas.measureText` na metryki z atlasu (`getGlyphAdvance.ts`/`measureGlyphTextWidth.ts`),
+      geometria liter batchowana w jeden bufor na node (`buildGlyphQuads.ts`, ten sam wzorzec co
+      `drawPolygon`/`drawStar` — jeden `bufferData` + jeden `drawArrays` zamiast quada per literę),
+      cache geometrii keyowany **bez** zoomu/DPI (`getOrBuildTextGeometry.ts`) — to jest realna
+      przewaga MSDF nad starym podejściem: raz policzona geometria zostaje poprawna na każdym
+      zoomie, nie trzeba jej przeliczać przy zmianie przybliżenia. Znaki spoza wypalonego zestawu
+      (obecnie: ASCII + polskie znaki diakrytyczne + podstawowa typografia) są pomijane po cichu z
+      fallbackowym odstępem — bez crasha, bez zastępczego "boxa"
 
 ## Etap 8 — Panele boczne
 
 - [ ] panel warstw (drzewo node'ów, zawsze zwykły DOM/React)
 - [ ] panel właściwości zaznaczonego node'a (x/y/w/h, fill, itd.)
+
+## Etap 9 — Wiele fontów, atlas per font ładowany z serwera
+
+**Świadomie odłożone do czasu, aż w apce pojawi się realny wybór/edycja fontu** (część Etapu 8 —
+panel właściwości tekstu). Dziś jest jeden, zaszyty na sztywno font (Inter,
+`TEXT_FONT_FAMILY`), więc jeden atlas wpieczony w bundle apki (`constant/webgl/msdfAtlas.ts`,
+statyczny import `.json`/`.png`) ma sens — ale to się nie skaluje na realny wybór z wielu (docelowo
+dziesiątek/setek) fontów, bo każdy dodatkowy font to +~150–300 KB bezwarunkowo wpieczone w build,
+nawet jeśli user nigdy go nie użyje:
+
+- [ ] atlasy fontów lecą na CDN/serwer, nie do repo apki i nie do bundla — generator (osobne repo,
+      patrz niżej) produkuje `atlas.png`+`atlas.json` per font i wrzuca bezpośrednio na hosting,
+      bez przechodzenia przez git tej apki
+- [ ] ładowanie atlasu zamienia się ze statycznego importu na dynamiczne (`fetch` po wybranym
+      `fontFamily`), dopiero gdy user faktycznie użyje danego fontu — `getOrLoadTexture.ts` już
+      dziś umie ładować teksturę z dowolnego URL-a asynchronicznie (placeholder + podmiana po
+      załadowaniu), ta część pipeline'u się nie zmienia, zmienia się tylko skąd bierze się URL
+- [ ] cache per `fontFamily` (`Map<fontFamily, atlas>`) zamiast jednego globalnego atlasu
+- [ ] manifest/katalog dostępnych fontów (nazwa → URL atlasu) do wyboru w panelu właściwości tekstu
+- [ ] **generator atlasów przenosi się do osobnego repo** — dziś `msdf-bmfont-xml` +
+      `npm run generate:font-atlas` + surowy TTF (`src/assets/fonts/inter/source/`) siedzą w
+      x-draft, co ma sens dla jednego fontu, ale nie skaluje się. Docelowo osobne repo trzyma tylko
+      `charset.txt` per font (decyzje o zestawie znaków, kilkaset bajtów) + skrypt generujący, który
+      ściąga TTF **na żądanie** z publicznego źródła (np. Google Fonts) zamiast trzymać binarki
+      fontów w gicie na stałe
 
 ---
 
