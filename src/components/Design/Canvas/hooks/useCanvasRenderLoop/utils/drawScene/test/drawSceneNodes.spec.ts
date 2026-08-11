@@ -24,6 +24,7 @@ const createGlMock = (): WebGL2RenderingContext =>
     createTexture: vi.fn(() => ({})),
     drawArrays: vi.fn(),
     enableVertexAttribArray: vi.fn(),
+    generateMipmap: vi.fn(),
     getAttribLocation: vi.fn(() => 0),
     getUniformLocation: vi.fn(() => ({})),
     texImage2D: vi.fn(),

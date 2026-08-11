@@ -7,11 +7,14 @@ import { getOrCreateTextTexture } from '../getOrCreateTextTexture';
 
 const createGlMock = (createTextureReturn: object | null = {}): WebGL2RenderingContext =>
   ({
+    LINEAR_MIPMAP_LINEAR: 9987,
     RGBA: 6408,
     TEXTURE_2D: 3553,
+    TEXTURE_MIN_FILTER: 10241,
     UNSIGNED_BYTE: 5121,
     bindTexture: vi.fn(),
     createTexture: vi.fn(() => createTextureReturn),
+    generateMipmap: vi.fn(),
     texImage2D: vi.fn(),
     texParameteri: vi.fn(),
   }) as unknown as WebGL2RenderingContext;
@@ -63,6 +66,8 @@ describe('getOrCreateTextTexture', () => {
     expect(texture).not.toBeNull();
     expect(cache.size).toBe(1);
     expect(fillText).toHaveBeenCalled();
+    expect(gl.generateMipmap).toHaveBeenCalledWith(gl.TEXTURE_2D);
+    expect(gl.texParameteri).toHaveBeenCalledWith(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
   });
 
   it('should return the cached texture on a second call with the same node, without re-rendering', () => {
