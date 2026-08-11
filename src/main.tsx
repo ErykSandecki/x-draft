@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 
 // components
 import App from 'components/App/App';
+import { TooltipProvider } from 'shared';
 
 // others
 import { initI18n } from 'translations';
@@ -20,7 +21,9 @@ initI18n().then(() => {
   createRoot(container).render(
     <StrictMode>
       <Provider store={store}>
-        <App />
+        <TooltipProvider>
+          <App />
+        </TooltipProvider>
       </Provider>
     </StrictMode>,
   );

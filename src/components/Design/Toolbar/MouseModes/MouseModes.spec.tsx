@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 
 // components
 import MouseModes from './MouseModes';
+import { TooltipProvider } from 'shared';
 
 // store
 import { setActiveTool } from 'store/design/slice';
@@ -12,14 +13,19 @@ import { store } from 'store';
 // types
 import { ToolName } from 'types/design/enums';
 
+const renderMouseModes = (timeoutEnter?: number): ReturnType<typeof render> =>
+  render(
+    <Provider store={store}>
+      <TooltipProvider timeoutEnter={timeoutEnter}>
+        <MouseModes />
+      </TooltipProvider>
+    </Provider>,
+  );
+
 describe('MouseModes snapshots', () => {
   it('should render MouseModes', () => {
     // before
-    const { asFragment } = render(
-      <Provider store={store}>
-        <MouseModes />
-      </Provider>,
-    );
+    const { asFragment } = renderMouseModes();
 
     // result
     expect(asFragment()).toMatchSnapshot();
@@ -29,11 +35,7 @@ describe('MouseModes snapshots', () => {
 describe('MouseModes behaviors', () => {
   it('should change active tool', () => {
     // before
-    const { getByRole } = render(
-      <Provider store={store}>
-        <MouseModes />
-      </Provider>,
-    );
+    const { getByRole } = renderMouseModes();
 
     // action
     fireEvent.click(getByRole('radio', { name: ToolName.frame }));
@@ -44,11 +46,7 @@ describe('MouseModes behaviors', () => {
 
   it('should show the last selected shape tool on the shared rectangle/ellipse button', () => {
     // before
-    render(
-      <Provider store={store}>
-        <MouseModes />
-      </Provider>,
-    );
+    renderMouseModes();
 
     // action
     act(() => store.dispatch(setActiveTool(ToolName.ellipse)));
@@ -59,11 +57,7 @@ describe('MouseModes behaviors', () => {
 
   it('should keep showing the last shape tool but unchecked once the tool resets to default', () => {
     // before
-    render(
-      <Provider store={store}>
-        <MouseModes />
-      </Provider>,
-    );
+    renderMouseModes();
 
     // action
     act(() => store.dispatch(setActiveTool(ToolName.ellipse)));
@@ -75,11 +69,7 @@ describe('MouseModes behaviors', () => {
 
   it('should show the last selected mouse tool on the shared default/hand button', () => {
     // before
-    render(
-      <Provider store={store}>
-        <MouseModes />
-      </Provider>,
-    );
+    renderMouseModes();
 
     // action
     act(() => store.dispatch(setActiveTool(ToolName.hand)));
@@ -93,11 +83,7 @@ describe('MouseModes behaviors', () => {
     const user = userEvent.setup();
 
     // before
-    render(
-      <Provider store={store}>
-        <MouseModes />
-      </Provider>,
-    );
+    renderMouseModes();
 
     // action
     await user.click(screen.getByRole('button', { name: 'default options' }));
@@ -111,5 +97,37 @@ describe('MouseModes behaviors', () => {
     // result — opening the frame dropdown must close the still-open default dropdown, not stack
     expect(screen.queryByText('Hand tool')).not.toBeInTheDocument();
     expect(screen.getByText('Frame')).toBeInTheDocument();
+  });
+
+  it('should show the tool label and keyboard shortcut in a tooltip when hovering a toolbar button', async () => {
+    // mock
+    const user = userEvent.setup();
+
+    // before
+    renderMouseModes(0);
+
+    // action
+    await user.hover(screen.getByRole('radio', { name: ToolName.frame }));
+
+    // result — same label the dropdown shows, plus the raw (non-translated) keyboard shortcut
+    expect(await screen.findByText('Frame')).toBeInTheDocument();
+    expect(screen.getByText('F')).toBeInTheDocument();
+  });
+
+  it('should not show a shortcut hint for a tool with no keyboard shortcut', async () => {
+    // mock
+    const user = userEvent.setup();
+
+    renderMouseModes(0);
+
+    // before — Polygon has no keyboard shortcut, unlike Rectangle/Ellipse/Line
+    act(() => store.dispatch(setActiveTool(ToolName.polygon)));
+
+    // action
+    await user.hover(screen.getByRole('radio', { name: ToolName.polygon }));
+
+    // result
+    expect(await screen.findByText('Polygon')).toBeInTheDocument();
+    expect(document.querySelector('[class*="MouseModes__shortcut"]')).not.toBeInTheDocument();
   });
 });

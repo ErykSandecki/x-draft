@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 
 // components
 import DesignPage from './DesignPage';
+import { TooltipProvider } from 'shared';
 
 // store
 import { store } from 'store';
@@ -12,7 +13,9 @@ describe('DesignPage snapshots', () => {
     // before
     const { asFragment } = render(
       <Provider store={store}>
-        <DesignPage />
+        <TooltipProvider>
+          <DesignPage />
+        </TooltipProvider>
       </Provider>,
     );
 

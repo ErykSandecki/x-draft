@@ -9,6 +9,11 @@
     height: 100%;
   }
 
+  &__trigger {
+    display: inline-flex;
+    height: 100%;
+  }
+
   &__button {
     align-items: center;
     background-color: transparent;
@@ -27,5 +32,9 @@
     &[data-state='on'] {
       background-color: var(--color-blue-1);
     }
+  }
+
+  &__shortcut {
+    color: var(--color-neutral-2);
   }
 }

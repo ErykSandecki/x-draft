@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 
 // components
 import Toolbar from './Toolbar';
+import { TooltipProvider } from 'shared';
 
 // store
 import { store } from 'store';
@@ -12,7 +13,9 @@ describe('Toolbar snapshots', () => {
     // before
     const { asFragment } = render(
       <Provider store={store}>
-        <Toolbar />
+        <TooltipProvider>
+          <Toolbar />
+        </TooltipProvider>
       </Provider>,
     );
 
