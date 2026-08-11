@@ -7,7 +7,7 @@ import { RefObject } from 'react';
 import { useDrawMediaTool, TMediaToolConfig } from './useDrawMediaTool';
 
 // store
-import designReducer, { setActiveTool } from 'store/design/slice';
+import designReducer, { setActiveTool, setViewport } from 'store/design/slice';
 import { TDesignState } from 'store/design/types';
 
 // types
@@ -437,6 +437,36 @@ describe('useDrawMediaTool behaviors', () => {
     // height (25) is far too short for that ratio, so it gets forced up to 100
     expect(design.nodes[design.rootOrder[1]]).toMatchObject({ height: 100, width: 50, x: 40, y: 40 });
     expect(design.activeTool).toBe(ToolName.default);
+  });
+
+  it('should not reopen the file picker or lose the armed file when the viewport changes (e.g. panning) while armed', () => {
+    // mock
+    const store = createTestStore();
+    const canvasRef = createCanvasRef();
+    const draftRef: RefObject<TDraftEntity | null> = { current: null };
+    const { getLastImage } = stubImageConstructor();
+    const { getInput } = captureInput();
+
+    store.dispatch(setActiveTool(CONFIG.tool));
+    renderMediaTool(canvasRef, draftRef, store);
+    armMedia(getInput(), getLastImage, 200, 100);
+
+    // action — panning (or scroll-zooming) dispatches setViewport while a file is still armed
+    act(() => store.dispatch(setViewport({ x: 150, y: 90, zoom: 1 })));
+
+    // result — the file picker must not reopen, and the still-armed file must still place normally
+    expect(getInput().click).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerdown', 10, 10));
+      canvasRef.current?.dispatchEvent(pointerEvent('pointerup', 10, 10));
+    });
+
+    const { design } = store.getState();
+
+    expect(design.rootOrder).toHaveLength(1);
+    expect(design.viewport).toEqual({ x: 150, y: 90, zoom: 1 });
+    expect(design.nodes[design.rootOrder[0]]).toMatchObject({ x: -140, y: -80 });
   });
 
   it('should not place a stale armed file after the tool is deactivated and reactivated without picking a new one', () => {

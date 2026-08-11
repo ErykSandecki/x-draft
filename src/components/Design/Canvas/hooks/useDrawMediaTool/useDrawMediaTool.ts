@@ -6,7 +6,7 @@ import { MIN_SHAPE_SIZE } from '../../constants';
 // store
 import { addNode, setActiveTool, setSelection } from 'store/design/slice';
 import { selectActiveTool, selectViewport } from 'store/design/selectors';
-import { useAppDispatch, useAppSelector } from 'store';
+import { useAppDispatch, useAppSelector, useAppStore } from 'store';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -32,8 +32,8 @@ export const useDrawMediaTool = (
   { name, tool }: TMediaToolConfig,
 ): void => {
   const activeTool = useAppSelector(selectActiveTool);
-  const viewport = useAppSelector(selectViewport);
   const dispatch = useAppDispatch();
+  const appStore = useAppStore();
   const startRef = useRef<TPoint | null>(null);
   const armedRef = useRef<TArmedMedia | null>(null);
   const queueRef = useRef<File[]>([]);
@@ -63,7 +63,7 @@ export const useDrawMediaTool = (
   const handlePointerDown = (canvas: HTMLCanvasElement, event: PointerEvent): void => {
     if (event.button === MouseButton.primary && armedRef.current) {
       dispatch(setSelection([]));
-      startRef.current = screenToWorld(getPointerPosition(canvas, event), viewport);
+      startRef.current = screenToWorld(getPointerPosition(canvas, event), selectViewport(appStore.getState()));
       canvas.setPointerCapture(event.pointerId);
     }
   };
@@ -72,7 +72,7 @@ export const useDrawMediaTool = (
     const armed = armedRef.current;
 
     if (armed && startRef.current) {
-      const current = screenToWorld(getPointerPosition(canvas, event), viewport);
+      const current = screenToWorld(getPointerPosition(canvas, event), selectViewport(appStore.getState()));
       const rect = getAspectRatioLockedRect(startRef.current, current, armed.naturalWidth / armed.naturalHeight);
 
       draftRef.current = { ...rect, src: armed.src, type: NodeType.media };
@@ -83,7 +83,7 @@ export const useDrawMediaTool = (
     const armed = armedRef.current;
 
     if (armed && startRef.current) {
-      const current = screenToWorld(getPointerPosition(canvas, event), viewport);
+      const current = screenToWorld(getPointerPosition(canvas, event), selectViewport(appStore.getState()));
       const isClick =
         Math.abs(current.x - startRef.current.x) < MIN_SHAPE_SIZE && Math.abs(current.y - startRef.current.y) < MIN_SHAPE_SIZE;
       const rect = isClick
@@ -146,5 +146,5 @@ export const useDrawMediaTool = (
         canvas.style.cursor = '';
       };
     }
-  }, [activeTool, canvasRef, dispatch, draftRef, name, tool, viewport]);
+  }, [activeTool, appStore, canvasRef, dispatch, draftRef, name, tool]);
 };
