@@ -4,6 +4,7 @@ import { RefObject, useEffect } from 'react';
 import FRAGMENT_SHADER_SOURCE from 'constant/webgl/fragmentShaderSource';
 import IMAGE_FRAGMENT_SHADER_SOURCE from 'constant/webgl/imageFragmentShaderSource';
 import IMAGE_VERTEX_SHADER_SOURCE from 'constant/webgl/imageVertexShaderSource';
+import MSDF_FRAGMENT_SHADER_SOURCE from 'constant/webgl/msdfFragmentShaderSource';
 import VERTEX_SHADER_SOURCE from 'constant/webgl/vertexShaderSource';
 import { WEBGL_CONTEXT_ATTRIBUTES, WEBGL_CONTEXT_ID } from '../../constants';
 
@@ -29,18 +30,28 @@ export const useCanvasRenderLoop = (
     const buffer = gl && gl.createBuffer();
     const imageProgram = gl && createProgram(gl, IMAGE_VERTEX_SHADER_SOURCE, IMAGE_FRAGMENT_SHADER_SOURCE);
     const imageBuffer = gl && gl.createBuffer();
+    const msdfProgram = gl && createProgram(gl, IMAGE_VERTEX_SHADER_SOURCE, MSDF_FRAGMENT_SHADER_SOURCE);
+    const msdfBuffer = gl && gl.createBuffer();
 
-    if (canvas && gl && program && buffer && imageProgram && imageBuffer) {
+    if (canvas && gl && program && buffer && imageProgram && imageBuffer && msdfProgram && msdfBuffer) {
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-      const imageContext: TImageRenderContext = { buffer: imageBuffer, cache: new Map(), program: imageProgram, textCache: new Map() };
+      const imageContext: TImageRenderContext = {
+        buffer: imageBuffer,
+        cache: new Map(),
+        msdfBuffer,
+        msdfProgram,
+        program: imageProgram,
+        textGeometryCache: new Map(),
+      };
       const stopRenderLoop = startRenderLoop(gl, program, buffer, imageContext, canvas, draftRef, marqueeRef, hoverRef);
 
       return (): void => {
         stopRenderLoop();
         gl.deleteBuffer(buffer);
         gl.deleteBuffer(imageBuffer);
+        gl.deleteBuffer(msdfBuffer);
       };
     }
   }, [canvasRef, draftRef, marqueeRef, hoverRef]);

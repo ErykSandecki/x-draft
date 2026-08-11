@@ -1,6 +1,8 @@
 export type TImageRenderContext = {
   buffer: WebGLBuffer;
   cache: Map<string, WebGLTexture>;
+  msdfBuffer: WebGLBuffer;
+  msdfProgram: WebGLProgram;
   program: WebGLProgram;
-  textCache: Map<string, WebGLTexture>;
+  textGeometryCache: Map<string, Float32Array>;
 };

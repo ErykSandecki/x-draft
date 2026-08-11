@@ -1,4 +1,4 @@
-export const wrapText = (context: CanvasRenderingContext2D, content: string, maxWidth: number): string[] => {
+export const wrapText = (measureWidth: (text: string) => number, content: string, maxWidth: number): string[] => {
   const lines: string[] = [];
 
   content.split('\n').forEach((sourceLine) => {
@@ -7,7 +7,7 @@ export const wrapText = (context: CanvasRenderingContext2D, content: string, max
     sourceLine.split(' ').forEach((word) => {
       const candidate = currentLine ? `${currentLine} ${word}` : word;
 
-      if (currentLine && context.measureText(candidate).width > maxWidth) {
+      if (currentLine && measureWidth(candidate) > maxWidth) {
         lines.push(currentLine);
         currentLine = word;
       } else {

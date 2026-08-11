@@ -1,5 +1,6 @@
 // others
 import { LINE_RENDER_STROKE_WIDTH } from 'constant/canvas';
+import { MSDF_ATLAS_JSON } from 'constant/webgl/msdfAtlas';
 
 // types
 import { NodeType } from 'types/design/enums';
@@ -10,10 +11,11 @@ import { TSceneNode, TViewport } from 'types/design/types';
 import { drawEllipse } from 'utils/canvas/drawEllipse';
 import { drawImage } from 'utils/canvas/drawImage';
 import { drawLine } from 'utils/canvas/drawLine';
+import { drawMsdfText } from 'utils/canvas/drawMsdfText';
 import { drawPolygon } from 'utils/canvas/drawPolygon';
 import { drawRect } from 'utils/canvas/drawRect';
 import { drawStar } from 'utils/canvas/drawStar';
-import { getOrCreateTextTexture } from 'utils/canvas/getOrCreateTextTexture';
+import { getMsdfAtlasTexture } from 'utils/canvas/getMsdfAtlasTexture';
 import { getOrLoadTexture } from 'utils/canvas/getOrLoadTexture';
 
 export const drawSceneNodes = (
@@ -53,11 +55,13 @@ export const drawSceneNodes = (
         drawLine(gl, program, buffer, node, node.stroke, LINE_RENDER_STROKE_WIDTH, canvasWidth, canvasHeight, viewport);
         break;
       case NodeType.text:
-        drawImage(
+        drawMsdfText(
           gl,
-          imageContext.program,
-          imageContext.buffer,
-          getOrCreateTextTexture(gl, imageContext.textCache, node),
+          imageContext.msdfProgram,
+          imageContext.msdfBuffer,
+          getMsdfAtlasTexture(gl, imageContext.cache),
+          MSDF_ATLAS_JSON,
+          imageContext.textGeometryCache,
           node,
           canvasWidth,
           canvasHeight,

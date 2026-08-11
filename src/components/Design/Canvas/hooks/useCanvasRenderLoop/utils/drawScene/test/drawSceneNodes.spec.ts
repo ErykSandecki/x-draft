@@ -41,8 +41,10 @@ const IDENTITY_VIEWPORT = { x: 0, y: 0, zoom: 1 };
 const IMAGE_CONTEXT: TImageRenderContext = {
   buffer: {} as WebGLBuffer,
   cache: new Map(),
+  msdfBuffer: {} as WebGLBuffer,
+  msdfProgram: {} as WebGLProgram,
   program: {} as WebGLProgram,
-  textCache: new Map(),
+  textGeometryCache: new Map(),
 };
 
 const buildNode = (overrides: Partial<Exclude<TBoxSceneNode, TPolygonNode | TStarNode | TMediaNode | TTextNode>>): TSceneNode => ({
@@ -180,7 +182,7 @@ describe('drawSceneNodes', () => {
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
   });
 
-  it('should draw a textured quad for a text node', () => {
+  it('should draw a batched glyph quad for a text node', () => {
     // mock
     const gl = createGlMock();
     const program = {} as WebGLProgram;
@@ -196,7 +198,7 @@ describe('drawSceneNodes', () => {
       parentId: null,
       rotation: 0,
       type: NodeType.text,
-      width: 10,
+      width: 100,
       x: 0,
       y: 0,
     };
@@ -204,8 +206,8 @@ describe('drawSceneNodes', () => {
     // before
     drawSceneNodes(gl, program, buffer, IMAGE_CONTEXT, [text], 100, 100, IDENTITY_VIEWPORT);
 
-    // result
-    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
+    // result — "hello" is 5 known glyphs in the real MSDF atlas, 6 vertices each
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 30);
   });
 
   it('should draw a thin segment for a line node instead of a filled rect', () => {
