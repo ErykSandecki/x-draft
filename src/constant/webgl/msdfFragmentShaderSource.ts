@@ -16,6 +16,8 @@ void main() {
   float signedDist = median(msdf.r, msdf.g, msdf.b) - 0.5;
   float screenPxDistance = u_screenPxRange * signedDist;
   float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
+  float contrast = mix(1.8, 1.0, clamp(u_screenPxRange / 2.0, 0.0, 1.0));
+  opacity = clamp((opacity - 0.5) * contrast + 0.5, 0.0, 1.0);
 
   outColor = vec4(u_color.rgb, u_color.a * opacity);
 }

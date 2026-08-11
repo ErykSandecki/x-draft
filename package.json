@@ -13,7 +13,7 @@
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
-    "generate:font-atlas": "msdf-bmfont -f json -t msdf -s 42 -r 4 -p 2 -i src/assets/fonts/inter/inter-msdf.charset.txt -o src/assets/fonts/inter/inter-msdf src/assets/fonts/inter/source/Inter-Regular.ttf && mv src/assets/fonts/inter/Inter-Regular.json src/assets/fonts/inter/inter-msdf.json",
+    "generate:font-atlas": "msdf-bmfont -f json -t msdf -s 64 -r 6 -p 2 -i src/assets/fonts/inter/inter-msdf.charset.txt -o src/assets/fonts/inter/inter-msdf src/assets/fonts/inter/source/Inter-Regular.ttf && mv src/assets/fonts/inter/Inter-Regular.json src/assets/fonts/inter/inter-msdf.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "stylelint:check": "stylelint \"**/*.scss\"",

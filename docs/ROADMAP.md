@@ -358,6 +358,29 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       zoomie, nie trzeba jej przeliczać przy zmianie przybliżenia. Znaki spoza wypalonego zestawu
       (obecnie: ASCII + polskie znaki diakrytyczne + podstawowa typografia) są pomijane po cichu z
       fallbackowym odstępem — bez crasha, bez zastępczego "boxa"
+- [x] **dostrojenie wagi/ostrości atlasu** — po zgłoszeniu, że tekst po commicie wygląda odrobinę
+      grubiej niż w `TextEditOverlay` podczas edycji: sprawdzone przez `fonttools`, że mój
+      wyekstrahowany statyczny TTF (`varLib.instancer`, `wght=400 opsz=14` — to akurat też domyślne
+      wartości osi tego fonta) jest **bajt w bajt identyczny** z plikiem serwowanym przez
+      `@fontsource/inter` (ta sama wersja `4.001;git-66647c0bb`, identyczne advance widths) — różnica
+      nie brała się więc ze złego fonta, tylko z za niskiej rozdzielczości pieczenia atlasu
+      (`fontSize=42` dawał grubszą rekonstrukcję krawędzi w shaderze niż oryginalny kontur). Podbite
+      do `fontSize=64, distanceRange=6` (`generate:font-atlas`) — zmierzone pokrycie "atramentem"
+      (piksele tekstu) spadło z wyraźnie widocznej różnicy do -0.63%, czyli szumu pomiaru
+- [x] **mipmapy dla tekstury atlasu** — `getMsdfAtlasTexture.ts` dostał **własny loader** (przestał
+      delegować do współdzielonego `getOrLoadTexture.ts`, używanego też przez Media) z
+      `gl.generateMipmap` wywoływanym po załadowaniu prawdziwego obrazu — bo minifikacja pola
+      odległości bez mipmap psuje wynik progu mediany dokładniej/bardziej widocznie niż zwykłe
+      zdjęcie (dla Media to nie był problem, dla MSDF tak)
+- [x] **kontrast/gamma-correction dla drobnego tekstu** — przy oddalaniu (`u_screenPxRange < ~2px`)
+      `msdfFragmentShaderSource.ts` rozciąga `opacity` wokół progu krawędzi (0.5), naśladując to co
+      przeglądarki robią dla czytelności małego tekstu (gamma-corrected antialiasing zamiast
+      liniowego blendowania). Pomaga w realistycznym zakresie oddalenia (np. żeby zobaczyć więcej
+      planszy). **Świadomie nie próbuje** naprawić skrajnego przypadku (wiele całych liter + odstępy
+      między nimi skompresowane w kilka pikseli ekranu, ~12×+ pomniejszenia) — sprawdzone liczbowo
+      i wizualnie, że przy takim oddaleniu poprawka nic nie zmienia, bo to już nie kwestia krzywej
+      kontrastu jednego fragmentu, tylko fizycznego braku rozdzielczości do pokazania tylu osobnych
+      liter naraz — realna Figma ma dokładnie ten sam efekt przy takim oddaleniu, to nie jest bug
 
 ## Etap 8 — Panele boczne
 
