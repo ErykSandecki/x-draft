@@ -13,6 +13,7 @@ export const TOOL_ICON: Record<ToolName, keyof typeof Icons> = {
   [ToolName.default]: 'MoveTool',
   [ToolName.ellipse]: 'EllipseTool',
   [ToolName.frame]: 'FrameTool',
+  [ToolName.hand]: 'HandTool',
   [ToolName.line]: 'LineTool',
   [ToolName.media]: 'FileTool',
   [ToolName.polygon]: 'PolygonTool',
@@ -26,6 +27,7 @@ export const TOOL_LABEL: Record<ToolName, string> = {
   [ToolName.default]: `${translationNameSpace}.tool.default`,
   [ToolName.ellipse]: `${translationNameSpace}.tool.ellipse`,
   [ToolName.frame]: `${translationNameSpace}.tool.frame`,
+  [ToolName.hand]: `${translationNameSpace}.tool.hand`,
   [ToolName.line]: `${translationNameSpace}.tool.line`,
   [ToolName.media]: `${translationNameSpace}.tool.media`,
   [ToolName.polygon]: `${translationNameSpace}.tool.polygon`,
@@ -34,6 +36,7 @@ export const TOOL_LABEL: Record<ToolName, string> = {
 };
 
 export const TOOL_GROUP_ITEMS: Partial<Record<ToolName, ToolName[]>> = {
+  [ToolName.default]: [ToolName.default, ToolName.hand],
   [ToolName.rectangle]: [ToolName.rectangle, ToolName.line, ToolName.ellipse, ToolName.polygon, ToolName.star, ToolName.media],
 };
 

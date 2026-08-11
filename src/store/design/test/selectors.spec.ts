@@ -1,6 +1,7 @@
 // selectors
 import {
   selectActiveTool,
+  selectLastMouseTool,
   selectLastShapeTool,
   selectNodes,
   selectOrderedNodes,
@@ -29,6 +30,7 @@ const node: TSceneNode = {
 const state = {
   design: {
     activeTool: ToolName.frame,
+    lastMouseTool: ToolName.hand,
     lastShapeTool: ToolName.ellipse,
     nodes: { [node.id]: node },
     rootOrder: [node.id],
@@ -46,6 +48,11 @@ describe('design selectors', () => {
   it('should select the last shape tool', () => {
     // result
     expect(selectLastShapeTool(state)).toBe(ToolName.ellipse);
+  });
+
+  it('should select the last mouse tool', () => {
+    // result
+    expect(selectLastMouseTool(state)).toBe(ToolName.hand);
   });
 
   it('should select the nodes record', () => {

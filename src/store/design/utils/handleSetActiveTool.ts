@@ -1,5 +1,5 @@
 // others
-import { SHAPE_TOOLS } from '../constants';
+import { MOUSE_TOOLS, SHAPE_TOOLS } from '../constants';
 
 // types
 import { TDesignState } from '../types';
@@ -10,5 +10,9 @@ export const handleSetActiveTool = (state: TDesignState, tool: ToolName): void =
 
   if (SHAPE_TOOLS.includes(tool)) {
     state.lastShapeTool = tool;
+  }
+
+  if (MOUSE_TOOLS.includes(tool)) {
+    state.lastMouseTool = tool;
   }
 };

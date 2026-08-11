@@ -7,6 +7,7 @@ export enum KeyboardKeys {
   d = 'KeyD',
   escape = 'Escape',
   f = 'KeyF',
+  h = 'KeyH',
   k = 'KeyK',
   l = 'KeyL',
   o = 'KeyO',

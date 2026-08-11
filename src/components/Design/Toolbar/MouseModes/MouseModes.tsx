@@ -6,10 +6,10 @@ import ToolDropdown from './ToolDropdown/ToolDropdown';
 import { Icon } from 'shared';
 
 // others
-import { TOOL_GROUP_ITEMS, TOOL_ICON, TOOL_ICON_SIZE, TOOLBAR_ORDER, TOOLS_WITH_DROPDOWN } from '../constants';
+import { TOOL_ICON, TOOL_ICON_SIZE, TOOLBAR_ORDER, TOOLS_WITH_DROPDOWN } from '../constants';
 
 // store
-import { selectActiveTool, selectLastShapeTool } from 'store/design/selectors';
+import { selectActiveTool, selectLastMouseTool, selectLastShapeTool } from 'store/design/selectors';
 import { setActiveTool } from 'store/design/slice';
 import { useAppDispatch, useAppSelector } from 'store';
 
@@ -19,8 +19,12 @@ import styles from './mouse-modes.module.scss';
 // types
 import { ToolName } from 'types/design/enums';
 
+// utils
+import { getGroupDisplayedTool } from '../utils/getGroupDisplayedTool';
+
 const MouseModes: FC = () => {
   const activeTool = useAppSelector(selectActiveTool);
+  const lastMouseTool = useAppSelector(selectLastMouseTool);
   const lastShapeTool = useAppSelector(selectLastShapeTool);
   const dispatch = useAppDispatch();
 
@@ -32,7 +36,7 @@ const MouseModes: FC = () => {
       value={activeTool}
     >
       {TOOLBAR_ORDER.map((name) => {
-        const displayedTool = TOOL_GROUP_ITEMS[name] ? lastShapeTool : name;
+        const displayedTool = getGroupDisplayedTool(name, lastShapeTool, lastMouseTool);
         const isActive = displayedTool === activeTool;
 
         return (

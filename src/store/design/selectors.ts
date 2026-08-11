@@ -7,6 +7,8 @@ import { TSceneNode, TViewport } from 'types/design/types';
 
 export const selectActiveTool = (state: RootState): ToolName => state.design.activeTool;
 
+export const selectLastMouseTool = (state: RootState): ToolName => state.design.lastMouseTool;
+
 export const selectLastShapeTool = (state: RootState): ToolName => state.design.lastShapeTool;
 
 export const selectNodes = (state: RootState): Record<string, TSceneNode> => state.design.nodes;

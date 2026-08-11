@@ -22,6 +22,7 @@ describe('design slice', () => {
     // result
     expect(slice(undefined, { type: 'unknown' })).toEqual({
       activeTool: ToolName.default,
+      lastMouseTool: ToolName.default,
       lastShapeTool: ToolName.rectangle,
       nodes: {},
       rootOrder: [],
@@ -55,6 +56,25 @@ describe('design slice', () => {
 
     // result
     expect(state.lastShapeTool).toBe(ToolName.ellipse);
+  });
+
+  it('should remember the last mouse tool when switching to the hand tool', () => {
+    // before
+    const state = slice(undefined, setActiveTool(ToolName.hand));
+
+    // result
+    expect(state.lastMouseTool).toBe(ToolName.hand);
+  });
+
+  it('should keep the last mouse tool when switching to a non-mouse tool', () => {
+    // before
+    const withHand = slice(undefined, setActiveTool(ToolName.hand));
+
+    // action
+    const state = slice(withHand, setActiveTool(ToolName.frame));
+
+    // result
+    expect(state.lastMouseTool).toBe(ToolName.hand);
   });
 
   it('should add a node with a generated id', () => {

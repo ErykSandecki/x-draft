@@ -35,6 +35,20 @@ describe('useToolbarShortcuts behaviors', () => {
     expect(store.getState().design.activeTool).toBe(ToolName.frame);
   });
 
+  it('should switch to the hand tool on "H"', () => {
+    // mock
+    const store = createTestStore();
+
+    // before
+    renderShortcuts(store);
+
+    // action
+    fireEvent.keyDown(window, { code: 'KeyH' });
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.hand);
+  });
+
   it('should switch to the rectangle tool on "R"', () => {
     // mock
     const store = createTestStore();

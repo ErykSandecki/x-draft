@@ -10,6 +10,7 @@ export const KEYBOARD_SHORTCUTS: TKeyboardShortcuts = {
   [ToolName.default]: ['V'],
   [ToolName.ellipse]: ['O'],
   [ToolName.frame]: ['F'],
+  [ToolName.hand]: ['H'],
   [ToolName.line]: ['L'],
   [ToolName.media]: [CONTROL, SHIFT, 'K'],
   [ToolName.polygon]: [],

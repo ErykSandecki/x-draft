@@ -44,6 +44,13 @@
     top: 0;
     width: 100%;
 
+    &--hand {
+      cursor:
+        /* stylelint-disable-next-line value-no-vendor-prefix, unit-allowed-list */
+        -webkit-image-set(url('../../../assets/icons/cursors/hand.png') 8x) 16 16,
+        auto;
+    }
+
     &--pressing {
       cursor:
         /* stylelint-disable-next-line value-no-vendor-prefix, unit-allowed-list */

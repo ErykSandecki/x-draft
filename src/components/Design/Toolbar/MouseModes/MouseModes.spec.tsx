@@ -71,4 +71,19 @@ describe('MouseModes behaviors', () => {
     // result
     expect(screen.getByRole('radio', { name: ToolName.ellipse })).not.toBeChecked();
   });
+
+  it('should show the last selected mouse tool on the shared default/hand button', () => {
+    // before
+    render(
+      <Provider store={store}>
+        <MouseModes />
+      </Provider>,
+    );
+
+    // action
+    act(() => store.dispatch(setActiveTool(ToolName.hand)));
+
+    // result
+    expect(screen.getByRole('radio', { name: ToolName.hand })).toBeChecked();
+  });
 });

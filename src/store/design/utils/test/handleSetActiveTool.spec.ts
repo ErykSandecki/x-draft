@@ -7,6 +7,7 @@ import { handleSetActiveTool } from '../handleSetActiveTool';
 
 const buildState = (overrides: Partial<TDesignState> = {}): TDesignState => ({
   activeTool: ToolName.default,
+  lastMouseTool: ToolName.default,
   lastShapeTool: ToolName.rectangle,
   nodes: {},
   rootOrder: [],
@@ -69,5 +70,27 @@ describe('handleSetActiveTool', () => {
 
     // result
     expect(state.lastShapeTool).toBe(ToolName.ellipse);
+  });
+
+  it('should remember the last mouse tool when switching to the hand tool', () => {
+    // mock
+    const state = buildState();
+
+    // before
+    handleSetActiveTool(state, ToolName.hand);
+
+    // result
+    expect(state.lastMouseTool).toBe(ToolName.hand);
+  });
+
+  it('should keep the last mouse tool when switching to a non-mouse tool', () => {
+    // mock
+    const state = buildState({ lastMouseTool: ToolName.hand });
+
+    // before
+    handleSetActiveTool(state, ToolName.comment);
+
+    // result
+    expect(state.lastMouseTool).toBe(ToolName.hand);
   });
 });

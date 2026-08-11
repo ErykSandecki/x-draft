@@ -209,6 +209,30 @@ shifts the hover target to the node about to be pressed. Fix: explicitly `pointe
 same point _before_ capturing the "before" screenshot too, so hover state matches in both
 captures and the comparison isolates the thing actually under test.
 
+## Hand tool (pan-only tool)
+
+Mirrors Figma's Hand tool: shares its toolbar slot with the default (Move) tool
+(`TOOL_GROUP_ITEMS[default] = [default, hand]`, `lastMouseTool` remembers which of the two was
+picked last, same mechanism as `lastShapeTool` for the Rectangle group), and has its own keyboard
+shortcut ("H", `useToolbarShortcuts.ts`). While active, holding the primary (left) mouse button and
+dragging pans the viewport exactly like the existing middle-mouse-button drag-pan
+(`useCanvasDragPan`) — reusing the same `applyDragPan` math — but every other tool's own
+`activeTool === <its own ToolName>` guard means no other tool's pointer listeners are attached while
+hand is active, so nothing on the canvas can be selected or moved. Cursor is `hand.png` while idle
+and swaps to the existing `pressing.png` class while actively dragging (`useHandTool.ts`).
+
+| #   | Scenario                                                                                                                                                                                              | Unit |          E2E           |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--: | :--------------------: |
+| 33  | Pressing "H" activates the Hand tool, then dragging with the primary button pans the viewport (a frame remains selectable at its new on-screen position afterwards, same proof shape as scenario #14) |  ✅  | ✅ `hand-tool.spec.ts` |
+| 34  | Dragging directly over an existing frame with the Hand tool pans the canvas without selecting or moving that frame                                                                                    |  ✅  | ✅ `hand-tool.spec.ts` |
+
+Both are real browser + pointer-event-ordering claims (`event.button` read inside a live
+`PointerEvent`, `setPointerCapture` during the drag), the same category of "worth proving against a
+real browser" as scenarios #14/#15 and the marquee Control test above — `useHandTool.spec.tsx`
+already asserts the `setViewport` dispatch and cursor-class toggling precisely in jsdom, but only a
+real browser proves a `pointerdown` on top of an actual rendered frame doesn't leak into the
+selection tool.
+
 ## Why so few scenarios get e2e coverage
 
 Most of the branches above are two-line Redux-state assertions in the unit suite — an e2e

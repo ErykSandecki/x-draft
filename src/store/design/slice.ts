@@ -1,7 +1,7 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 
 // others
-import { DEFAULT_SHAPE_TOOL, DEFAULT_TOOL, DEFAULT_VIEWPORT } from './constants';
+import { DEFAULT_MOUSE_TOOL, DEFAULT_SHAPE_TOOL, DEFAULT_TOOL, DEFAULT_VIEWPORT } from './constants';
 
 // types
 import { TDesignState } from './types';
@@ -15,6 +15,7 @@ import { handleUpdateNode } from './utils/handleUpdateNode';
 
 const initialState: TDesignState = {
   activeTool: DEFAULT_TOOL,
+  lastMouseTool: DEFAULT_MOUSE_TOOL,
   lastShapeTool: DEFAULT_SHAPE_TOOL,
   nodes: {},
   rootOrder: [],

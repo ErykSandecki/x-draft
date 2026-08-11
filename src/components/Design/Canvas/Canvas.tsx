@@ -11,6 +11,7 @@ import { useDrawMediaTool } from './hooks/useDrawMediaTool/useDrawMediaTool';
 import { useDrawPolygonTool } from './hooks/useDrawPolygonTool/useDrawPolygonTool';
 import { useDrawShapeTool } from './hooks/useDrawShapeTool/useDrawShapeTool';
 import { useDrawStarTool } from './hooks/useDrawStarTool/useDrawStarTool';
+import { useHandTool } from './hooks/useHandTool/useHandTool';
 import { useHoverHighlight } from './hooks/useHoverHighlight/useHoverHighlight';
 import { useSelectionTool } from './hooks/useSelectionTool/useSelectionTool';
 
@@ -41,6 +42,7 @@ const Canvas: FC = () => {
   useCanvasResize(canvasRef);
   useCanvasPanZoom(canvasRef);
   useCanvasDragPan(canvasRef);
+  useHandTool(canvasRef);
   useDrawShapeTool(canvasRef, draftRef, FRAME_TOOL_SETTINGS);
   useDrawShapeTool(canvasRef, draftRef, RECTANGLE_TOOL_SETTINGS);
   useDrawShapeTool(canvasRef, draftRef, ELLIPSE_TOOL_SETTINGS);

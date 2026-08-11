@@ -13,6 +13,7 @@ export enum ToolName {
   default = 'default',
   ellipse = 'ellipse',
   frame = 'frame',
+  hand = 'hand',
   line = 'line',
   media = 'media',
   polygon = 'polygon',

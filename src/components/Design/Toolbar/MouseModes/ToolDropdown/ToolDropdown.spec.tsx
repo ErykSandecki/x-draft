@@ -83,4 +83,24 @@ describe('ToolDropdown behaviors', () => {
     expect(store.getState().design.activeTool).toBe(ToolName.ellipse);
     expect(store.getState().design.lastShapeTool).toBe(ToolName.ellipse);
   });
+
+  it('should list every tool in the default group and select the last mouse tool used', async () => {
+    // mock
+    const user = userEvent.setup();
+
+    // before
+    render(
+      <Provider store={store}>
+        <ToolDropdown tool={ToolName.default} />
+      </Provider>,
+    );
+
+    // action
+    await user.click(screen.getByRole('button', { name: 'default options' }));
+    await user.click(screen.getByText('Hand tool'));
+
+    // result
+    expect(store.getState().design.activeTool).toBe(ToolName.hand);
+    expect(store.getState().design.lastMouseTool).toBe(ToolName.hand);
+  });
 });

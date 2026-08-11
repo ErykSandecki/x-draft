@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export type TToolName = 'comment' | 'default' | 'ellipse' | 'frame' | 'line' | 'media' | 'polygon' | 'rectangle' | 'star';
+export type TToolName = 'comment' | 'default' | 'ellipse' | 'frame' | 'hand' | 'line' | 'media' | 'polygon' | 'rectangle' | 'star';
 
 export class DesignPage {
   readonly page: Page;
