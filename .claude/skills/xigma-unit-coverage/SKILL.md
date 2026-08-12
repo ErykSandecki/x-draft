@@ -1,6 +1,6 @@
 ---
 name: xigma-unit-coverage
-description: xigma enforces 100% unit test coverage (branches/functions/lines/statements) via vite.config.ts's coverage.thresholds. Load before saying a change is "done" — run `npm run test:coverage` and add a targeted test for any line the report flags, rather than only running the plain `vitest run` suite.
+description: xigma enforces 100% unit test coverage (branches/functions/lines/statements) via vite.config.ts's coverage.thresholds. Load before saying a change is "done" — run `npm run test:coverage` and add a targeted test for any line the report flags, rather than only running the plain `vitest run` suite. Finish every change with `npm run prettier:write`, not just coverage-driven ones.
 ---
 
 # xigma Unit Coverage — 100% Enforced
@@ -36,6 +36,9 @@ everything else, including every hook/util/component you touch, is held to the s
    path," not a duplicate of an existing test.
 4. Re-run `npm run test:coverage` until clean, then run the plain `vitest run` suite once more (the
    coverage instrumentation can occasionally mask a timing issue) plus `tsc -b`/`eslint`.
+5. Always finish by running `npm run prettier:write` — every change, regardless of whether coverage
+   was actually the thing that needed fixing. This is the last step, after tests/tsc are already
+   green, not a substitute for them.
 
 ## Worked example: a gesture's *release* path, not just its *start*
 
