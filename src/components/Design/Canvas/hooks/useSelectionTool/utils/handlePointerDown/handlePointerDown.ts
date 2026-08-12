@@ -19,6 +19,7 @@ import { getLineEndpointAtPoint } from '../../../../utils/getLineEndpointAtPoint
 import { getNodeAtPoint } from '../../../../utils/getNodeAtPoint';
 import { getPointerPosition } from '../../../../utils/getPointerPosition';
 import { isPointInGroupBounds } from '../isPointInGroupBounds';
+import { isPointInSelectedTextBounds } from '../isPointInSelectedTextBounds';
 import { screenToWorld } from '../../../../utils/screenToWorld';
 import { toggleSelection } from '../toggleSelection';
 
@@ -48,6 +49,9 @@ export const handlePointerDown = (
         break;
       case Boolean(hit):
         armHitDrag(canvas, event, dispatch, dragStateRef, hit!, currentSelection, selectedNodes, point);
+        break;
+      case !event.shiftKey && isPointInSelectedTextBounds(point, selectedNodes):
+        armHitDrag(canvas, event, dispatch, dragStateRef, selectedNodes[0], currentSelection, selectedNodes, point);
         break;
       case !event.shiftKey && isPointInGroupBounds(point, selectedNodes):
         armGroupBoundsDrag(canvas, event, dragStateRef, currentSelection, point);

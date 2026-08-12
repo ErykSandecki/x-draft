@@ -131,6 +131,29 @@ describe('getNodeAtPoint', () => {
     expect(getNodeAtPoint({ x: 5, y: 5 }, [line], IDENTITY_VIEWPORT)).toEqual(line);
   });
 
+  it('should use per-line text hit-testing for text nodes, not the full fixed box', () => {
+    // mock
+    const node: TSceneNode = {
+      content: 'Hi',
+      fill: '#ffffff',
+      fontFamily: 'Inter',
+      fontSize: 14,
+      height: 500,
+      id: 'a',
+      name: 'Text',
+      parentId: null,
+      rotation: 0,
+      type: NodeType.text,
+      width: 500,
+      x: 0,
+      y: 0,
+    };
+
+    // result — the box is 500x500 but "Hi" only occupies a small area near the top-left
+    expect(getNodeAtPoint({ x: 300, y: 300 }, [node], IDENTITY_VIEWPORT)).toBeNull();
+    expect(getNodeAtPoint({ x: 2, y: 2 }, [node], IDENTITY_VIEWPORT)).toEqual(node);
+  });
+
   it('should widen the line hit-test tolerance in world units as the viewport zooms out', () => {
     // mock
     const line: TSceneNode = { id: 'a', name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1: 0, x2: 10, y1: 0, y2: 0 };

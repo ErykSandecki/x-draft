@@ -48,6 +48,29 @@ const addFrameNode = (x: number, y: number, size = 20): string => {
   return rootOrder[rootOrder.length - 1];
 };
 
+const addTextNode = (x: number, y: number, size = 500): string => {
+  store.dispatch(
+    addNode({
+      content: 'Hi',
+      fill: '#ffffff',
+      fontFamily: 'Inter',
+      fontSize: 14,
+      height: size,
+      name: 'Text',
+      parentId: null,
+      rotation: 0,
+      type: NodeType.text,
+      width: size,
+      x,
+      y,
+    }),
+  );
+
+  const { rootOrder } = store.getState().design;
+
+  return rootOrder[rootOrder.length - 1];
+};
+
 const addLineNode = (x1: number, y1: number, x2: number, y2: number): string => {
   store.dispatch(addNode({ name: 'Line', parentId: null, stroke: '#000000', type: NodeType.line, x1, x2, y1, y2 }));
 
@@ -148,6 +171,41 @@ describe('handlePointerDown', () => {
     expect(dragStateRef.current).toBeNull();
     expect(marqueeStartRef.current).not.toBeNull();
     expect(canvas.setPointerCapture).toHaveBeenCalledWith(1);
+  });
+
+  it('should allow dragging from anywhere in a selected text node fixed box, even past its rendered content', () => {
+    // mock
+    const idA = addTextNode(1000, 1000);
+
+    store.dispatch(setSelection([idA]));
+
+    const canvas = createCanvas();
+    const dragStateRef = createDragStateRef();
+    const marqueeStartRef = createMarqueeStartRef();
+
+    // before — click far from the actual "Hi" glyphs but still inside the 500x500 box
+    handlePointerDown(canvas, pointerEvent(1300, 1300), store.dispatch, dragStateRef, createEndpointDragRef(), marqueeStartRef);
+
+    // result
+    expect(dragStateRef.current).toMatchObject({ pendingClickAction: null });
+    expect(marqueeStartRef.current).toBeNull();
+  });
+
+  it('should not select or drag an unselected text node when clicking inside its box but past its rendered content', () => {
+    // mock
+    const idA = addTextNode(1500, 1500);
+
+    const canvas = createCanvas();
+    const dragStateRef = createDragStateRef();
+    const marqueeStartRef = createMarqueeStartRef();
+
+    // before
+    handlePointerDown(canvas, pointerEvent(1800, 1800), store.dispatch, dragStateRef, createEndpointDragRef(), marqueeStartRef);
+
+    // result — falls through to marquee instead of grabbing the text
+    expect(store.getState().design.selectedIds).not.toContain(idA);
+    expect(dragStateRef.current).toBeNull();
+    expect(marqueeStartRef.current).not.toBeNull();
   });
 
   it('should delegate to armEndpointDrag when a selected line endpoint is hit, instead of moving the whole shape', () => {
