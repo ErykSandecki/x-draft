@@ -46,6 +46,25 @@ describe('TextEditOverlay behaviors', () => {
     expect(element).toHaveFocus();
   });
 
+  it('should dispatch the live typed content while editing', () => {
+    // mock
+    const store = createTestStore();
+
+    store.dispatch(startTextEdit({ height: 20, width: 100, x: 10, y: 10 }));
+
+    const { container } = renderWithStore(store);
+    const element = container.querySelector('[contenteditable="true"]') as HTMLDivElement;
+
+    // jsdom doesn't implement innerText, simulate the typed content directly
+    Object.defineProperty(element, 'innerText', { configurable: true, value: 'hi' });
+
+    // action
+    fireEvent.input(element);
+
+    // result
+    expect(store.getState().design.editingTextContent).toBe('hi');
+  });
+
   it('should stop editing when the editable box loses focus', () => {
     // mock
     const store = createTestStore();

@@ -1,5 +1,12 @@
 // store
-import { selectNodes, selectOrderedNodes, selectSelectedNodes, selectViewport } from 'store/design/selectors';
+import {
+  selectEditingTextBox,
+  selectEditingTextContent,
+  selectNodes,
+  selectOrderedNodes,
+  selectSelectedNodes,
+  selectViewport,
+} from 'store/design/selectors';
 import { store } from 'store';
 
 // types
@@ -8,6 +15,7 @@ import { TDraftEntity } from 'types/design/types';
 import { TImageRenderContext } from '../../types';
 
 // utils
+import { drawEditingText } from './drawEditingText';
 import { drawFrame } from './drawFrame';
 import { drawHoverOutline } from './drawHoverOutline';
 import { drawMarquee } from 'utils/canvas/drawMarquee';
@@ -34,5 +42,6 @@ export const drawScene = (
   drawHoverOutline(gl, program, buffer, hoveredNodeId ? selectNodes(state)[hoveredNodeId] : null, clientWidth, clientHeight, viewport);
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
   drawFrame(gl, program, buffer, imageContext, draftShape, clientWidth, clientHeight, viewport);
+  drawEditingText(gl, imageContext, selectEditingTextBox(state), selectEditingTextContent(state), clientWidth, clientHeight, viewport);
   drawMarquee(gl, program, buffer, marqueeRect, clientWidth, clientHeight, viewport);
 };

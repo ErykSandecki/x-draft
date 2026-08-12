@@ -1,5 +1,5 @@
 // store
-import slice, { addNode, setActiveTool, setSelection, setViewport, startTextEdit, stopTextEdit, updateNode } from '../slice';
+import slice, { addNode, setActiveTool, setSelection, setViewport, startTextEdit, stopTextEdit, updateNode, updateTextEditContent } from '../slice';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';
@@ -23,6 +23,7 @@ describe('design slice', () => {
     expect(slice(undefined, { type: 'unknown' })).toEqual({
       activeTool: ToolName.default,
       editingTextBox: null,
+      editingTextContent: '',
       lastMouseTool: ToolName.default,
       lastShapeTool: ToolName.rectangle,
       nodes: {},
@@ -132,6 +133,18 @@ describe('design slice', () => {
     expect(state.editingTextBox).toEqual({ height: 20, width: 100, x: 10, y: 10 });
   });
 
+  it('should reset the editing content when starting to edit a text box', () => {
+    // before
+    const withContent = slice(undefined, startTextEdit({ height: 20, width: 100, x: 10, y: 10 }));
+    const typed = slice(withContent, updateTextEditContent('hello'));
+
+    // action
+    const state = slice(typed, startTextEdit({ height: 30, width: 200, x: 0, y: 0 }));
+
+    // result
+    expect(state.editingTextContent).toBe('');
+  });
+
   it('should stop editing a text box', () => {
     // before
     const editing = slice(undefined, startTextEdit({ height: 20, width: 100, x: 10, y: 10 }));
@@ -141,5 +154,17 @@ describe('design slice', () => {
 
     // result
     expect(state.editingTextBox).toBeNull();
+    expect(state.editingTextContent).toBe('');
+  });
+
+  it('should update the live text edit content', () => {
+    // before
+    const editing = slice(undefined, startTextEdit({ height: 20, width: 100, x: 10, y: 10 }));
+
+    // action
+    const state = slice(editing, updateTextEditContent('hello'));
+
+    // result
+    expect(state.editingTextContent).toBe('hello');
   });
 });

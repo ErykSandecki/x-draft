@@ -8,6 +8,7 @@ import { handleSetActiveTool } from '../handleSetActiveTool';
 const buildState = (overrides: Partial<TDesignState> = {}): TDesignState => ({
   activeTool: ToolName.default,
   editingTextBox: null,
+  editingTextContent: '',
   lastMouseTool: ToolName.default,
   lastShapeTool: ToolName.rectangle,
   nodes: {},

@@ -25,6 +25,7 @@ describe('handleAddNode', () => {
     const state: TDesignState = {
       activeTool: ToolName.default,
       editingTextBox: null,
+      editingTextContent: '',
       lastMouseTool: ToolName.default,
       lastShapeTool: ToolName.rectangle,
       nodes: {},
@@ -46,6 +47,7 @@ describe('handleAddNode', () => {
     const state: TDesignState = {
       activeTool: ToolName.default,
       editingTextBox: null,
+      editingTextContent: '',
       lastMouseTool: ToolName.default,
       lastShapeTool: ToolName.rectangle,
       nodes: { existing: { ...node, id: 'existing' } },

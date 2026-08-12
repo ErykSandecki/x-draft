@@ -12,11 +12,14 @@ import { TNewSceneNode, TSceneNode, TSceneNodeChanges, TViewport } from 'types/d
 // utils
 import { handleAddNode } from './utils/handleAddNode';
 import { handleSetActiveTool } from './utils/handleSetActiveTool';
+import { handleStartTextEdit } from './utils/handleStartTextEdit';
+import { handleStopTextEdit } from './utils/handleStopTextEdit';
 import { handleUpdateNode } from './utils/handleUpdateNode';
 
 const initialState: TDesignState = {
   activeTool: DEFAULT_TOOL,
   editingTextBox: null,
+  editingTextContent: '',
   lastMouseTool: DEFAULT_MOUSE_TOOL,
   lastShapeTool: DEFAULT_SHAPE_TOOL,
   nodes: {},
@@ -40,16 +43,16 @@ const designSlice = createSlice({
     setViewport: (state, action: PayloadAction<TViewport>) => {
       state.viewport = action.payload;
     },
-    startTextEdit: (state, action: PayloadAction<TEditingTextBox>) => {
-      state.editingTextBox = action.payload;
-    },
-    stopTextEdit: (state) => {
-      state.editingTextBox = null;
-    },
+    startTextEdit: (state, action: PayloadAction<TEditingTextBox>) => handleStartTextEdit(state, action.payload),
+    stopTextEdit: (state) => handleStopTextEdit(state),
     updateNode: (state, action: PayloadAction<{ changes: TSceneNodeChanges; id: string }>) => handleUpdateNode(state, action.payload),
+    updateTextEditContent: (state, action: PayloadAction<string>) => {
+      state.editingTextContent = action.payload;
+    },
   },
 });
 
-export const { addNode, setActiveTool, setSelection, setViewport, startTextEdit, stopTextEdit, updateNode } = designSlice.actions;
+export const { addNode, setActiveTool, setSelection, setViewport, startTextEdit, stopTextEdit, updateNode, updateTextEditContent } =
+  designSlice.actions;
 
 export default designSlice.reducer;

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, FormEvent, useEffect, useRef } from 'react';
 
 // others
 import { TEXT_FILL, TEXT_FONT_FAMILY, TEXT_FONT_SIZE } from '../../constants';
@@ -8,7 +8,8 @@ import { useCommitTextEdit } from './hooks/useCommitTextEdit';
 
 // store
 import { selectEditingTextBox, selectViewport } from 'store/design/selectors';
-import { useAppSelector } from 'store';
+import { updateTextEditContent } from 'store/design/slice';
+import { useAppDispatch, useAppSelector } from 'store';
 
 // styles
 import styles from './TextEditOverlay.module.scss';
@@ -21,6 +22,11 @@ const TextEditOverlay: FC = () => {
   const elementRef = useRef<HTMLDivElement>(null);
   const handleBlur = useCommitTextEdit(box);
   const viewport = useAppSelector(selectViewport);
+  const dispatch = useAppDispatch();
+
+  const handleInput = (event: FormEvent<HTMLDivElement>): void => {
+    dispatch(updateTextEditContent(event.currentTarget.innerText));
+  };
 
   useEffect(() => {
     if (box) {
@@ -36,9 +42,11 @@ const TextEditOverlay: FC = () => {
         className={styles.TextEditOverlay}
         contentEditable
         onBlur={handleBlur}
+        onInput={handleInput}
         ref={elementRef}
         style={{
-          color: TEXT_FILL,
+          caretColor: TEXT_FILL,
+          color: 'transparent',
           fontFamily: TEXT_FONT_FAMILY,
           fontSize: TEXT_FONT_SIZE * viewport.zoom,
           left: screen.x,

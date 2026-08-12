@@ -6,6 +6,7 @@ import { TSceneNode, TViewport } from 'types/design/types';
 export type TDesignState = {
   activeTool: ToolName;
   editingTextBox: TEditingTextBox | null;
+  editingTextContent: string;
   lastMouseTool: ToolName;
   lastShapeTool: ToolName;
   nodes: Record<string, TSceneNode>;
