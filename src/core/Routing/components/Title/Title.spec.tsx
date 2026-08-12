@@ -14,7 +14,7 @@ describe('Title behaviors', () => {
     );
 
     // result
-    expect(document.title).toBe('Home - x-draft');
+    expect(document.title).toBe('Home - xigma');
   });
 
   it('should fall back to the not-found title for an unmatched route', () => {
@@ -26,6 +26,6 @@ describe('Title behaviors', () => {
     );
 
     // result
-    expect(document.title).toBe('404 - x-draft');
+    expect(document.title).toBe('404 - xigma');
   });
 });

@@ -52,7 +52,7 @@ exports[`HomePage snapshots > should render HomePage 1`] = `
       </defs>
     </svg>
     <h1>
-      x-draft
+      xigma
     </h1>
     <p
       style="color: var(--color-neutral-2);"

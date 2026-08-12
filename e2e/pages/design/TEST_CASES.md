@@ -100,7 +100,7 @@ get e2e coverage" below.
 
 Setup shorthand: **A**, **B**, **C** are frames drawn left-to-right with a gap between each, all
 with `parentId: null` (today, every frame shares the same parent — multi-selection is always a
-"group selection", see [[x-draft roadmap Etap 5]]).
+"group selection", see [[xigma roadmap Etap 5]]).
 
 | #   | Scenario                                                                                                                                                                                                                                | Unit |          E2E           |
 | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--: | :--------------------: |
@@ -182,7 +182,7 @@ see `useHoverHighlight/useHoverHighlight.ts` and
 `useCanvasRenderLoop/utils/drawScene/drawHoverOutline.ts`. Hover state lives in a ref
 (`hoverRef`, threaded through `drawScene` exactly like `draftRef`/`marqueeRef`), not Redux — it's
 a pure rendering concern, updated every `pointermove`, with no other part of the app reacting to
-it (no layers panel/inspector exists — verified absent, see [[x-draft-playwright-mcp-testing]]).
+it (no layers panel/inspector exists — verified absent, see [[xigma-playwright-mcp-testing]]).
 
 | #   | Scenario                                                                                                                                                     | Unit |        E2E         |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--: | :----------------: |

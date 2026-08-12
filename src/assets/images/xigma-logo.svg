@@ -21,8 +21,6 @@
       <stop offset="1" stop-color="#FF1744"/>
     </linearGradient>
   </defs>
-
-  <!-- Xigma mark -->
   <g transform="translate(30 20)">
     <rect x="45" y="0" width="78" height="112" rx="39" fill="url(#blue)"
           transform="rotate(-45 84 56)"/>
@@ -34,8 +32,6 @@
           transform="rotate(-45 124 134)"/>
     <circle cx="104" cy="95" r="43" fill="url(#green)"/>
   </g>
-
-  <!-- Wordmark -->
   <text x="255" y="174"
         font-family="Inter, Arial, Helvetica, sans-serif"
         font-size="116"

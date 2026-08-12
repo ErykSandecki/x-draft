@@ -1,4 +1,4 @@
-# x-draft — Roadmap
+# xigma — Roadmap
 
 Cel: odtworzyć aplikację Figma 1:1, krok po kroku. Silnik rysowania: **Canvas**
 (nie DOM/SVG). Wyjątek: pod czas edycji tekstu montowany jest mały DOM overlay
@@ -59,7 +59,7 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
 - [x] stan aktywnego narzędzia (`activeTool`) — Redux (`store/design`), nie
       lokalny stan; podświetlenie aktywnej ikony przez Radix `ToggleGroup`
       (`data-state="on"` → `background-color: var(--color-blue-1)`)
-- [x] ikony wg konwencji projektu ([[x-draft-icons]])
+- [x] ikony wg konwencji projektu ([[xigma-icons]])
 - [x] pierwsze 3 przyciski od lewej: Select/Move (`default`), Frame, Comment —
       realna logika (dispatch `setActiveTool`), nie tylko UI
 - [x] dropdown-chevron (16×32, hover taki sam jak reszta przycisków) przy
@@ -189,7 +189,7 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
       (bez trafienia w node i poza wspólnym bboxem istniejącego zaznaczenia) uzbraja marquee
       zamiast od razu czyścić zaznaczenie. Wzorzec 1:1 z x-design
       (`ViewBox/utils/getCollidedElements.ts` + `SelectableArea`), przeniesiony na architekturę
-      x-draft (jeden WebGL canvas zamiast DOM-u per element): `Canvas/utils/getCollidedNodes.ts`
+      xigma (jeden WebGL canvas zamiast DOM-u per element): `Canvas/utils/getCollidedNodes.ts`
       operuje na `TSceneNode[]` z redux zamiast na DOM `rectCoordinates`, a sam prostokąt renderuje
       się przez `utils/canvas/drawMarquee.ts` (WebGL, nie SVG-overlay) — półprzezroczyste
       wypełnienie (`MARQUEE_FILL_ALPHA = 0.2`, ten sam pattern co x-design'owe
@@ -230,7 +230,7 @@ comment / shapes, potem osobno: draw / scale / actions / dev mode).
   Pełna semantyka zaznaczania 1:1 z Figmy/x-design (`Element/utils/handleSelectElement.ts` +
   `MultipleElementsArea/ClickableArea/*`), ale spleciona w **jeden** hit-test-driven handler
   zamiast dwuwarstwowego systemu DOM-owego z x-design (`Element`-level handler +
-  `ClickableArea` overlay z `stopPropagation`) — x-draft nie ma DOM-u per node (jeden canvas,
+  `ClickableArea` overlay z `stopPropagation`) — xigma nie ma DOM-u per node (jeden canvas,
   ręczny hit-test), więc dwuwarstwowość x-design nie miała się w co przełożyć 1:1; ten sam efekt
   wychodzi z jednej funkcji z `dragStateRef` (`pendingClickAction` — `{ kind: 'collapse', id }` /
   `{ kind: 'deselect' }` / `null` — + `hasMoved`, ustalane na pointerdown, rozstrzygane na
@@ -407,7 +407,7 @@ nawet jeśli user nigdy go nie użyje:
 - [ ] manifest/katalog dostępnych fontów (nazwa → URL atlasu) do wyboru w panelu właściwości tekstu
 - [ ] **generator atlasów przenosi się do osobnego repo** — dziś `msdf-bmfont-xml` +
       `npm run generate:font-atlas` + surowy TTF (`src/assets/fonts/inter/source/`) siedzą w
-      x-draft, co ma sens dla jednego fontu, ale nie skaluje się. Docelowo osobne repo trzyma tylko
+      xigma, co ma sens dla jednego fontu, ale nie skaluje się. Docelowo osobne repo trzyma tylko
       `charset.txt` per font (decyzje o zestawie znaków, kilkaset bajtów) + skrypt generujący, który
       ściąga TTF **na żądanie** z publicznego źródła (np. Google Fonts) zamiast trzymać binarki
       fontów w gicie na stałe

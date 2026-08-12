@@ -1,4 +1,4 @@
-# x-draft
+# xigma
 
 React + TypeScript template, built with Vite and tested with Vitest.
 

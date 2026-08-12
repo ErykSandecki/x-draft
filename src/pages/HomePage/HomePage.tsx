@@ -8,6 +8,7 @@ import { Icon } from 'shared';
 import { useTheme } from 'hooks';
 
 // others
+import { APP_NAME } from 'constant/appName';
 import { colors } from 'constant/colors';
 
 // styles
@@ -20,7 +21,7 @@ const HomePage: FC = () => {
   return (
     <main className={styles.HomePage}>
       <Icon color="blue1" name="Logo" size={32} />
-      <h1>x-draft</h1>
+      <h1>{APP_NAME}</h1>
       <p style={{ color: colors.neutral2 }}>{t('home.subtitle')}</p>
       <p style={{ color: colors.neutral2 }}>{t('home.description')}</p>
       <button className={styles['HomePage__theme-toggle']} onClick={toggleTheme} type="button">

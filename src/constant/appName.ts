@@ -1,1 +1,1 @@
-export const APP_NAME = 'x-draft';
+export const APP_NAME = 'xigma';
