@@ -1,6 +1,4 @@
 .TextEditOverlay {
-  // the browser's default subpixel/LCD antialiasing renders noticeably bolder and brighter than
-  // the canvas' MSDF glyphs — forcing grayscale antialiasing here matches that softer weight
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   outline: none;
