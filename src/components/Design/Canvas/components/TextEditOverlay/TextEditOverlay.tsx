@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef } from 'react';
 
 // others
+import { MSDF_ATLAS_JSON } from 'constant/webgl/msdfAtlas';
 import { TEXT_FILL, TEXT_FONT_FAMILY, TEXT_FONT_SIZE } from '../../constants';
 
 // hooks
@@ -49,6 +50,7 @@ const TextEditOverlay: FC = () => {
           fontFamily: TEXT_FONT_FAMILY,
           fontSize: TEXT_FONT_SIZE * viewport.zoom,
           left: screen.x,
+          lineHeight: MSDF_ATLAS_JSON.common.lineHeight / MSDF_ATLAS_JSON.info.size,
           top: screen.y,
           width: box.width * viewport.zoom,
         }}

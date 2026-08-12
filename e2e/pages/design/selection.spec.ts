@@ -149,3 +149,42 @@ test('marquee selection distinguishes a touched frame from a fully-contained one
   // Q is selected in touch mode but not in contain mode — the two results must differ
   expect(touchModeSelection.equals(containModeSelection)).toBe(false);
 });
+
+test('clicking a text node inside its fixed box but past its rendered content does not select it', async ({ page }) => {
+  const designPage = new DesignPage(page);
+
+  await designPage.goto('e2e-test-selection-text-empty-area');
+  await expect(designPage.canvas).toBeVisible();
+
+  await designPage.drawTextBox(100, 100, 400, 300); // a much bigger box than "Hi" needs
+  await designPage.typeText('Hi');
+  await designPage.click(500, 500); // click away, well outside the box, to commit
+  const baseline = await designPage.canvas.screenshot();
+
+  await designPage.click(350, 250); // deep inside the box, but past the rendered "Hi"
+  const afterClick = await designPage.canvas.screenshot();
+
+  expect(afterClick.equals(baseline)).toBe(true);
+});
+
+test('a selected text node can be dragged from anywhere in its fixed box, even past its rendered content', async ({ page }) => {
+  const designPage = new DesignPage(page);
+
+  await designPage.goto('e2e-test-selection-text-drag-empty-area');
+  await expect(designPage.canvas).toBeVisible();
+
+  await designPage.drawTextBox(100, 100, 400, 300); // a much bigger box than "Hi" needs
+  await designPage.typeText('Hi');
+  await designPage.click(500, 500); // click away, well outside the box, to commit
+
+  await designPage.click(105, 108); // select it by clicking directly on the "Hi" glyphs
+  const selected = await designPage.canvas.screenshot();
+
+  // drag from deep inside the box, past the rendered content — must still move the node
+  await designPage.pointerDown(350, 250);
+  await designPage.pointerMove(450, 350);
+  await designPage.pointerUp();
+  const afterDrag = await designPage.canvas.screenshot();
+
+  expect(afterDrag.equals(selected)).toBe(false);
+});

@@ -55,8 +55,7 @@ describe('TextEditOverlay behaviors', () => {
     const { container } = renderWithStore(store);
     const element = container.querySelector('[contenteditable="true"]') as HTMLDivElement;
 
-    // jsdom doesn't implement innerText, simulate the typed content directly
-    Object.defineProperty(element, 'innerText', { configurable: true, value: 'hi' });
+    element.textContent = 'hi';
 
     // action
     fireEvent.input(element);
@@ -96,8 +95,7 @@ describe('TextEditOverlay behaviors', () => {
     const { container } = renderWithStore(store);
     const element = container.querySelector('[contenteditable="true"]') as HTMLDivElement;
 
-    // jsdom doesn't implement innerText, simulate the typed content directly
-    Object.defineProperty(element, 'innerText', { configurable: true, value: 'hello world' });
+    element.textContent = 'hello world';
 
     // action
     fireEvent.blur(element);

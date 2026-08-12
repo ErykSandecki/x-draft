@@ -11,12 +11,15 @@ import { useAppDispatch } from 'store';
 import { NodeType } from 'types/design/enums';
 import { TEditingTextBox } from 'types/canvas';
 
+// utils
+import { getEditableTextContent } from '../utils/getEditableTextContent';
+
 export const useCommitTextEdit = (box: TEditingTextBox | null): ((event: FocusEvent<HTMLDivElement>) => void) => {
   const dispatch = useAppDispatch();
 
   return (event: FocusEvent<HTMLDivElement>): void => {
     if (box) {
-      const content = event.currentTarget.innerText;
+      const content = getEditableTextContent(event.currentTarget);
 
       if (content.length > 0) {
         dispatch(

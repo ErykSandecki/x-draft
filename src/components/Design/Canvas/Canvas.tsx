@@ -34,8 +34,8 @@ import {
 import styles from './canvas.module.scss';
 
 // types
-import { TDraftRect } from 'types/canvas';
 import { TDraftEntity } from 'types/design/types';
+import { TDraftRect } from 'types/canvas';
 
 const Canvas: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

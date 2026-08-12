@@ -15,8 +15,13 @@ import { NodeType } from 'types/design/enums';
 
 const createTestStore = (): EnhancedStore<{ design: TDesignState }> => configureStore({ reducer: { design: designReducer } });
 
-const createBlurEvent = (innerText: string): FocusEvent<HTMLDivElement> =>
-  ({ currentTarget: { innerText } as HTMLDivElement }) as FocusEvent<HTMLDivElement>;
+const createBlurEvent = (html: string): FocusEvent<HTMLDivElement> => {
+  const currentTarget = document.createElement('div');
+
+  currentTarget.innerHTML = html;
+
+  return { currentTarget } as FocusEvent<HTMLDivElement>;
+};
 
 describe('useCommitTextEdit behaviors', () => {
   it('should do nothing when there is no box being edited', () => {
@@ -61,6 +66,25 @@ describe('useCommitTextEdit behaviors', () => {
       y: 10,
     });
     expect(design.editingTextBox).toBeNull();
+  });
+
+  it('should collapse a blank line (Enter twice) to a single newline, not the browser doubled one', () => {
+    // mock
+    const store = createTestStore();
+    const box = { height: 20, width: 100, x: 10, y: 10 };
+
+    // before
+    const { result } = renderHook(() => useCommitTextEdit(box), {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
+
+    // action — chrome represents the blank line as a <div> containing only a <br>
+    result.current(createBlurEvent('first<div><br></div><div>second</div>'));
+
+    // result
+    const { design } = store.getState();
+
+    expect(design.nodes[design.rootOrder[0]]).toMatchObject({ content: 'first\n\nsecond' });
   });
 
   it('should keep a whitespace-only value as valid content, not treat it as empty', () => {

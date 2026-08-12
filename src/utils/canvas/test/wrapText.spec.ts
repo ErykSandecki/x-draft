@@ -20,9 +20,14 @@ describe('wrapText', () => {
     expect(wrapText(measureWidth, 'one two three', 80)).toEqual(['one two', 'three']);
   });
 
-  it('should keep an unbreakable word that alone exceeds maxWidth on its own line', () => {
+  it('should break a single word with no spaces mid-word once it alone exceeds maxWidth, matching overflow-wrap: break-word', () => {
+    // result — 20 chars at 10 units each, breaking every 5 chars (50-unit budget)
+    expect(wrapText(measureWidth, 'supercalifragilistic', 50)).toEqual(['super', 'calif', 'ragil', 'istic']);
+  });
+
+  it('should wrap normally at the preceding space, then keep breaking mid-word for the oversized word that follows', () => {
     // result
-    expect(wrapText(measureWidth, 'supercalifragilistic', 50)).toEqual(['supercalifragilistic']);
+    expect(wrapText(measureWidth, 'hi supercalifragilistic', 50)).toEqual(['hi', 'super', 'calif', 'ragil', 'istic']);
   });
 
   it('should treat an explicit newline as a forced line break, regardless of width', () => {
