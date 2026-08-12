@@ -7,7 +7,7 @@ import { TTextNode, TViewport } from 'types/design/types';
 
 // utils
 import { drawLine } from 'utils/canvas/drawLine';
-import { getTextLineWidths } from 'utils/canvas/getTextLineWidths';
+import { getTextLineWidths } from 'utils/canvas/text/getTextLineWidths';
 
 export const drawTextHoverUnderline = (
   gl: WebGL2RenderingContext,

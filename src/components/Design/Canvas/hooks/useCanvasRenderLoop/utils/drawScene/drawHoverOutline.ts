@@ -8,10 +8,10 @@ import { TSceneNode, TViewport } from 'types/design/types';
 // utils
 import { drawLine } from 'utils/canvas/drawLine';
 import { drawTextHoverUnderline } from './drawTextHoverUnderline';
-import { drawThickEllipseOutline } from 'utils/canvas/drawThickEllipseOutline';
+import { drawThickEllipseOutline } from 'utils/canvas/shapes/drawThickEllipseOutline';
 import { drawThickOutline } from 'utils/canvas/drawThickOutline';
-import { drawThickPolygonOutline } from 'utils/canvas/drawThickPolygonOutline';
-import { drawThickStarOutline } from 'utils/canvas/drawThickStarOutline';
+import { drawThickPolygonOutline } from 'utils/canvas/shapes/drawThickPolygonOutline';
+import { drawThickStarOutline } from 'utils/canvas/shapes/drawThickStarOutline';
 
 export const drawHoverOutline = (
   gl: WebGL2RenderingContext,

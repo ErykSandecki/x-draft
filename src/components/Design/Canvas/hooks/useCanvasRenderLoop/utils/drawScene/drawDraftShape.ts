@@ -8,11 +8,11 @@ import { TDraftMedia, TDraftPolygon, TDraftShape, TDraftStar, TDraftText, TViewp
 
 // utils
 import { drawCornerHandles } from 'utils/canvas/drawCornerHandles';
-import { drawEllipse } from 'utils/canvas/drawEllipse';
+import { drawEllipse } from 'utils/canvas/shapes/drawEllipse';
 import { drawImage } from 'utils/canvas/drawImage';
-import { drawPolygon } from 'utils/canvas/drawPolygon';
+import { drawPolygon } from 'utils/canvas/shapes/drawPolygon';
 import { drawRect } from 'utils/canvas/drawRect';
-import { drawStar } from 'utils/canvas/drawStar';
+import { drawStar } from 'utils/canvas/shapes/drawStar';
 import { getOrLoadTexture } from 'utils/canvas/getOrLoadTexture';
 
 export const drawDraftShape = (

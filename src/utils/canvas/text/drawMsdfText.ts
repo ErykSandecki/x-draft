@@ -4,7 +4,7 @@ import { TTextNode, TViewport } from 'types/design/types';
 
 // utils
 import { getOrBuildTextGeometry } from './getOrBuildTextGeometry';
-import { hexToRgbaFloat } from './hexToRgbaFloat';
+import { hexToRgbaFloat } from '../hexToRgbaFloat';
 
 export const drawMsdfText = (
   gl: WebGL2RenderingContext,

@@ -10,9 +10,9 @@ import { TImageRenderContext } from '../../types';
 import { TViewport } from 'types/design/types';
 
 // utils
-import { drawMsdfText } from 'utils/canvas/drawMsdfText';
+import { drawMsdfText } from 'utils/canvas/text/drawMsdfText';
 import { drawRect } from 'utils/canvas/drawRect';
-import { getMsdfAtlasTexture } from 'utils/canvas/getMsdfAtlasTexture';
+import { getMsdfAtlasTexture } from 'utils/canvas/text/getMsdfAtlasTexture';
 
 export const drawEditingText = (
   gl: WebGL2RenderingContext,

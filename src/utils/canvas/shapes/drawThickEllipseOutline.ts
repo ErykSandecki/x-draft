@@ -1,17 +1,20 @@
+// others
+import { ELLIPSE_SEGMENTS } from 'constant/canvas';
+
 // types
 import { TDraftRect } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 // utils
-import { getPolygonPoints } from './getPolygonPoints';
-import { getQuadVertices } from './drawThickOutline';
-import { hexToRgbaFloat } from './hexToRgbaFloat';
+import { getEllipsePoints } from './getEllipsePoints';
+import { getQuadVertices } from '../drawThickOutline';
+import { hexToRgbaFloat } from '../hexToRgbaFloat';
 
-export const drawThickPolygonOutline = (
+export const drawThickEllipseOutline = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
   buffer: WebGLBuffer,
-  polygon: TDraftRect & { sides: number },
+  ellipse: TDraftRect,
   color: string,
   strokeWidth: number,
   canvasWidth: number,
@@ -24,19 +27,18 @@ export const drawThickPolygonOutline = (
   const zoomLocation = gl.getUniformLocation(program, 'u_zoom');
   const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
   const halfWidth = strokeWidth / viewport.zoom / 2;
-  const { sides } = polygon;
 
-  const outerPoints = getPolygonPoints(
-    { height: polygon.height + halfWidth * 2, width: polygon.width + halfWidth * 2, x: polygon.x - halfWidth, y: polygon.y - halfWidth },
-    sides,
+  const outerPoints = getEllipsePoints(
+    { height: ellipse.height + halfWidth * 2, width: ellipse.width + halfWidth * 2, x: ellipse.x - halfWidth, y: ellipse.y - halfWidth },
+    ELLIPSE_SEGMENTS,
   );
-  const innerPoints = getPolygonPoints(
-    { height: polygon.height - halfWidth * 2, width: polygon.width - halfWidth * 2, x: polygon.x + halfWidth, y: polygon.y + halfWidth },
-    sides,
+  const innerPoints = getEllipsePoints(
+    { height: ellipse.height - halfWidth * 2, width: ellipse.width - halfWidth * 2, x: ellipse.x + halfWidth, y: ellipse.y + halfWidth },
+    ELLIPSE_SEGMENTS,
   );
 
   const vertices = outerPoints.flatMap((outerPoint, index) => {
-    const nextIndex = (index + 1) % sides;
+    const nextIndex = (index + 1) % ELLIPSE_SEGMENTS;
 
     return getQuadVertices(
       outerPoint.x,
@@ -57,7 +59,8 @@ export const drawThickPolygonOutline = (
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(positionLocation);
   gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
   gl.uniform4fv(colorLocation, hexToRgbaFloat(color));
-  gl.drawArrays(gl.TRIANGLES, 0, sides * 6);
+  gl.drawArrays(gl.TRIANGLES, 0, ELLIPSE_SEGMENTS * 6);
 };

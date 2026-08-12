@@ -2,7 +2,7 @@
 import { TDraftRect, TPoint } from 'types/canvas';
 
 // utils
-import { getPolygonPoints } from 'utils/canvas/getPolygonPoints';
+import { getPolygonPoints } from 'utils/canvas/shapes/getPolygonPoints';
 
 export const isPointInPolygon = (point: TPoint, polygon: TDraftRect & { sides: number }): boolean => {
   const vertices = getPolygonPoints(polygon, polygon.sides);

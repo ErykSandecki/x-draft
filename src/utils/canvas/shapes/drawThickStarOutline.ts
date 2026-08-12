@@ -3,9 +3,9 @@ import { TDraftRect } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 // utils
-import { getQuadVertices } from './drawThickOutline';
+import { getQuadVertices } from '../drawThickOutline';
 import { getStarPoints } from './getStarPoints';
-import { hexToRgbaFloat } from './hexToRgbaFloat';
+import { hexToRgbaFloat } from '../hexToRgbaFloat';
 
 export const drawThickStarOutline = (
   gl: WebGL2RenderingContext,

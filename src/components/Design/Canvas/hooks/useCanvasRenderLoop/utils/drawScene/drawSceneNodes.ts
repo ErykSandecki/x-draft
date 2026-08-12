@@ -8,14 +8,14 @@ import { TImageRenderContext } from '../../types';
 import { TSceneNode, TViewport } from 'types/design/types';
 
 // utils
-import { drawEllipse } from 'utils/canvas/drawEllipse';
+import { drawEllipse } from 'utils/canvas/shapes/drawEllipse';
 import { drawImage } from 'utils/canvas/drawImage';
 import { drawLine } from 'utils/canvas/drawLine';
-import { drawMsdfText } from 'utils/canvas/drawMsdfText';
-import { drawPolygon } from 'utils/canvas/drawPolygon';
+import { drawMsdfText } from 'utils/canvas/text/drawMsdfText';
+import { drawPolygon } from 'utils/canvas/shapes/drawPolygon';
 import { drawRect } from 'utils/canvas/drawRect';
-import { drawStar } from 'utils/canvas/drawStar';
-import { getMsdfAtlasTexture } from 'utils/canvas/getMsdfAtlasTexture';
+import { drawStar } from 'utils/canvas/shapes/drawStar';
+import { getMsdfAtlasTexture } from 'utils/canvas/text/getMsdfAtlasTexture';
 import { getOrLoadTexture } from 'utils/canvas/getOrLoadTexture';
 
 export const drawSceneNodes = (

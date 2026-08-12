@@ -6,7 +6,7 @@ import { TPoint } from 'types/canvas';
 import { TTextNode } from 'types/design/types';
 
 // utils
-import { getTextLineWidths } from 'utils/canvas/getTextLineWidths';
+import { getTextLineWidths } from 'utils/canvas/text/getTextLineWidths';
 
 export const isPointInText = (point: TPoint, node: TTextNode): boolean => {
   const lineWidths = getTextLineWidths(MSDF_ATLAS_JSON, node.content, node.width, node.fontSize);

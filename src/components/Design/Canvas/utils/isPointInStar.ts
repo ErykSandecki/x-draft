@@ -2,7 +2,7 @@
 import { TDraftRect, TPoint } from 'types/canvas';
 
 // utils
-import { getStarPoints } from 'utils/canvas/getStarPoints';
+import { getStarPoints } from 'utils/canvas/shapes/getStarPoints';
 
 export const isPointInStar = (point: TPoint, star: TDraftRect & { points: number; ratio: number }): boolean => {
   const vertices = getStarPoints(star, star.points, star.ratio);

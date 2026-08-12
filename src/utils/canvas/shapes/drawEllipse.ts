@@ -1,25 +1,27 @@
+// others
+import { ELLIPSE_SEGMENTS } from 'constant/canvas';
+
 // types
 import { TDraftRect, TPoint } from 'types/canvas';
 import { TViewport } from 'types/design/types';
 
 // utils
-import { getPolygonPoints } from './getPolygonPoints';
-import { hexToRgbaFloat } from './hexToRgbaFloat';
+import { getEllipsePoints } from './getEllipsePoints';
+import { hexToRgbaFloat } from '../hexToRgbaFloat';
 
-export type TDrawablePolygon = TDraftRect & {
+export type TDrawableEllipse = TDraftRect & {
   fill?: string;
   fillAlpha?: number;
-  sides: number;
   stroke?: string;
 };
 
 const toFanVertices = (center: TPoint, points: TPoint[]): number[] => [center, ...points, points[0]].flatMap((point) => [point.x, point.y]);
 
-export const drawPolygon = (
+export const drawEllipse = (
   gl: WebGL2RenderingContext,
   program: WebGLProgram,
   buffer: WebGLBuffer,
-  polygon: TDrawablePolygon,
+  ellipse: TDrawableEllipse,
   canvasWidth: number,
   canvasHeight: number,
   viewport: TViewport,
@@ -30,8 +32,8 @@ export const drawPolygon = (
   const zoomLocation = gl.getUniformLocation(program, 'u_zoom');
   const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
 
-  const points = getPolygonPoints(polygon, polygon.sides);
-  const center: TPoint = { x: polygon.x + polygon.width / 2, y: polygon.y + polygon.height / 2 };
+  const points = getEllipsePoints(ellipse, ELLIPSE_SEGMENTS);
+  const center: TPoint = { x: ellipse.x + ellipse.width / 2, y: ellipse.y + ellipse.height / 2 };
 
   gl.useProgram(program);
   gl.uniform2f(viewportOffsetLocation, viewport.x, viewport.y);
@@ -41,15 +43,15 @@ export const drawPolygon = (
   gl.enableVertexAttribArray(positionLocation);
   gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-  if (polygon.fill) {
+  if (ellipse.fill) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(toFanVertices(center, points)), gl.STATIC_DRAW);
-    gl.uniform4fv(colorLocation, hexToRgbaFloat(polygon.fill, polygon.fillAlpha));
+    gl.uniform4fv(colorLocation, hexToRgbaFloat(ellipse.fill, ellipse.fillAlpha));
     gl.drawArrays(gl.TRIANGLE_FAN, 0, points.length + 2);
   }
 
-  if (polygon.stroke) {
+  if (ellipse.stroke) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points.flatMap((point) => [point.x, point.y])), gl.STATIC_DRAW);
-    gl.uniform4fv(colorLocation, hexToRgbaFloat(polygon.stroke));
+    gl.uniform4fv(colorLocation, hexToRgbaFloat(ellipse.stroke));
     gl.drawArrays(gl.LINE_LOOP, 0, points.length);
   }
 };
