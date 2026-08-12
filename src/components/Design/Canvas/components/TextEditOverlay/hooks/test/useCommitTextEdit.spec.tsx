@@ -15,14 +15,8 @@ import { NodeType } from 'types/design/enums';
 
 const createTestStore = (): EnhancedStore<{ design: TDesignState }> => configureStore({ reducer: { design: designReducer } });
 
-const createBlurEvent = (innerText: string, height = 20): FocusEvent<HTMLDivElement> => {
-  const currentTarget = {
-    getBoundingClientRect: (): DOMRect => ({ height }) as DOMRect,
-    innerText,
-  } as unknown as HTMLDivElement;
-
-  return { currentTarget } as unknown as FocusEvent<HTMLDivElement>;
-};
+const createBlurEvent = (innerText: string): FocusEvent<HTMLDivElement> =>
+  ({ currentTarget: { innerText } as HTMLDivElement }) as FocusEvent<HTMLDivElement>;
 
 describe('useCommitTextEdit behaviors', () => {
   it('should do nothing when there is no box being edited', () => {
@@ -41,7 +35,7 @@ describe('useCommitTextEdit behaviors', () => {
     expect(store.getState().design.rootOrder).toHaveLength(0);
   });
 
-  it('should add a text node and stop editing when blurred with content', () => {
+  it('should add a text node with the fixed box size, not the rendered content size, when blurred with content', () => {
     // mock
     const store = createTestStore();
     const box = { height: 20, width: 100, x: 10, y: 10 };
@@ -52,7 +46,7 @@ describe('useCommitTextEdit behaviors', () => {
     });
 
     // action
-    result.current(createBlurEvent('hello world', 40));
+    result.current(createBlurEvent('hello world'));
 
     // result
     const { design } = store.getState();
@@ -60,7 +54,7 @@ describe('useCommitTextEdit behaviors', () => {
     expect(design.rootOrder).toHaveLength(1);
     expect(design.nodes[design.rootOrder[0]]).toMatchObject({
       content: 'hello world',
-      height: 40,
+      height: 20,
       type: NodeType.text,
       width: 100,
       x: 10,

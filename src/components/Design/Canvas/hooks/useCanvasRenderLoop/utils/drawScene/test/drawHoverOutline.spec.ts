@@ -139,6 +139,35 @@ describe('drawHoverOutline', () => {
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 10 * 6);
   });
 
+  it('should draw a thin underline sized to the text content, not the box, for a hovered text node', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const text: TSceneNode = {
+      content: 'hello',
+      fill: '#ffffff',
+      fontFamily: 'Inter',
+      fontSize: 14,
+      height: 200,
+      id: 'a',
+      name: 'Text',
+      parentId: null,
+      rotation: 0,
+      type: NodeType.text,
+      width: 400,
+      x: 0,
+      y: 0,
+    };
+
+    // before
+    drawHoverOutline(gl, program, buffer, text, 100, 100, IDENTITY_VIEWPORT);
+
+    // result — a single thin quad, not the 24-vertex bounding-box ring
+    expect(gl.drawArrays).toHaveBeenCalledTimes(1);
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 6);
+  });
+
   it('should draw a thin highlight along the segment for a hovered line node, not a bounding-box ring', () => {
     // mock
     const gl = createGlMock();

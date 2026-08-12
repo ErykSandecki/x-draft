@@ -7,6 +7,7 @@ import { TSceneNode, TViewport } from 'types/design/types';
 
 // utils
 import { drawLine } from 'utils/canvas/drawLine';
+import { drawTextHoverUnderline } from './drawTextHoverUnderline';
 import { drawThickEllipseOutline } from 'utils/canvas/drawThickEllipseOutline';
 import { drawThickOutline } from 'utils/canvas/drawThickOutline';
 import { drawThickPolygonOutline } from 'utils/canvas/drawThickPolygonOutline';
@@ -74,6 +75,9 @@ export const drawHoverOutline = (
           canvasHeight,
           viewport,
         );
+        break;
+      case NodeType.text:
+        drawTextHoverUnderline(gl, program, buffer, hoveredNode, canvasWidth, canvasHeight, viewport);
         break;
       default:
         drawThickOutline(gl, program, buffer, hoveredNode, DRAFT_FRAME_STROKE, HOVER_OUTLINE_WIDTH, canvasWidth, canvasHeight, viewport);
