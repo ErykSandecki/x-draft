@@ -6,6 +6,9 @@ import { drawEditingText } from '../drawEditingText';
 
 const createGlMock = (): WebGL2RenderingContext =>
   ({
+    ARRAY_BUFFER: 34962,
+    FLOAT: 5126,
+    LINE_LOOP: 2,
     RGBA: 6408,
     STATIC_DRAW: 35044,
     TEXTURE0: 33984,
@@ -45,21 +48,39 @@ describe('drawEditingText', () => {
   it('should draw nothing when no text box is being edited', () => {
     // mock
     const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
 
     // before
-    drawEditingText(gl, IMAGE_CONTEXT, null, 'hello', 100, 100, IDENTITY_VIEWPORT);
+    drawEditingText(gl, program, buffer, IMAGE_CONTEXT, null, 'hello', 100, 100, IDENTITY_VIEWPORT);
 
     // result
     expect(gl.drawArrays).not.toHaveBeenCalled();
   });
 
-  it('should draw the live typed content through the same MSDF pipeline as committed text', () => {
+  it('should draw an outline around the box being edited', () => {
     // mock
     const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
     const box = { height: 20, width: 100, x: 0, y: 0 };
 
     // before
-    drawEditingText(gl, IMAGE_CONTEXT, box, 'hello', 100, 100, IDENTITY_VIEWPORT);
+    drawEditingText(gl, program, buffer, IMAGE_CONTEXT, box, 'hello', 100, 100, IDENTITY_VIEWPORT);
+
+    // result
+    expect(gl.drawArrays).toHaveBeenCalledWith(gl.LINE_LOOP, 0, 4);
+  });
+
+  it('should draw the live typed content through the same MSDF pipeline as committed text', () => {
+    // mock
+    const gl = createGlMock();
+    const program = {} as WebGLProgram;
+    const buffer = {} as WebGLBuffer;
+    const box = { height: 20, width: 100, x: 0, y: 0 };
+
+    // before
+    drawEditingText(gl, program, buffer, IMAGE_CONTEXT, box, 'hello', 100, 100, IDENTITY_VIEWPORT);
 
     // result — "hello" is 5 known glyphs in the real MSDF atlas, 6 vertices each
     expect(gl.drawArrays).toHaveBeenCalledWith(gl.TRIANGLES, 0, 30);

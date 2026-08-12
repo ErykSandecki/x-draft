@@ -1,15 +1,16 @@
-import { FC, FormEvent, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 // others
 import { TEXT_FILL, TEXT_FONT_FAMILY, TEXT_FONT_SIZE } from '../../constants';
 
 // hooks
+import { useBlockShortcutPropagation } from './hooks/useBlockShortcutPropagation';
 import { useCommitTextEdit } from './hooks/useCommitTextEdit';
+import { useTextEditInput } from './hooks/useTextEditInput';
 
 // store
 import { selectEditingTextBox, selectViewport } from 'store/design/selectors';
-import { updateTextEditContent } from 'store/design/slice';
-import { useAppDispatch, useAppSelector } from 'store';
+import { useAppSelector } from 'store';
 
 // styles
 import styles from './TextEditOverlay.module.scss';
@@ -21,12 +22,9 @@ const TextEditOverlay: FC = () => {
   const box = useAppSelector(selectEditingTextBox);
   const elementRef = useRef<HTMLDivElement>(null);
   const handleBlur = useCommitTextEdit(box);
+  const handleInput = useTextEditInput();
+  const handleKeyDown = useBlockShortcutPropagation();
   const viewport = useAppSelector(selectViewport);
-  const dispatch = useAppDispatch();
-
-  const handleInput = (event: FormEvent<HTMLDivElement>): void => {
-    dispatch(updateTextEditContent(event.currentTarget.innerText));
-  };
 
   useEffect(() => {
     if (box) {
@@ -43,6 +41,7 @@ const TextEditOverlay: FC = () => {
         contentEditable
         onBlur={handleBlur}
         onInput={handleInput}
+        onKeyDown={handleKeyDown}
         ref={elementRef}
         style={{
           caretColor: TEXT_FILL,

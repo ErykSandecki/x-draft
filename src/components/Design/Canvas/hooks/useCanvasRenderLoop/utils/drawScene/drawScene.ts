@@ -42,6 +42,16 @@ export const drawScene = (
   drawHoverOutline(gl, program, buffer, hoveredNodeId ? selectNodes(state)[hoveredNodeId] : null, clientWidth, clientHeight, viewport);
   drawSelectionOutline(gl, program, buffer, selectSelectedNodes(state), clientWidth, clientHeight, viewport);
   drawFrame(gl, program, buffer, imageContext, draftShape, clientWidth, clientHeight, viewport);
-  drawEditingText(gl, imageContext, selectEditingTextBox(state), selectEditingTextContent(state), clientWidth, clientHeight, viewport);
+  drawEditingText(
+    gl,
+    program,
+    buffer,
+    imageContext,
+    selectEditingTextBox(state),
+    selectEditingTextContent(state),
+    clientWidth,
+    clientHeight,
+    viewport,
+  );
   drawMarquee(gl, program, buffer, marqueeRect, clientWidth, clientHeight, viewport);
 };

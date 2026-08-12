@@ -65,6 +65,28 @@ describe('TextEditOverlay behaviors', () => {
     expect(store.getState().design.editingTextContent).toBe('hi');
   });
 
+  it('should stop keydown events from bubbling up to window-level shortcut listeners', () => {
+    // mock
+    const store = createTestStore();
+
+    store.dispatch(startTextEdit({ height: 20, width: 100, x: 10, y: 10 }));
+
+    const { container } = renderWithStore(store);
+    const element = container.querySelector('[contenteditable="true"]') as HTMLDivElement;
+    const windowKeyDown = vi.fn();
+
+    window.addEventListener('keydown', windowKeyDown);
+
+    // action
+    fireEvent.keyDown(element, { code: 'KeyR' });
+
+    // result
+    expect(windowKeyDown).not.toHaveBeenCalled();
+
+    // after
+    window.removeEventListener('keydown', windowKeyDown);
+  });
+
   it('should stop editing when the editable box loses focus', () => {
     // mock
     const store = createTestStore();
