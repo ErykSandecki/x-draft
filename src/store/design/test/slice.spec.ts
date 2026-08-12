@@ -1,5 +1,14 @@
 // store
-import slice, { addNode, setActiveTool, setSelection, setViewport, startTextEdit, stopTextEdit, updateNode, updateTextEditContent } from '../slice';
+import slice, {
+  addNode,
+  setActiveTool,
+  setSelection,
+  setViewport,
+  startTextEdit,
+  stopTextEdit,
+  updateNode,
+  updateTextEditContent,
+} from '../slice';
 
 // types
 import { NodeType, ToolName } from 'types/design/enums';

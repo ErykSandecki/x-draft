@@ -241,16 +241,16 @@ dispatches `startTextEdit` instead of `addNode` (`useDrawTextTool.ts`), which mo
 actually created on blur, and only if the typed content is non-empty (`useCommitTextEdit.ts`) — an
 empty text box is discarded entirely, never added and never needing deletion.
 
-| #   | Scenario                                                                                        | Unit |           E2E            |
-| --- | ----------------------------------------------------------------------------------------------- | :--: | :----------------------: |
-| 35  | Drawing a text box, typing content, then clicking away commits a rendered text node                        |  —   | ✅ `create-text.spec.ts` |
-| 36  | Drawing a text box and clicking away with no content typed discards it — nothing is created                |  —   | ✅ `create-text.spec.ts` |
-| 37  | A single whitespace character (e.g. a space) counts as valid content and is kept, not discarded             |  ✅  |            —             |
-| 38  | Typing a tool-shortcut letter (e.g. "r", "t") while editing text does not switch the active tool            |  ✅  | ✅ `create-text.spec.ts` |
-| 39  | Hovering a committed text node only highlights its rendered content, not the empty space in its fixed box   |  —   |    ✅ `hover.spec.ts`    |
-| 40  | Clicking a text node inside its fixed box but past its rendered content does not select it                 |  ✅  |  ✅ `selection.spec.ts`  |
-| 41  | A selected text node can be dragged from anywhere in its fixed box, even past its rendered content          |  ✅  |  ✅ `selection.spec.ts`  |
-| 42  | A run of text with no spaces wraps mid-word once it overflows the box, instead of overflowing on one line   |  ✅  | ✅ `create-text.spec.ts` |
+| #   | Scenario                                                                                                  | Unit |           E2E            |
+| --- | --------------------------------------------------------------------------------------------------------- | :--: | :----------------------: |
+| 35  | Drawing a text box, typing content, then clicking away commits a rendered text node                       |  —   | ✅ `create-text.spec.ts` |
+| 36  | Drawing a text box and clicking away with no content typed discards it — nothing is created               |  —   | ✅ `create-text.spec.ts` |
+| 37  | A single whitespace character (e.g. a space) counts as valid content and is kept, not discarded           |  ✅  |            —             |
+| 38  | Typing a tool-shortcut letter (e.g. "r", "t") while editing text does not switch the active tool          |  ✅  | ✅ `create-text.spec.ts` |
+| 39  | Hovering a committed text node only highlights its rendered content, not the empty space in its fixed box |  —   |    ✅ `hover.spec.ts`    |
+| 40  | Clicking a text node inside its fixed box but past its rendered content does not select it                |  ✅  |  ✅ `selection.spec.ts`  |
+| 41  | A selected text node can be dragged from anywhere in its fixed box, even past its rendered content        |  ✅  |  ✅ `selection.spec.ts`  |
+| 42  | A run of text with no spaces wraps mid-word once it overflows the box, instead of overflowing on one line |  ✅  | ✅ `create-text.spec.ts` |
 
 #37 stays unit-only: `useCommitTextEdit.spec.tsx` asserts `store.getState()` directly (the node was
 added, `content: ' '`), which is exact. A screenshot diff can't reliably stand in for this claim —
@@ -262,14 +262,14 @@ for (see "Why so few scenarios get e2e coverage" below).
 text box became a fixed size independent of its rendered content (`useCommitTextEdit.ts` uses
 `box.height`, not the DOM's measured height), and both hit-testing (`isPointInText.ts`, replacing
 `isPointInRect` for text) and the hover underline (`drawTextHoverUnderline.ts`) had to follow that
-same "content, not box" distinction, while dragging an *already-selected* text node still needs the
+same "content, not box" distinction, while dragging an _already-selected_ text node still needs the
 full box to stay grabbable (`isPointInSelectedTextBounds.ts`). Each of these has a precise
 `store.getState()`/mocked-`gl` unit assertion already, but the actual claim — a real `pointerdown`
 at real screen coordinates against the real rendered MSDF glyphs does/doesn't hit — is exactly the
 "real browser + rendering + timing" category this file exists for, so each also gets an e2e
 scenario. #38 is the exception with real jsdom coverage too
 (`TextEditOverlay.spec.tsx`'s stopPropagation test): `fireEvent` bubbling is standards-accurate in
-jsdom, so the *mechanism* is unit-provable, but the e2e version proves the actual toolbar's
+jsdom, so the _mechanism_ is unit-provable, but the e2e version proves the actual toolbar's
 `aria-checked` state end-to-end through the real `useToolbarShortcuts` wiring, which is worth
 keeping too since a regression could sneak in between the two layers (e.g. a capture-phase listener
 added elsewhere).

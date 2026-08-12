@@ -61,7 +61,9 @@ test('typing tool-shortcut letters while editing text does not switch the active
   await expect(defaultTool).toHaveAttribute('aria-checked', 'true');
 });
 
-test('wraps a long run of text with no spaces mid-word once it overflows a narrow box, matching the html overlay overflow-wrap: break-word', async ({ page }) => {
+test('wraps a long run of text with no spaces mid-word once it overflows a narrow box, matching the html overlay overflow-wrap: break-word', async ({
+  page,
+}) => {
   const designPage = new DesignPage(page);
 
   await designPage.goto('e2e-test-text-break-word');
